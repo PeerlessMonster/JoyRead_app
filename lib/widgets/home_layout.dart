@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:joyread/pages/user.dart';
-import 'package:joyread/pages/explore.dart';
+
+import '../pages/user.dart';
+import '../pages/explore.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({super.key});
