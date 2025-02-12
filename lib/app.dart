@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'constants/theme.dart';
-import 'widgets/home_layout.dart';
+import 'router.dart';
 
-class App extends StatelessWidget {
-  const App({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,6 @@ class App extends StatelessWidget {
 
     final textTheme = Theme.of(context).textTheme;
     final theme = MaterialTheme(textTheme);
-
     return MaterialApp(
       title: 'Flutter Demo',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
