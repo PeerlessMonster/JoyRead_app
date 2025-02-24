@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../constants/breakpoint.dart';
+import '../utils/adaptive_state.dart';
 import '../widgets/navigation_sidebar.dart';
-import '../widgets/adaptive_state.dart';
 
 class AdaptiveScaffold extends StatefulWidget {
   final Widget body;
