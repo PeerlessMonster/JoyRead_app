@@ -1,20 +1,29 @@
 class LatestNews {
   final String id;
   final String title;
-  final String coverImgFilename;
+  final DateTime publishTime;
+  final String coverImageFilename;
 
-  const LatestNews(
-      {required this.id, required this.title, required this.coverImgFilename});
+  LatestNews(
+      {required this.id,
+      required this.title,
+      required this.publishTime,
+      required this.coverImageFilename});
 
-  factory LatestNews.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {
-        'id': String id,
-        'title': String title,
-        'coverImgFilename': String coverImgFilename
-      } =>
-        LatestNews(id: id, title: title, coverImgFilename: coverImgFilename),
-      _ => throw const FormatException('Unexpected JSON format'),
-    };
-  }
+  factory LatestNews.fromJson(Map<String, dynamic> json) => switch (json) {
+        {
+          'id': String id,
+          'title': String title,
+          'publishEpochMillisecond': String publishEpochMillisecond,
+          'coverImgFilename': String coverImgFilename
+        } =>
+          LatestNews(
+              id: id,
+              title: title,
+              publishTime: DateTime.fromMillisecondsSinceEpoch(
+                  int.parse(publishEpochMillisecond),
+                  isUtc: true),
+              coverImageFilename: coverImgFilename),
+        _ => throw const FormatException('Unexpected JSON format'),
+      };
 }

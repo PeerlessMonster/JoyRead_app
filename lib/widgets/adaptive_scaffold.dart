@@ -32,7 +32,8 @@ class AdaptiveScaffold extends StatefulWidget {
   State<AdaptiveScaffold> createState() => _AdaptiveScaffoldState();
 }
 
-class _AdaptiveScaffoldState extends AdaptiveState<AdaptiveScaffold> {
+class _AdaptiveScaffoldState extends State<AdaptiveScaffold>
+    with AdaptiveState<AdaptiveScaffold> {
   @override
   Widget build(BuildContext context) => breakpoint <= Breakpoint.compact
       ? Scaffold(

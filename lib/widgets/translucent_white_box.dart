@@ -1,14 +1,14 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
-class TranslucentBox extends StatelessWidget {
+class TranslucentWhiteBox extends StatelessWidget {
   final Widget? child;
   final String imageAssetName;
   final AlignmentGeometry alignment;
   final double borderRadius;
 
   /// While no passing [child], [alignment] will be ignored.
-  const TranslucentBox(
+  const TranslucentWhiteBox(
       {super.key,
       required this.imageAssetName,
       this.alignment = AlignmentDirectional.topStart,

@@ -61,7 +61,7 @@ class _NavigationSidebarState extends State<NavigationSidebar> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
+                    const EdgeInsetsDirectional.only(start: 6, end: 6, bottom: 12),
                 child: IconButton(
                   onPressed: () => setState(() {
                     _isExtended = !_isExtended;

@@ -8,11 +8,11 @@ class SegmentIndicatorCarousel extends StatefulWidget {
   final bool autoplay;
   final bool isInfiniteLoop;
   final bool showIndicator;
-  final double maxImageHeight;
+  final double maxCarouselHeight;
 
   const SegmentIndicatorCarousel(
       {super.key,
-      required this.maxImageHeight,
+      required this.maxCarouselHeight,
       this.showIndicator = true,
       this.isInfiniteLoop = true,
       this.autoplay = true,
@@ -39,7 +39,7 @@ class _SegmentIndicatorCarouselState extends State<SegmentIndicatorCarousel> {
   }
 
   Widget _buildCarousel() => LimitedBox(
-        maxHeight: widget.maxImageHeight,
+        maxHeight: widget.maxCarouselHeight,
         child: Swiper(
           loop: widget.isInfiniteLoop,
           itemBuilder: (context, index) => widget.children[index],

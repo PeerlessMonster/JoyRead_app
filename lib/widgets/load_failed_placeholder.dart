@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'alert.dart';
 import 'blurred_box.dart';
-import 'icon_alert.dart';
 
 class LoadFailedPlaceholder extends StatelessWidget {
   final void Function() reload;

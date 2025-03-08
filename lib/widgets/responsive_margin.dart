@@ -4,6 +4,35 @@ import '../constants/breakpoint.dart';
 import '../constants/layout.dart';
 import '../utils/adaptive_state.dart';
 
+class ResponsiveEdgeInsets {
+  final bool applyStart;
+  final bool applyTop;
+  final bool applyEnd;
+  final bool applyBottom;
+
+  const ResponsiveEdgeInsets.all()
+      : applyStart = true,
+        applyTop = true,
+        applyEnd = true,
+        applyBottom = true;
+
+  const ResponsiveEdgeInsets.fromSTEB(
+      this.applyStart, this.applyTop, this.applyEnd, this.applyBottom);
+
+  const ResponsiveEdgeInsets.only(
+      {this.applyStart = false,
+      this.applyTop = false,
+      this.applyEnd = false,
+      this.applyBottom = false});
+
+  const ResponsiveEdgeInsets.symmetric(
+      {bool applyHorizontal = false, bool applyVertical = false})
+      : applyStart = applyHorizontal,
+        applyTop = applyVertical,
+        applyEnd = applyHorizontal,
+        applyBottom = applyVertical;
+}
+
 class ResponsiveMargin extends StatefulWidget {
   final Widget? child;
   final ResponsiveEdgeInsets margin;
@@ -14,46 +43,67 @@ class ResponsiveMargin extends StatefulWidget {
   State<ResponsiveMargin> createState() => _ResponsiveMarginState();
 }
 
-class _ResponsiveMarginState extends AdaptiveState<ResponsiveMargin> {
+class _ResponsiveMarginState
+    extends _ResponsiveEdgeInsetsState<ResponsiveMargin> {
   @override
   Widget build(BuildContext context) {
-    final edgeInsets = switch (breakpoint) {
+    final margin = _calculateMargin(widget.margin, edgeInsets);
+    return Padding(
+      padding: margin,
+      child: widget.child,
+    );
+  }
+}
+
+class ResponsiveSliverMargin extends StatefulWidget {
+  final Widget? sliver;
+  final ResponsiveEdgeInsets margin;
+
+  const ResponsiveSliverMargin({super.key, required this.margin, this.sliver});
+
+  @override
+  State<ResponsiveSliverMargin> createState() => _ResponsiveSliverMarginState();
+}
+
+class _ResponsiveSliverMarginState
+    extends _ResponsiveEdgeInsetsState<ResponsiveSliverMargin> {
+  @override
+  Widget build(BuildContext context) {
+    final margin = _calculateMargin(widget.margin, edgeInsets);
+    return SliverPadding(
+      padding: margin,
+      sliver: widget.sliver,
+    );
+  }
+}
+
+abstract class _ResponsiveEdgeInsetsState<T extends StatefulWidget>
+    extends State<T> with AdaptiveState<T> {
+  var edgeInsets = Spacing.compactMargin;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final currentEdgeInsets = switch (breakpoint) {
       Breakpoint.compact => Spacing.compactMargin,
       Breakpoint.medium => Spacing.mediumMargin,
       Breakpoint.expanded => Spacing.expandedMargin,
       Breakpoint.large => Spacing.largeMargin,
       Breakpoint.extraLarge => Spacing.largeMargin
     };
-
-    final bottomMargin = widget.margin.applyBottom ? edgeInsets : .0;
-    final horizontalMargin = widget.margin.applyHorizontal ? edgeInsets : .0;
-    final topMargin = widget.margin.applyTop ? edgeInsets : .0;
-    
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-          horizontalMargin, topMargin, horizontalMargin, bottomMargin),
-      child: widget.child,
-    );
+    if (currentEdgeInsets != edgeInsets) {
+      edgeInsets = currentEdgeInsets;
+    }
   }
 }
 
-class ResponsiveEdgeInsets {
-  final bool applyBottom;
-  final bool applyHorizontal;
-  final bool applyTop;
-
-  ResponsiveEdgeInsets.all()
-      : applyBottom = true,
-        applyHorizontal = true,
-        applyTop = true;
-
-  ResponsiveEdgeInsets.symmetric(
-      {bool applyVertical = false, this.applyHorizontal = false})
-      : applyBottom = applyVertical,
-        applyTop = applyVertical;
-
-  ResponsiveEdgeInsets.only(
-      {this.applyBottom = false,
-      this.applyHorizontal = false,
-      this.applyTop = false});
+EdgeInsetsGeometry _calculateMargin(
+    ResponsiveEdgeInsets responsiveMargin, double edgeInsets) {
+  final startMargin = responsiveMargin.applyStart ? edgeInsets : .0;
+  final topMargin = responsiveMargin.applyTop ? edgeInsets : .0;
+  final endMargin = responsiveMargin.applyEnd ? edgeInsets : .0;
+  final bottomMargin = responsiveMargin.applyBottom ? edgeInsets : .0;
+  return EdgeInsetsDirectional.only(
+      start: startMargin, top: topMargin, end: endMargin, bottom: bottomMargin);
 }

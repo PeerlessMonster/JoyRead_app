@@ -6,14 +6,14 @@ import '../utils/future_network_image.dart';
 
 class LoadStateChangedNetworkImage extends StatelessWidget {
   final String url;
-  final String fallbackAssetName;
+  final String fallbackImageAssetName;
   final Color color;
   final double borderRadius;
 
   const LoadStateChangedNetworkImage(
+      this.url,
       {super.key,
-      required this.url,
-      required this.fallbackAssetName,
+      required this.fallbackImageAssetName,
       required this.color,
       this.borderRadius = 0});
 
@@ -29,14 +29,14 @@ class LoadStateChangedNetworkImage extends StatelessWidget {
 
         return LoadingPlaceholder(
           value: value,
-          backgroundImageAssetName: fallbackAssetName,
+          backgroundImageAssetName: fallbackImageAssetName,
           color: color,
           borderRadius: borderRadius,
         );
       },
       failedBuilder: (context, reloadImage) => LoadFailedPlaceholder(
         reload: reloadImage,
-        blurredImageAssetName: fallbackAssetName,
+        blurredImageAssetName: fallbackImageAssetName,
         color: color,
         borderRadius: borderRadius,
       ),
