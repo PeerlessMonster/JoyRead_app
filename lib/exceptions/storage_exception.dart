@@ -1,1 +1,0 @@
-class NoCacheException implements Exception {}
