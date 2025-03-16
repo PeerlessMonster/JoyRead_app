@@ -33,31 +33,12 @@ class MoreLatestNewsList extends StatefulWidget {
   State<StatefulWidget> createState() => _MoreLatestNewsListState();
 }
 
-class _MoreLatestNewsListState extends State<MoreLatestNewsList>
-    with BreakpointState<MoreLatestNewsList> {
-  late final colorScheme = Theme.of(context).colorScheme;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final currentCrossAxisCount = switch (breakpoint) {
-      Breakpoint.compact => 1,
-      Breakpoint.medium || Breakpoint.expanded => 2,
-      Breakpoint.large || Breakpoint.extraLarge => 3,
-    };
-    if (crossAxisCount != currentCrossAxisCount) {
-      crossAxisCount = currentCrossAxisCount;
-    }
-  }
-
-  var crossAxisCount = 1;
-
+class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
   static const _spacing = Spacing.paddingIncrement * 1;
 
   static const _borderRadius = RoundedCorner.smallBorderRadius;
 
-  Widget _buildCard(BuildContext context, LatestNews data, int index) {
+  Widget _buildCard(LatestNews data, int index, {required int crossAxisCount}) {
     late final EdgeInsetsGeometry padding;
     switch (crossAxisCount) {
       case 1:
@@ -94,53 +75,65 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList>
   }
 
   @override
-  Widget build(BuildContext context) => DynamicLoadingScrollView(
-        initialData: widget.firstPage,
-        loadData: widget.loadMorePage,
-        pageSize: widget.pageSize,
-        preloadDataCount: widget.preloadDataCount,
-        maxCachedPageCount: widget.maxCachedPageCount,
-        scrollViewBuilder:
-            (context, lastChildLayoutTypeBuilder, childBuilder, childCount) =>
-                ExtendedSliverGrid(
-          delegate: SliverChildBuilderDelegate(
-            childBuilder,
-            childCount: childCount,
-          ),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: _spacing,
-            crossAxisSpacing: _spacing,
-            childAspectRatio: 2.88,
-          ),
-          extendedListDelegate: ExtendedListDelegate(
-            lastChildLayoutTypeBuilder: lastChildLayoutTypeBuilder,
-          ),
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final breakpoint = BreakpointState.of(context);
+    final crossAxisCount = switch (breakpoint) {
+      Breakpoint.compact => 1,
+      Breakpoint.medium || Breakpoint.expanded => 2,
+      Breakpoint.large || Breakpoint.extraLarge => 3,
+    };
+
+    return DynamicLoadingScrollView(
+      initialData: widget.firstPage,
+      loadData: widget.loadMorePage,
+      pageSize: widget.pageSize,
+      preloadDataCount: widget.preloadDataCount,
+      maxCachedPageCount: widget.maxCachedPageCount,
+      scrollViewBuilder:
+          (context, lastChildLayoutTypeBuilder, childBuilder, childCount) =>
+              ExtendedSliverGrid(
+        delegate: SliverChildBuilderDelegate(
+          childBuilder,
+          childCount: childCount,
         ),
-        uncompletedWidget: ImageBackgroundTitleLabelCardSkeleton(
-          isLoading: true,
-          borderRadius: _borderRadius,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          mainAxisSpacing: _spacing,
+          crossAxisSpacing: _spacing,
+          childAspectRatio: 2.88,
         ),
-        successBuilder: _buildCard,
-        errorBuilder: (context, _) => ImageBackgroundTitleLabelCardSkeleton(
-          isLoading: false,
-          borderRadius: _borderRadius,
+        extendedListDelegate: ExtendedListDelegate(
+          lastChildLayoutTypeBuilder: lastChildLayoutTypeBuilder,
         ),
-        loadingMoreWidget: Padding(
-          padding: EdgeInsets.only(top: _spacing),
-          child: LinearProgressIndicator(),
-        ),
-        noMoreWidget: Padding(
-          padding: EdgeInsets.only(top: _spacing),
-          child: SizedBox(
-            height: 50,
-            child: ColoredBox(
-              color: colorScheme.surfaceContainer,
-              child: Center(
-                child: Text('已经到底啦'),
-              ),
+      ),
+      uncompletedWidget: ImageBackgroundTitleLabelCardSkeleton(
+        isLoading: true,
+        borderRadius: _borderRadius,
+      ),
+      successBuilder: (context, data, index) =>
+          _buildCard(data, index, crossAxisCount: crossAxisCount),
+      errorBuilder: (context, _) => ImageBackgroundTitleLabelCardSkeleton(
+        isLoading: false,
+        borderRadius: _borderRadius,
+      ),
+      loadingMoreWidget: Padding(
+        padding: EdgeInsets.only(top: _spacing),
+        child: LinearProgressIndicator(),
+      ),
+      noMoreWidget: Padding(
+        padding: EdgeInsets.only(top: _spacing),
+        child: SizedBox(
+          height: 50,
+          child: ColoredBox(
+            color: colorScheme.surfaceContainer,
+            child: Center(
+              child: Text('已经到底啦'),
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }

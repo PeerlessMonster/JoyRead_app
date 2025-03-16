@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'ui/core/breakpoint_state.dart';
 import 'ui/pages/explore.dart';
 import 'ui/pages/user_home.dart';
 import 'ui/widgets/adaptive_scaffold.dart';
@@ -44,7 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
       setSelectedIndex: (index) => setState(() {
         currentPageIndex = index;
       }),
-      body: page,
+      body: BreakpointProvider(
+        child: page,
+      ),
     );
   }
 }

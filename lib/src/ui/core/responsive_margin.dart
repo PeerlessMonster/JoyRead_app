@@ -52,11 +52,11 @@ class ResponsiveMargin extends StatefulWidget {
   State<ResponsiveMargin> createState() => _ResponsiveMarginState();
 }
 
-class _ResponsiveMarginState
-    extends _ResponsiveEdgeInsetsState<ResponsiveMargin> {
+class _ResponsiveMarginState extends State<ResponsiveMargin> {
   @override
   Widget build(BuildContext context) {
-    final margin = _calculateMargin(widget.margin, edgeInsets);
+    final breakpoint = BreakpointState.maybeOf(context) ?? Breakpoint.compact;
+    final margin = _calculateMargin(widget.margin, breakpoint);
     return Padding(
       padding: margin,
       child: widget.child,
@@ -79,11 +79,11 @@ class ResponsiveSliverMargin extends StatefulWidget {
   State<ResponsiveSliverMargin> createState() => _ResponsiveSliverMarginState();
 }
 
-class _ResponsiveSliverMarginState
-    extends _ResponsiveEdgeInsetsState<ResponsiveSliverMargin> {
+class _ResponsiveSliverMarginState extends State<ResponsiveSliverMargin> {
   @override
   Widget build(BuildContext context) {
-    final margin = _calculateMargin(widget.margin, edgeInsets);
+    final breakpoint = BreakpointState.maybeOf(context) ?? Breakpoint.compact;
+    final margin = _calculateMargin(widget.margin, breakpoint);
     return SliverPadding(
       padding: margin,
       sliver: widget.sliver,
@@ -91,29 +91,16 @@ class _ResponsiveSliverMarginState
   }
 }
 
-abstract class _ResponsiveEdgeInsetsState<T extends StatefulWidget>
-    extends State<T> with BreakpointState<T> {
-  var edgeInsets = Spacing.compactMargin;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final currentEdgeInsets = switch (breakpoint) {
-      Breakpoint.compact => Spacing.compactMargin,
-      Breakpoint.medium => Spacing.mediumMargin,
-      Breakpoint.expanded => Spacing.expandedMargin,
-      Breakpoint.large => Spacing.largeMargin,
-      Breakpoint.extraLarge => Spacing.largeMargin
-    };
-    if (currentEdgeInsets != edgeInsets) {
-      edgeInsets = currentEdgeInsets;
-    }
-  }
-}
-
 EdgeInsetsGeometry _calculateMargin(
-    ResponsiveEdgeInsets responsiveMargin, double edgeInsets) {
+    ResponsiveEdgeInsets responsiveMargin, Breakpoint breakpoint) {
+  final edgeInsets = switch (breakpoint) {
+    Breakpoint.compact => Spacing.compactMargin,
+    Breakpoint.medium => Spacing.mediumMargin,
+    Breakpoint.expanded => Spacing.expandedMargin,
+    Breakpoint.large => Spacing.largeMargin,
+    Breakpoint.extraLarge => Spacing.largeMargin
+  };
+
   final startMargin = responsiveMargin.applyStart ? edgeInsets : .0;
   final topMargin = responsiveMargin.applyTop ? edgeInsets : .0;
   final endMargin = responsiveMargin.applyEnd ? edgeInsets : .0;

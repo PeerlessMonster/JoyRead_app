@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../utils/breakpoint.dart';
-import '../core/breakpoint_state.dart';
 import 'navigation_sidebar.dart';
 
 class AdaptiveScaffold extends StatefulWidget {
@@ -32,44 +31,52 @@ class AdaptiveScaffold extends StatefulWidget {
   State<AdaptiveScaffold> createState() => _AdaptiveScaffoldState();
 }
 
-class _AdaptiveScaffoldState extends State<AdaptiveScaffold>
-    with BreakpointState<AdaptiveScaffold> {
+class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
   @override
-  Widget build(BuildContext context) => breakpoint <= Breakpoint.compact
-      ? Scaffold(
-          body: SafeArea(
-            child: widget.body,
-          ),
-          bottomNavigationBar: NavigationBar(
-            destinations: widget.navigationDestinations,
-            selectedIndex: widget.selectedIndex,
-            onDestinationSelected: widget.setSelectedIndex,
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {},
-            isExtended: true,
-            shape: CircleBorder(),
-            child: widget.floatingActionButtonDestination.icon,
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-        )
-      : Scaffold(
-          body: Row(children: [
-            NavigationSidebar(
-              navigationDestinations: widget.navigationDestinations.reversed
-                  .map((navigationDestination) => NavigationRailDestination(
-                        icon: navigationDestination.icon,
-                        label: Text(navigationDestination.label),
-                      ))
-                  .toList(),
-              floatingActionButtonDestination:
-                  widget.floatingActionButtonDestination,
-              selectedIndex: widget.reversedSelectedIndex,
-              onDestinationsSelected: widget.setReversedSelectedIndex,
-            ),
-            Expanded(child: widget.body),
-          ]),
-        );
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, constraints) {
+          final screenWidth = constraints.maxWidth;
+          final breakpoint = Breakpoint.include(screenWidth);
+          return breakpoint <= Breakpoint.compact
+              ? Scaffold(
+                  body: SafeArea(
+                    child: widget.body,
+                  ),
+                  bottomNavigationBar: NavigationBar(
+                    destinations: widget.navigationDestinations,
+                    selectedIndex: widget.selectedIndex,
+                    onDestinationSelected: widget.setSelectedIndex,
+                    labelBehavior:
+                        NavigationDestinationLabelBehavior.alwaysShow,
+                  ),
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {},
+                    isExtended: true,
+                    shape: CircleBorder(),
+                    child: widget.floatingActionButtonDestination.icon,
+                  ),
+                  floatingActionButtonLocation:
+                      FloatingActionButtonLocation.centerDocked,
+                )
+              : Scaffold(
+                  body: Row(children: [
+                    NavigationSidebar(
+                      navigationDestinations: widget
+                          .navigationDestinations.reversed
+                          .map((navigationDestination) =>
+                              NavigationRailDestination(
+                                icon: navigationDestination.icon,
+                                label: Text(navigationDestination.label),
+                              ))
+                          .toList(),
+                      floatingActionButtonDestination:
+                          widget.floatingActionButtonDestination,
+                      selectedIndex: widget.reversedSelectedIndex,
+                      onDestinationsSelected: widget.setReversedSelectedIndex,
+                    ),
+                    Expanded(child: widget.body),
+                  ]),
+                );
+        },
+      );
 }
