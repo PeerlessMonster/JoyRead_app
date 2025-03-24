@@ -1,9 +1,18 @@
 class HttpException implements Exception {
   final Uri url;
-  final HttpMethod method;
   final int statusCode;
 
-  const HttpException(this.url, this.method, this.statusCode);
+  const HttpException(this.url, this.statusCode);
+
+  factory HttpException.badRequest(Uri url) => BadRequestException(url);
+
+  factory HttpException.notFound(Uri url) => BadRequestException(url);
 }
 
-enum HttpMethod { get, post, put, patch, delete }
+class BadRequestException extends HttpException {
+  const BadRequestException(Uri url) : super(url, 400);
+}
+
+class NotFoundException extends HttpException {
+  const NotFoundException(Uri url) : super(url, 404);
+}

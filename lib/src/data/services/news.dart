@@ -21,9 +21,34 @@ Future<Result<String>> getLatestNews(http.Client client,
     return Result.error(e);
   }
 
-  if (response.statusCode != 200) {
-    return Result.error(
-        HttpException(url, HttpMethod.get, response.statusCode));
+  switch (response.statusCode) {
+    case 200:
+      return Result.ok(response.body);
+    default:
+      return Result.error(HttpException(url, response.statusCode));
   }
-  return Result.ok(response.body);
+}
+
+Future<Result<String>> getNews(http.Client client, {required String id}) async {
+  assert(id.isNotEmpty, 'ID is required');
+
+  final url = Uri.http(serverDomainName, '$_pathname/$id');
+
+  late final http.Response response;
+  try {
+    response = await client.get(url);
+  } on http.ClientException catch (e) {
+    return Result.error(e);
+  }
+
+  switch (response.statusCode) {
+    case 200:
+      return Result.ok(response.body);
+    case 400:
+      return Result.error(HttpException.badRequest(url));
+    case 404:
+      return Result.error(HttpException.notFound(url));
+    default:
+      return Result.error(HttpException(url, response.statusCode));
+  }
 }

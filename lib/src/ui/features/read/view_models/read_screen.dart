@@ -1,0 +1,37 @@
+import 'package:flutter/material.dart';
+
+import '../../../../data/models/news.dart';
+import '../../../../data/repositories/image.dart';
+import '../../../../data/repositories/news.dart';
+import '../../../../utils/http_client_proxy.dart';
+import '../../../core/shared/background.dart';
+
+class ReadScreenViewModel extends ChangeNotifier {
+  final String newsId;
+
+  late final ImageUrlRepository _imageRepository;
+  late final NewsRepository _newsRepository;
+
+  ReadScreenViewModel(this.newsId) {
+    _imageRepository = const ImageUrlRepository();
+
+    final httpClient = HttpClientProxyWithDisposableConnection();
+    _newsRepository = NewsRepository(httpClient);
+
+    _load();
+  }
+
+  late Future<News> newsFuture;
+
+  void _load() => newsFuture = _newsRepository.loadOne(newsId);
+
+  void reload() {
+    _load();
+
+    notifyListeners();
+  }
+
+  String loadImageUrl(String filename) => _imageRepository.news(filename);
+
+  Background loadFallbackImage() => BackgroundRandom.nextAsset();
+}

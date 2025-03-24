@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../core/themes/constants/layout.dart';
-import '../widgets/skeleton.dart';
+import '../core/themes/constants/spacing.dart' as spacing;
 import 'scroll_parallax_image.dart';
+import 'skeleton.dart';
 import 'translucent_black_box.dart';
 
 class ImageBackgroundTitleSubtitleCard extends StatelessWidget {
@@ -11,7 +11,6 @@ class ImageBackgroundTitleSubtitleCard extends StatelessWidget {
   final Widget backgroundImage;
   final bool scrollBackgroundParallax;
   final double borderRadius;
-  static const _padding = Spacing.paddingIncrement * 4;
 
   const ImageBackgroundTitleSubtitleCard(
       {super.key,
@@ -41,7 +40,7 @@ class ImageBackgroundTitleSubtitleCard extends StatelessWidget {
             : backgroundImage,
         child: AbsorbPointer(
           child: Padding(
-            padding: const EdgeInsets.all(_padding),
+            padding: const EdgeInsets.all(spacing.Padding.increment * 4),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,13 +74,7 @@ class ImageBackgroundTitleLabelCardSkeleton extends StatelessWidget {
       {super.key, required this.isLoading, this.borderRadius = 0});
 
   @override
-  Widget build(BuildContext context) => Skeleton(
-        playEffect: isLoading,
-        child: TranslucentBlackBox(
-          borderRadius: borderRadius,
-          image: ColoredBox(
-            color: Colors.transparent,
-          ),
-        ),
+  Widget build(BuildContext context) => BoxSkeleton(
+        borderRadius: borderRadius,
       );
 }

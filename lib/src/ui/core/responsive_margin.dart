@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../utils/breakpoint.dart';
 import 'breakpoint_state.dart';
-import 'themes/constants/layout.dart';
+import 'themes/constants/spacing.dart' as spacing;
 
 /// The [margin] parameter of the constructor of [ResponsiveMargin] and
 /// [ResponsiveSliverMargin].
@@ -94,11 +94,11 @@ class _ResponsiveSliverMarginState extends State<ResponsiveSliverMargin> {
 EdgeInsetsGeometry _calculateMargin(
     ResponsiveEdgeInsets responsiveMargin, Breakpoint breakpoint) {
   final edgeInsets = switch (breakpoint) {
-    Breakpoint.compact => Spacing.compactMargin,
-    Breakpoint.medium => Spacing.mediumMargin,
-    Breakpoint.expanded => Spacing.expandedMargin,
-    Breakpoint.large => Spacing.largeMargin,
-    Breakpoint.extraLarge => Spacing.largeMargin
+    Breakpoint.compact => spacing.Margin.compactMargin,
+    Breakpoint.medium => spacing.Margin.mediumMargin,
+    Breakpoint.expanded => spacing.Margin.expandedMargin,
+    Breakpoint.large => spacing.Margin.largeMargin,
+    Breakpoint.extraLarge => spacing.Margin.largeMargin
   };
 
   final startMargin = responsiveMargin.applyStart ? edgeInsets : .0;

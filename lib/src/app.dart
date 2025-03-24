@@ -6,6 +6,12 @@ import 'ui/core/themes/theme.dart';
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+  static ThemeData _setPossibleMarginToBlankOnTouchDevice(
+          ThemeData themeData) =>
+      themeData.copyWith(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      );
+
   @override
   Widget build(BuildContext context) {
     final brightness = View.of(context).platformDispatcher.platformBrightness;
@@ -14,7 +20,9 @@ class MainApp extends StatelessWidget {
     final theme = MaterialTheme(textTheme);
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
+      theme: brightness == Brightness.light
+          ? _setPossibleMarginToBlankOnTouchDevice(theme.light())
+          : _setPossibleMarginToBlankOnTouchDevice(theme.dark()),
       home: const HomeScreen(),
     );
   }

@@ -13,7 +13,7 @@ class LatestNewsRepository {
 
   LatestNewsRepository(this._client);
 
-  Future<List<LatestNews>> loadLatestNews(int pageSize,
+  Future<List<LatestNews>> loadAll(int pageSize,
       [int pageOrder = 0]) async {
     final result = await _client.fetch((client) =>
         getLatestNews(client, pageSize: pageSize, pageOrder: pageOrder));
@@ -27,7 +27,7 @@ class LatestNewsRepository {
     }
   }
 
-  Future<List<LatestNews>> loadLatestNewsWithCache(int count) async {
+  Future<List<LatestNews>> loadAllWithCache(int count) async {
     const key = 'cache_latestNews';
     final box = GetStorage();
 

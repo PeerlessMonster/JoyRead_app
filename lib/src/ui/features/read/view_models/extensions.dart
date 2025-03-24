@@ -1,6 +1,6 @@
-import '../../../../data/models/latest_news.dart';
+import '../../../../data/models/news.dart';
 import '../../../../utils/time.dart' as time;
 
-extension Formatting on LatestNews {
+extension Formatting on News {
   String get formattedPublishTime => time.formatToLocal(publishUtc);
 }

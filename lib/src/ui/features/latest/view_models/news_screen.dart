@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../data/repositories/image.dart';
 
 import '../../../../data/models/latest_news.dart';
 import '../../../../data/repositories/latest_news.dart';
@@ -15,13 +16,14 @@ class NewsScreenViewModel extends ChangeNotifier {
   static const _maxCachedPageCount = 2;
   int get maxCachedPageCount => _maxCachedPageCount;
 
-  Background get fallbackImage => BackgroundRandom.nextAsset();
-
-  late final LatestNewsRepository _repository;
+  late final ImageUrlRepository _imageRepository;
+  late final LatestNewsRepository _newsRepository;
 
   NewsScreenViewModel() {
+    _imageRepository = const ImageUrlRepository();
+
     _httpClient = HttpClientProxyWithPersistentConnection();
-    _repository = LatestNewsRepository(_httpClient);
+    _newsRepository = LatestNewsRepository(_httpClient);
 
     _loadFirstPage();
   }
@@ -31,7 +33,7 @@ class NewsScreenViewModel extends ChangeNotifier {
   late Future<List<LatestNews>> firstPageFuture;
 
   void _loadFirstPage() =>
-      firstPageFuture = _repository.loadLatestNews(_pageSize);
+      firstPageFuture = _newsRepository.loadAll(_pageSize);
 
   void reloadFirstPage() {
     _loadFirstPage();
@@ -40,7 +42,7 @@ class NewsScreenViewModel extends ChangeNotifier {
   }
 
   Future<List<LatestNews>> loadMorePage(int pageOrder) =>
-      _repository.loadLatestNews(_pageSize, pageOrder);
+      _newsRepository.loadAll(_pageSize, pageOrder);
 
   @override
   void dispose() {
@@ -48,4 +50,8 @@ class NewsScreenViewModel extends ChangeNotifier {
 
     super.dispose();
   }
+
+  String loadImageUrl(String filename) => _imageRepository.news(filename);
+
+  Background get fallbackImage => BackgroundRandom.nextAsset();
 }

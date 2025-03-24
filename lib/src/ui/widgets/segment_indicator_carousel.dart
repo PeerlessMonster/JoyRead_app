@@ -1,7 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 
-import '../core/themes/constants/layout.dart';
+import '../core/themes/constants/spacing.dart' as spacing;
 
 class SegmentIndicatorCarousel extends StatefulWidget {
   final List<Widget> children;
@@ -27,8 +27,6 @@ class SegmentIndicatorCarousel extends StatefulWidget {
 
 class _SegmentIndicatorCarouselState extends State<SegmentIndicatorCarousel> {
   var currentSegmentIndex = 0;
-
-  static const _spacing = Spacing.paddingIncrement * 3;
 
   late final SwiperController _controller;
 
@@ -59,7 +57,7 @@ class _SegmentIndicatorCarouselState extends State<SegmentIndicatorCarousel> {
   Widget build(BuildContext context) => widget.showIndicator
       ? Column(children: [
           _buildCarousel(),
-          SizedBox(height: _spacing),
+          SizedBox(height: spacing.Padding.increment * 3),
           SizedBox(
             height: 20,
             child: SegmentedButton<int>(

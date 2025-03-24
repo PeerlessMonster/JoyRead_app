@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 
 import 'ui/core/breakpoint_state.dart';
+import 'ui/core/page_navigation_destination.dart';
+import 'ui/core/pressed_action.dart';
 import 'ui/pages/explore.dart';
 import 'ui/pages/user_home.dart';
-import 'ui/widgets/adaptive_scaffold.dart';
+import 'ui/widgets/adaptive_navigation_scaffold.dart';
 
 const _navigationDestinations = [
-  NavigationDestination(
-    label: 'Explore',
+  PageNavigationDestination(
+    name: 'Explore',
     icon: Icon(Icons.explore_rounded),
   ),
-  NavigationDestination(
-    label: 'Me',
+  PageNavigationDestination(
+    name: 'Me',
     icon: Icon(Icons.account_circle_rounded),
   ),
 ];
-const _floatingActionButtonDestination = NavigationDestination(
-  label: 'Search',
+final _floatingAction = PressedAction(
+  name: 'Search',
   icon: Icon(Icons.search_rounded),
+  onPressed: () {},
 );
 
 class HomeScreen extends StatefulWidget {
@@ -38,16 +41,14 @@ class _HomeScreenState extends State<HomeScreen> {
       _ => throw UnimplementedError("No widget for $currentPageIndex")
     };
 
-    return AdaptiveScaffold(
+    return AdaptiveNavigationScaffold(
       navigationDestinations: _navigationDestinations,
-      floatingActionButtonDestination: _floatingActionButtonDestination,
+      floatingAction: _floatingAction,
       selectedIndex: currentPageIndex,
       setSelectedIndex: (index) => setState(() {
         currentPageIndex = index;
       }),
-      body: BreakpointProvider(
-        child: page,
-      ),
+      narrowScreenBody: BreakpointProvider(child: page),
     );
   }
 }

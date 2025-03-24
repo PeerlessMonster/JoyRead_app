@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../core/themes/constants/layout.dart';
+import '../core/themes/constants/spacing.dart' as spacing;
 
 class _BaseAlert extends StatelessWidget {
   final Widget sign;
@@ -50,7 +50,6 @@ class IconAlert extends StatelessWidget {
   final Color? textColor;
   final Color? iconColor;
   final List<Widget>? actions;
-  static const _spacing = Spacing.paddingIncrement * 2;
 
   const IconAlert(
       {super.key,
@@ -69,7 +68,7 @@ class IconAlert extends StatelessWidget {
         ),
         textColor: textColor,
         content: content,
-        spacing: _spacing,
+        spacing: spacing.Padding.increment * 2,
         actions: actions,
       );
 }
@@ -79,7 +78,6 @@ class ImageAlert extends StatelessWidget {
   final String content;
   final Color? textColor;
   final List<Widget>? actions;
-  static const _spacing = Spacing.paddingIncrement * 5;
 
   const ImageAlert(
       {super.key,
@@ -96,7 +94,7 @@ class ImageAlert extends StatelessWidget {
         ),
         textColor: textColor,
         content: content,
-        spacing: _spacing,
+        spacing: spacing.Padding.increment * 5,
         actions: actions,
       );
 }

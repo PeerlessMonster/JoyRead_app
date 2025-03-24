@@ -6,8 +6,9 @@ import '../../../../utils/breakpoint.dart';
 import '../../../core/breakpoint_state.dart';
 import '../../../core/dynamic_loading_scroll_view.dart';
 import '../../../core/shared/background.dart';
-import '../../../core/themes/constants/layout.dart';
+import '../../../core/themes/constants/spacing.dart' as spacing;
 import '../../../core/themes/constants/style.dart';
+import '../../../features/read/views/read_screen.dart';
 import '../../../widgets/image_background_space_between_title_subtitle_card.dart';
 import '../../../widgets/load_state_changed_network_image.dart';
 import '../view_models/extensions.dart';
@@ -15,6 +16,7 @@ import '../view_models/extensions.dart';
 class MoreLatestNewsList extends StatefulWidget {
   final List<LatestNews> firstPage;
   final Future<List<LatestNews>> Function(int pageOrder) loadMorePage;
+  final String Function(String filename) loadImageUrl;
   final Background fallbackImage;
   final int pageSize;
   final int preloadDataCount;
@@ -24,6 +26,7 @@ class MoreLatestNewsList extends StatefulWidget {
       {super.key,
       required this.firstPage,
       required this.loadMorePage,
+      required this.loadImageUrl,
       required this.fallbackImage,
       required this.pageSize,
       required this.preloadDataCount,
@@ -34,7 +37,7 @@ class MoreLatestNewsList extends StatefulWidget {
 }
 
 class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
-  static const _spacing = Spacing.paddingIncrement * 1;
+  static const _spacing = spacing.Padding.increment * 1;
 
   static const _borderRadius = RoundedCorner.smallBorderRadius;
 
@@ -57,19 +60,30 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
             'CrossAxisCount should be positive integer');
     }
 
-    final fallbackImage = widget.fallbackImage;
+    final imageUrl = widget.loadImageUrl(data.coverImageFilename);
     return Padding(
       padding: padding,
-      child: ImageBackgroundTitleSubtitleCard(
-        title: data.title,
-        label: data.formattedPublishTime,
-        backgroundImage: LoadStateChangedNetworkImageWithPlaceholder(
-          data.coverImageUrl,
-          fallbackImageAssetName: fallbackImage.assetName,
-          color: fallbackImage.onBackground,
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReadScreen(
+                dataId: data.id,
+                title: data.title,
+                publishTime: data.formattedPublishTime,
+              ),
+            )),
+        child: ImageBackgroundTitleSubtitleCard(
+          title: data.title,
+          label: data.formattedPublishTime,
+          backgroundImage: LoadStateChangedNetworkImageWithPlaceholder(
+            imageUrl,
+            fallbackImageAssetName: widget.fallbackImage.assetName,
+            color: widget.fallbackImage.onBackground,
+          ),
+          scrollBackgroundParallax: true,
+          borderRadius: _borderRadius,
         ),
-        scrollBackgroundParallax: true,
-        borderRadius: _borderRadius,
       ),
     );
   }

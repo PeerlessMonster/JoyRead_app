@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../core/page_navigation_destination.dart';
+import '../core/pressed_action.dart';
+import '../core/themes/constants/dimension.dart' as dimension;
 import 'extended_floating_action_button.dart';
 
 class NavigationSidebar extends StatefulWidget {
-  final List<NavigationRailDestination> navigationDestinations;
-  final NavigationDestination floatingActionButtonDestination;
+  final List<PageNavigationDestination> navigationDestinations;
+  final PressedAction floatingAction;
   final int selectedIndex;
   final void Function(int) onDestinationsSelected;
 
   const NavigationSidebar(
       {super.key,
       required this.navigationDestinations,
-      required this.floatingActionButtonDestination,
+      required this.floatingAction,
       required this.selectedIndex,
       required this.onDestinationsSelected});
 
@@ -29,7 +32,12 @@ class _NavigationSidebarState extends State<NavigationSidebar> {
     final screenHeight = MediaQuery.sizeOf(context).height;
 
     return NavigationRail(
-      destinations: widget.navigationDestinations,
+      destinations: widget.navigationDestinations
+          .map((navigationDestination) => NavigationRailDestination(
+                icon: navigationDestination.icon,
+                label: Text(navigationDestination.name),
+              ))
+          .toList(),
       trailing: SizedBox(
         height: screenHeight / 2,
         child: Column(
@@ -38,27 +46,31 @@ class _NavigationSidebarState extends State<NavigationSidebar> {
               isExtended ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding:
+                  const EdgeInsets.only(top: dimension.NavigationRail.spacing),
               child: isExtended
                   ? CapsuleExtendedFloatingActionButton(
                       onPressed: () {},
-                      icon: widget.floatingActionButtonDestination.icon,
-                      label: Text(widget.floatingActionButtonDestination.label),
+                      icon: widget.floatingAction.icon,
+                      label: Text(widget.floatingAction.name),
                     )
                   : FloatingActionButton(
                       onPressed: () {},
                       shape: CircleBorder(),
-                      child: widget.floatingActionButtonDestination.icon,
+                      child: widget.floatingAction.icon,
                     ),
             ),
             Padding(
               padding: const EdgeInsetsDirectional.only(
-                  start: 6, end: 6, bottom: 12),
+                  start: dimension.NavigationRail.horizontalPadding,
+                  end: dimension.NavigationRail.horizontalPadding,
+                  bottom: dimension.NavigationRail.verticalPadding),
               child: IconButton(
+                tooltip: 'Expand',
+                icon: Icon(Icons.menu_open_rounded),
                 onPressed: () => setState(() {
                   isExtended = !isExtended;
                 }),
-                icon: Icon(Icons.menu_open_rounded),
               ),
             ),
           ],
@@ -67,7 +79,7 @@ class _NavigationSidebarState extends State<NavigationSidebar> {
       selectedIndex: widget.selectedIndex,
       onDestinationSelected: widget.onDestinationsSelected,
       extended: isExtended,
-      minExtendedWidth: 175,
+      minExtendedWidth: dimension.NavigationRail.extendedWidth,
       groupAlignment: 1,
       backgroundColor: colorScheme.surfaceContainer,
     );

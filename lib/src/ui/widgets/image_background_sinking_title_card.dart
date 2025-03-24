@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/skeleton.dart';
 import 'bottom_gradient_transparent_box.dart';
 import 'scroll_parallax_image.dart';
+import 'skeleton.dart';
 
 class ImageBackgroundTitleCard extends StatelessWidget {
   final String title;
@@ -52,13 +52,7 @@ class ImageBackgroundTitleCardSkeleton extends StatelessWidget {
       {super.key, required this.isLoading, this.borderRadius = 0});
 
   @override
-  Widget build(BuildContext context) => Skeleton(
-        playEffect: isLoading,
-        child: GradientTransparentBox(
-          borderRadius: borderRadius,
-          image: ColoredBox(
-            color: Colors.transparent,
-          ),
-        ),
+  Widget build(BuildContext context) => BoxSkeleton(
+        borderRadius: borderRadius,
       );
 }

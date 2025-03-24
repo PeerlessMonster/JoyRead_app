@@ -7,6 +7,7 @@ import '../../../widgets/image_background_sinking_title_card.dart';
 import '../../../widgets/load_state_changed_network_image.dart';
 import '../../../widgets/no_network_image_background_sign.dart';
 import '../../../widgets/segment_indicator_carousel.dart';
+import '../../read/views/read_screen.dart';
 import '../view_models/extensions.dart';
 import '../view_models/latest_news_slideshow.dart';
 
@@ -18,20 +19,33 @@ class LatestNewsSlideshow extends StatelessWidget {
 
   final _viewModel = LatestNewsSlideshowViewModel();
 
-  List<Widget> _buildCards(BuildContext context, List<LatestNews> newsList) {
+  List<Widget> _buildCards(BuildContext context, List<LatestNews> dataList) {
     final items = <Widget>[];
 
-    for (var i = 0; i < newsList.length; i++) {
-      final news = newsList[i];
+    for (var i = 0; i < dataList.length; i++) {
+      final data = dataList[i];
+
+      final imageUrl = _viewModel.loadImageUrl(data.coverImageFilename);
       final fallbackImage = _viewModel.fallbackImages[i];
 
-      final item = ImageBackgroundTitleCard(
-        borderRadius: _borderRadius,
-        title: news.title,
-        backgroundImage: LoadStateChangedNetworkImageWithPlaceholder(
-          news.coverImageUrl,
-          fallbackImageAssetName: fallbackImage.assetName,
-          color: fallbackImage.onBackground,
+      final item = GestureDetector(
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReadScreen(
+                dataId: data.id,
+                title: data.title,
+                publishTime: data.formattedPublishTime,
+              ),
+            )),
+        child: ImageBackgroundTitleCard(
+          borderRadius: _borderRadius,
+          title: data.title,
+          backgroundImage: LoadStateChangedNetworkImageWithPlaceholder(
+            imageUrl,
+            fallbackImageAssetName: fallbackImage.assetName,
+            color: fallbackImage.onBackground,
+          ),
         ),
       );
       items.add(item);
