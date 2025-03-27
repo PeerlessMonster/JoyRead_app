@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 
 import '../core/pressed_action.dart';
-import '../core/themes/constants/dimension.dart' as dimension;
+import '../core/themes/constants/spacing.dart' as spacing;
 
-class BottomActionBar extends StatelessWidget {
+class ActionBottomBar extends StatelessWidget {
   final List<PressedAction> primaryActions;
   final List<PressedAction> secondaryActions;
 
-  const BottomActionBar(
+  const ActionBottomBar(
       {super.key,
       required this.primaryActions,
       required this.secondaryActions});
 
   @override
   Widget build(BuildContext context) => BottomAppBar(
+        shape: const CircularNotchedRectangle(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               mainAxisSize: MainAxisSize.min,
-              spacing: dimension.NavigationRail.spacing,
+              spacing: spacing.Padding.targetSpacing,
               children: secondaryActions.reversed
                   .map((secondaryAction) => IconButton(
                         tooltip: secondaryAction.name,
@@ -32,7 +33,7 @@ class BottomActionBar extends StatelessWidget {
               padding: EdgeInsetsDirectional.only(end: 68),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                spacing: dimension.NavigationRail.spacing,
+                spacing: spacing.Padding.targetSpacing,
                 children: primaryActions.reversed
                     .map((primaryAction) => IconButton.filledTonal(
                           tooltip: primaryAction.name,

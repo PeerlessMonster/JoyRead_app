@@ -5,13 +5,13 @@ import '../../../core/shared/background.dart';
 import '../../../widgets/skeleton.dart';
 import 'block_widget.dart';
 
-class ContentDocument extends StatelessWidget {
+class NewsContentDocument extends StatelessWidget {
   final List<ParagraphBlock> data;
   final String Function(String filename) loadImageUrl;
   final Background Function() loadFallbackImage;
   final double spacing;
 
-  const ContentDocument(
+  const NewsContentDocument(
       {super.key,
       required this.data,
       required this.loadImageUrl,
@@ -87,10 +87,10 @@ class ContentDocument extends StatelessWidget {
       );
 }
 
-class ContentDocumentSkeleton extends StatelessWidget {
+class NewsContentDocumentSkeleton extends StatelessWidget {
   final bool isLoading;
 
-  const ContentDocumentSkeleton({super.key, required this.isLoading});
+  const NewsContentDocumentSkeleton({super.key, required this.isLoading});
 
   @override
   Widget build(BuildContext context) => SliverToBoxAdapter(

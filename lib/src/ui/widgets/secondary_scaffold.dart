@@ -18,10 +18,10 @@ class SecondaryScaffold extends StatelessWidget {
 
 class SliverSecondaryScaffold extends StatelessWidget {
   final String title;
-  final List<Widget> bodySlivers;
+  final List<Widget> sliversBody;
 
   const SliverSecondaryScaffold(
-      {super.key, required this.title, required this.bodySlivers});
+      {super.key, required this.title, required this.sliversBody});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -29,7 +29,7 @@ class SliverSecondaryScaffold extends StatelessWidget {
           RigidSliverAppBar(
             title: Text(title),
           ),
-          ...bodySlivers,
+          ...sliversBody,
         ]),
       );
 }

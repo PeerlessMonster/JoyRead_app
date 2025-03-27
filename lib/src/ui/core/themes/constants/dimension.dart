@@ -1,18 +1,18 @@
-import 'spacing.dart';
-
 class SliverAppBar {
   const SliverAppBar._();
 
   static const bottomPadding = 16.0;
   static const startPadding = 72.0;
-  static const endPadding = Margin.compactMargin;
-  static const horizontalPaddingWithoutLeading = Margin.mediumMargin;
+}
+
+class BottomAppBar {
+  const BottomAppBar._();
+
+  static const height = 80.0;
 }
 
 class NavigationRail {
   const NavigationRail._();
-
-  static const spacing = Padding.increment * 2;
 
   static const verticalPadding = 12.0;
   static const horizontalPadding = 6.0;

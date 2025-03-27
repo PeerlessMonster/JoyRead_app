@@ -33,7 +33,9 @@ class BreakpointState extends InheritedWidget {
 /// To obtain [Breakpoint] information, insert it to somewhere top of the widget
 /// tree. Had better use in [Scaffold] for better performance.
 ///
-/// See also [BreakpointState].
+/// See also:
+///
+///   * [BreakpointState]
 class BreakpointProvider extends StatelessWidget {
   final Widget child;
 

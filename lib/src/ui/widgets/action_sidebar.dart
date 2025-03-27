@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/pressed_action.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
+import '../core/themes/constants/spacing.dart' as spacing;
 
 class ActionSidebar extends StatelessWidget {
   final PressedAction floatingAction;
@@ -39,7 +40,7 @@ class ActionSidebar extends StatelessWidget {
                 children: [
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    spacing: dimension.NavigationRail.spacing,
+                    spacing: spacing.Padding.targetSpacing,
                     children: [
                       FloatingActionButton(
                         onPressed: floatingAction.onPressed,
@@ -58,7 +59,7 @@ class ActionSidebar extends StatelessWidget {
                   Divider(),
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    spacing: dimension.NavigationRail.spacing,
+                    spacing: spacing.Padding.targetSpacing,
                     children: secondaryActions
                         .map((secondaryAction) => IconButton(
                               tooltip: secondaryAction.name,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/future_widget.dart';
 import 'secondary_scaffold.dart';
 
-class LoadStateChangedSecondaryScaffoldWithSign<T> extends StatelessWidget {
+class LoadStateChangedSecondaryScaffold<T> extends StatelessWidget {
   final T? initialData;
   final Future<T> dataFuture;
   final String title;
@@ -11,7 +11,7 @@ class LoadStateChangedSecondaryScaffoldWithSign<T> extends StatelessWidget {
   final Widget Function(BuildContext context, T data) bodyBuilder;
   final Widget Function(BuildContext context, Object error) errorSignBuilder;
 
-  const LoadStateChangedSecondaryScaffoldWithSign(
+  const LoadStateChangedSecondaryScaffold(
       {super.key,
       this.initialData,
       required this.dataFuture,
@@ -37,22 +37,22 @@ class LoadStateChangedSecondaryScaffoldWithSign<T> extends StatelessWidget {
       );
 }
 
-class SliverLoadStateChangedSecondaryScaffoldWithSign<T>
+class SliverLoadStateChangedSecondaryScaffold<T>
     extends StatelessWidget {
   final T? initialData;
   final Future<T> dataFuture;
   final String title;
   final Widget uncompletedSign;
-  final List<Widget> Function(BuildContext context, T data) bodySliversBuilder;
+  final List<Widget> Function(BuildContext context, T data) sliversBodyBuilder;
   final Widget Function(BuildContext context, Object error) errorSignBuilder;
 
-  const SliverLoadStateChangedSecondaryScaffoldWithSign(
+  const SliverLoadStateChangedSecondaryScaffold(
       {super.key,
       this.initialData,
       required this.dataFuture,
       required this.title,
       required this.uncompletedSign,
-      required this.bodySliversBuilder,
+      required this.sliversBodyBuilder,
       required this.errorSignBuilder});
 
   @override
@@ -67,11 +67,13 @@ class SliverLoadStateChangedSecondaryScaffoldWithSign<T>
         ),
         dataBuilder: (context, data) => SliverSecondaryScaffold(
           title: title,
-          bodySlivers: bodySliversBuilder(context, data),
+          sliversBody: sliversBodyBuilder(context, data),
         ),
         errorBuilder: (context, error) => SecondaryScaffold(
           title: title,
-          body: errorSignBuilder(context, error),
+          body: Center(
+            child: errorSignBuilder(context, error),
+          ),
         ),
       );
 }

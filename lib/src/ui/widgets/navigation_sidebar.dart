@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/page_navigation_destination.dart';
 import '../core/pressed_action.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
+import '../core/themes/constants/spacing.dart' as spacing;
 import 'extended_floating_action_button.dart';
 
 class NavigationSidebar extends StatefulWidget {
@@ -33,9 +34,9 @@ class _NavigationSidebarState extends State<NavigationSidebar> {
 
     return NavigationRail(
       destinations: widget.navigationDestinations
-          .map((navigationDestination) => NavigationRailDestination(
-                icon: navigationDestination.icon,
-                label: Text(navigationDestination.name),
+          .map((destination) => NavigationRailDestination(
+                icon: destination.icon,
+                label: Text(destination.name),
               ))
           .toList(),
       trailing: SizedBox(
@@ -47,7 +48,7 @@ class _NavigationSidebarState extends State<NavigationSidebar> {
           children: [
             Padding(
               padding:
-                  const EdgeInsets.only(top: dimension.NavigationRail.spacing),
+                  const EdgeInsets.only(top: spacing.Padding.targetSpacing),
               child: isExtended
                   ? CapsuleExtendedFloatingActionButton(
                       onPressed: () {},

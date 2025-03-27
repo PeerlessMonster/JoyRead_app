@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import '../../../core/breakpoint_state.dart';
 import '../../../core/shared/sign.dart';
 import '../../../widgets/load_state_changed_secondary_scaffold.dart';
-import '../view_models/news_screen.dart';
+import '../view_models/latest_screen.dart';
 import 'more_news_list.dart';
 
-class NewsScreen extends StatelessWidget {
-  NewsScreen({super.key});
+class LatestScreen extends StatelessWidget {
+  LatestScreen({super.key});
 
-  final _viewModel = NewsScreenViewModel();
+  final _viewModel = LatestScreenViewModel();
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: _viewModel,
         builder: (context, _) =>
-            SliverLoadStateChangedSecondaryScaffoldWithSign(
+            SliverLoadStateChangedSecondaryScaffold(
           dataFuture: _viewModel.firstPageFuture,
           title: '最新资讯',
           uncompletedSign: LoadingSign(),
-          bodySliversBuilder: (context, data) => [
+          sliversBodyBuilder: (context, data) => [
             BreakpointProvider(
               child: MoreLatestNewsList(
                 firstPage: data,

@@ -6,7 +6,7 @@ import '../../../../data/repositories/latest_news.dart';
 import '../../../../utils/http_client_proxy.dart';
 import '../../../core/shared/background.dart';
 
-class NewsScreenViewModel extends ChangeNotifier {
+class LatestScreenViewModel extends ChangeNotifier {
   static const _pageSize = 18;
   int get pageSize => _pageSize;
 
@@ -19,7 +19,7 @@ class NewsScreenViewModel extends ChangeNotifier {
   late final ImageUrlRepository _imageRepository;
   late final LatestNewsRepository _newsRepository;
 
-  NewsScreenViewModel() {
+  LatestScreenViewModel() {
     _imageRepository = const ImageUrlRepository();
 
     _httpClient = HttpClientProxyWithPersistentConnection();

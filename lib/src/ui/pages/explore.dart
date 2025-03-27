@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/responsive_margin.dart';
 import '../features/latest/views/latest_news_slideshow.dart';
-import '../features/latest/views/news_screen.dart';
+import '../features/latest/views/latest_screen.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -24,7 +24,7 @@ class _ExplorePageState extends State<ExplorePage> {
     return ListView(children: [
       ResponsiveMargin(
         margin: const ResponsiveEdgeInsets.only(
-            applyTop: true, applyStart: true, applyEnd: true),
+            enableTop: true, enableStart: true, enableEnd: true),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -41,7 +41,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NewsScreen(),
+                      builder: (context) => LatestScreen(),
                     )),
               ),
             ),

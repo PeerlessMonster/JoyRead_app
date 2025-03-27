@@ -3,6 +3,9 @@ class Padding {
 
   // https://m3.material.io/foundations/layout/understanding-layout/spacing#95b924d9-fd43-4ab1-9d25-664a9681bb22
   static const increment = 4.0;
+
+  // https://m3.material.io/foundations/designing/structure#1057f862-b8f1-42a1-9239-7077b8763a48
+  static const targetSpacing = increment * 2;
 }
 
 class Margin {
