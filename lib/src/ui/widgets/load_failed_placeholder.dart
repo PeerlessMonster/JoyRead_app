@@ -1,34 +1,39 @@
 import 'package:flutter/material.dart';
 
-import 'alert.dart';
+import '../core/themes/constants/dimension.dart' as dimension;
 import 'blurred_box.dart';
 
 class LoadFailedPlaceholder extends StatelessWidget {
   final void Function() reload;
-  final String blurredImageAssetName;
-  final Color color;
-  final double borderRadius;
+  final String backgroundImageAssetName;
+  final Color foregroundColor;
 
   const LoadFailedPlaceholder(
       {super.key,
       required this.reload,
-      required this.blurredImageAssetName,
-      required this.color,
-      this.borderRadius = 0});
+      required this.backgroundImageAssetName,
+      required this.foregroundColor});
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: reload,
-        child: BlurredBox(
-          borderRadius: borderRadius,
-          alignment: Alignment.center,
-          imageAssetName: blurredImageAssetName,
-          child: IconAlert(
-            textColor: color,
-            iconColor: color,
-            iconData: Icons.refresh_rounded,
-            content: 'Click to Retry',
-          ),
+  Widget build(BuildContext context) => BlurredBox(
+        alignment: Alignment.center,
+        imageAssetName: backgroundImageAssetName,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              iconSize: dimension.Icon.size * 2,
+              color: foregroundColor,
+              icon: Icon(Icons.refresh_rounded),
+              onPressed: reload,
+            ),
+            Text(
+              'Click to retry',
+              style: TextStyle(
+                color: foregroundColor,
+              ),
+            )
+          ],
         ),
       );
 }

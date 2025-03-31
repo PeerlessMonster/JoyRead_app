@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../core/global_widget.dart';
 
-class ScrollParallaxImage extends StatelessWidget {
+class ScrollingParallaxImage extends StatelessWidget {
   final Widget image;
 
-  ScrollParallaxImage({super.key, required this.image});
+  ScrollingParallaxImage({super.key, required this.image});
 
   final backgroundImageKey = GlobalKey();
 

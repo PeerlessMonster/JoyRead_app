@@ -9,8 +9,10 @@ import '../../../core/shared/background.dart';
 import '../../../core/themes/constants/spacing.dart' as spacing;
 import '../../../core/themes/constants/style.dart';
 import '../../../features/read/views/read_screen.dart';
-import '../../../widgets/image_background_space_between_title_subtitle_card.dart';
+import '../../../widgets/image_background_card.dart';
+import '../../../widgets/ink_well_for_opaque_widget.dart';
 import '../../../widgets/load_state_changed_network_image.dart';
+import '../../../widgets/scrolling_parallax_image.dart';
 import '../view_models/extensions.dart';
 
 class MoreLatestNewsList extends StatefulWidget {
@@ -63,25 +65,34 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
     final imageUrl = widget.loadImageUrl(data.coverImageFilename);
     return Padding(
       padding: padding,
-      child: GestureDetector(
-        onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReadScreen(
-                dataId: data.id,
-                title: data.title,
-                publishTime: data.formattedPublishTime,
-              ),
-            )),
-        child: ImageBackgroundTitleSubtitleCard(
+      child: InkWellForOpaqueWidget(
+        inkWell: InkWell(
+          borderRadius: BorderRadius.circular(_borderRadius),
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ReadScreen(
+                  dataId: data.id,
+                  title: data.title,
+                  publishTime: data.formattedPublishTime,
+                ),
+              )),
+        ),
+        child: ImageBackgroundCardWithSpaceBetweenTitleAndLabel(
           title: data.title,
           label: data.formattedPublishTime,
-          backgroundImage: LoadStateChangedNetworkImageWithPlaceholder(
+          backgroundImage: LoadStateChangedNetworkImage(
             imageUrl,
             fallbackImageAssetName: widget.fallbackImage.assetName,
-            color: widget.fallbackImage.onBackground,
+            showLoadingPlaceholder: false,
+            showLoadFailedPlaceholder: false,
+            displayNotificationWhenLoadFailed: true,
+            completedBuilder: (context, completedWidget) =>
+                ScrollingParallaxImage(
+              image: completedWidget,
+            ),
+            foregroundColor: widget.fallbackImage.foregroundColor,
           ),
-          scrollBackgroundParallax: true,
           borderRadius: _borderRadius,
         ),
       ),
@@ -122,13 +133,13 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
           lastChildLayoutTypeBuilder: lastChildLayoutTypeBuilder,
         ),
       ),
-      uncompletedWidget: ImageBackgroundTitleLabelCardSkeleton(
+      uncompletedWidget: ImageBackgroundCardSkeleton(
         isLoading: true,
         borderRadius: _borderRadius,
       ),
       successBuilder: (context, data, index) =>
           _buildCard(data, index, crossAxisCount: crossAxisCount),
-      errorBuilder: (context, _) => ImageBackgroundTitleLabelCardSkeleton(
+      errorBuilder: (context, _) => ImageBackgroundCardSkeleton(
         isLoading: false,
         borderRadius: _borderRadius,
       ),
@@ -143,7 +154,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
           child: ColoredBox(
             color: colorScheme.surfaceContainer,
             child: Center(
-              child: Text('已经到底啦'),
+              child: Text('已经到底啦~'),
             ),
           ),
         ),

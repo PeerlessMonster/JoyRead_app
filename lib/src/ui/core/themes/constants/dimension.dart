@@ -1,3 +1,16 @@
+class Icon {
+  const Icon._();
+
+  static const size = 24.0;
+}
+
+class MaterialBanner {
+  const MaterialBanner._();
+
+  static const height = 52.0;
+  static const heightPlusDivider = height + 2.0;
+}
+
 class SliverAppBar {
   const SliverAppBar._();
 

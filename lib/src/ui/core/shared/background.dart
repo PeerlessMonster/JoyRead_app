@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 
 class Background {
   final String filename;
-
   String get assetName => 'assets/backgrounds/$filename';
+  final Color foregroundColor;
 
-  final Color onBackground;
-
-  const Background(this.filename, this.onBackground);
+  const Background(this.filename, this.foregroundColor);
 }
 
 const _backgrounds = [

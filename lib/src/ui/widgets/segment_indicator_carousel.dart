@@ -8,11 +8,11 @@ class SegmentIndicatorCarousel extends StatefulWidget {
   final bool autoplay;
   final bool isInfiniteLoop;
   final bool showIndicator;
-  final double maxCarouselHeight;
+  final double childHeight;
 
   const SegmentIndicatorCarousel(
       {super.key,
-      required this.maxCarouselHeight,
+      required this.childHeight,
       this.showIndicator = true,
       this.isInfiniteLoop = true,
       this.autoplay = true,
@@ -36,8 +36,8 @@ class _SegmentIndicatorCarouselState extends State<SegmentIndicatorCarousel> {
     super.initState();
   }
 
-  Widget _buildCarousel() => LimitedBox(
-        maxHeight: widget.maxCarouselHeight,
+  Widget _buildCarousel() => SizedBox(
+        height: widget.childHeight,
         child: Swiper(
           loop: widget.isInfiniteLoop,
           itemBuilder: (context, index) => widget.children[index],
@@ -55,32 +55,35 @@ class _SegmentIndicatorCarouselState extends State<SegmentIndicatorCarousel> {
 
   @override
   Widget build(BuildContext context) => widget.showIndicator
-      ? Column(children: [
-          _buildCarousel(),
-          SizedBox(height: spacing.Padding.increment * 3),
-          SizedBox(
-            height: 20,
-            child: SegmentedButton<int>(
-              segments: List.generate(
-                widget.children.length,
-                (index) => ButtonSegment(
-                  value: index,
-                  label: SizedBox.shrink(),
+      ? Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildCarousel(),
+            SizedBox(height: spacing.Padding.increment * 3),
+            SizedBox(
+              height: 20,
+              child: SegmentedButton<int>(
+                segments: List.generate(
+                  widget.children.length,
+                  (index) => ButtonSegment(
+                    value: index,
+                    label: SizedBox.shrink(),
+                  ),
                 ),
-              ),
-              showSelectedIcon: false,
-              selected: {currentSegmentIndex},
-              onSelectionChanged: (newSelections) {
-                final newSegmentIndex = newSelections.first;
-                _controller.move(newSegmentIndex);
+                showSelectedIcon: false,
+                selected: {currentSegmentIndex},
+                onSelectionChanged: (newSelections) {
+                  final newSegmentIndex = newSelections.first;
+                  _controller.move(newSegmentIndex);
 
-                setState(() {
-                  currentSegmentIndex = newSegmentIndex;
-                });
-              },
+                  setState(() {
+                    currentSegmentIndex = newSegmentIndex;
+                  });
+                },
+              ),
             ),
-          ),
-        ])
+          ],
+        )
       : _buildCarousel();
 
   @override

@@ -15,24 +15,27 @@ class HeadingBlockWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
+
     final colorScheme = theme.colorScheme;
+
+    final textTheme = theme.textTheme;
+    final textStyle = switch (level) {
+      1 => textTheme.titleLarge?.copyWith(
+          color: colorScheme.tertiary,
+        ),
+      2 => textTheme.titleMedium?.copyWith(
+          color: colorScheme.tertiary,
+        ),
+      >= 3 => textTheme.titleSmall?.copyWith(
+          color: colorScheme.tertiary,
+        ),
+      _ => throw RangeError.range(level, 1, null, 'level',
+          'Level of heading should be positive integer'),
+    };
 
     return Text(
       text,
-      style: switch (level) {
-        1 => textTheme.titleLarge?.copyWith(
-            color: colorScheme.tertiary,
-          ),
-        2 => textTheme.titleMedium?.copyWith(
-            color: colorScheme.tertiary,
-          ),
-        >= 3 => textTheme.titleSmall?.copyWith(
-            color: colorScheme.tertiary,
-          ),
-        _ => throw RangeError.range(level, 1, null, 'level',
-            'Level of heading should be positive integer'),
-      },
+      style: textStyle,
     );
   }
 }
@@ -49,19 +52,17 @@ class ImageBlockWidget extends StatelessWidget {
       required this.foregroundColor});
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints.tightFor(
-            width: Breakpoint.medium.screenWidthRange.end),
-        child: LoadStateChangedNetworkImageWithPlaceholder(
-          url,
-          fallbackImageAssetName: fallbackImageAssetName,
-          color: foregroundColor,
+  Widget build(BuildContext context) => Center(
+        child: SizedBox(
+          width: Breakpoint.medium.screenWidthRange.end,
+          child: LoadStateChangedNetworkImage(
+            url,
+            fallbackImageAssetName: fallbackImageAssetName,
+            foregroundColor: foregroundColor,
+            placeholderAspectRatio: 16 / 9,
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 class ImageDescriptionBlockWidget extends StatelessWidget {
@@ -72,8 +73,13 @@ class ImageDescriptionBlockWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
+
     final colorScheme = theme.colorScheme;
+
+    final textTheme = theme.textTheme;
+    final textStyle = textTheme.labelLarge?.copyWith(
+      color: colorScheme.onSurface.withValues(alpha: 0.5),
+    );
 
     return Center(
       child: ConstrainedBox(
@@ -92,9 +98,7 @@ class ImageDescriptionBlockWidget extends StatelessWidget {
             child: _SpansBlockLayout(
               key: key,
               spans: spans,
-              rootTextSpanStyle: textTheme.labelLarge?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.5),
-              ),
+              rootTextSpanStyle: textStyle,
             ),
           ),
         ),
@@ -185,68 +189,72 @@ class _SpansBlockLayout extends StatelessWidget {
         firstSpanStyle == SpanStyle.order || firstSpanStyle == SpanStyle.sign;
 
     final mainSpans = hasLeading ? spans.skip(1) : spans;
-
     final mainWidget = Text.rich(
       TextSpan(
-        children: mainSpans
-            .map((span) => TextSpan(
-                  text: span.text,
-                  style: switch (span.style) {
-                    SpanStyle.normal => null,
-                    SpanStyle.bold => TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    SpanStyle.italic => TextStyle(
-                        fontStyle: FontStyle.italic,
-                      ),
-                    SpanStyle.colored => TextStyle(
-                        color: colorScheme.tertiary,
-                        fontWeight: FontWeight.bold),
-                    _ => throw FormatException(
-                        "No textStyle for ${span.style} after the first span of a paragraph"),
-                  },
-                ))
-            .toList(),
+        children: mainSpans.map((span) {
+          final textStyle = switch (span.style) {
+            SpanStyle.normal => null,
+            SpanStyle.bold => TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            SpanStyle.italic => TextStyle(
+                fontStyle: FontStyle.italic,
+              ),
+            SpanStyle.colored => TextStyle(
+                color: colorScheme.tertiary, fontWeight: FontWeight.bold),
+            _ => throw FormatException(
+                "No textStyle for ${span.style} after the first span of a paragraph"),
+          };
+
+          return TextSpan(
+            text: span.text,
+            style: textStyle,
+          );
+        }).toList(),
         style: rootTextSpanStyle ?? defaultTextStyle,
       ),
     );
-    return hasLeading
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.only(
-                    end: spacing.Padding.increment * 2),
-                child: Text(
-                  spans[0].text,
-                  style: switch (firstSpanStyle) {
-                    SpanStyle.sign => defaultTextStyle
-                        .copyWith(
-                          height: 0.37,
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        )
-                        .apply(
-                          fontSizeFactor: 3,
-                        ),
-                    SpanStyle.order => defaultTextStyle
-                        .copyWith(
-                          height: 0.7,
-                          color: colorScheme.primary,
-                        )
-                        .apply(
-                          fontSizeFactor: 2,
-                        ),
-                    _ => throw UnimplementedError(
-                        "No textStyle for $firstSpanStyle when this paragraph has leading"),
-                  },
-                ),
-              ),
-              Expanded(
-                child: mainWidget,
-              ),
-            ],
+    if (!hasLeading) {
+      return mainWidget;
+    }
+
+    final textStyle = switch (firstSpanStyle) {
+      SpanStyle.sign => defaultTextStyle
+          .copyWith(
+            height: 0.37,
+            color: colorScheme.primary,
+            fontWeight: FontWeight.bold,
           )
-        : mainWidget;
+          .apply(
+            fontSizeFactor: 3,
+          ),
+      SpanStyle.order => defaultTextStyle
+          .copyWith(
+            height: 0.7,
+            color: colorScheme.primary,
+          )
+          .apply(
+            fontSizeFactor: 2,
+          ),
+      _ => throw UnimplementedError(
+          "No textStyle for $firstSpanStyle when this paragraph has leading"),
+    };
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding:
+              EdgeInsetsDirectional.only(end: spacing.Padding.increment * 2),
+          child: Text(
+            spans[0].text,
+            style: textStyle,
+          ),
+        ),
+        Expanded(
+          child: mainWidget,
+        ),
+      ],
+    );
   }
 }

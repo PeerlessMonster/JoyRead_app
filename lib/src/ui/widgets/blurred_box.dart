@@ -7,15 +7,13 @@ class BlurredBox extends StatelessWidget {
   final Widget? child;
   final String imageAssetName;
   final AlignmentGeometry alignment;
-  final double borderRadius;
 
   /// While no passing [child], [alignment] will be ignored.
   const BlurredBox(
       {super.key,
       required this.imageAssetName,
       this.child,
-      this.alignment = AlignmentDirectional.topStart,
-      this.borderRadius = 0});
+      this.alignment = AlignmentDirectional.topStart});
 
   static const _kilobyte1 = 1 * 1024;
 
@@ -23,14 +21,14 @@ class BlurredBox extends StatelessWidget {
         imageFilter: ui.ImageFilter.blur(sigmaX: 25, sigmaY: 25),
         child: ExtendedImage.asset(
           imageAssetName,
+          clearMemoryCacheWhenDispose: true,
           maxBytes: _kilobyte1,
           fit: BoxFit.cover,
         ),
       );
 
   @override
-  Widget build(BuildContext context) => ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
+  Widget build(BuildContext context) => ClipRect(
         child: child == null
             ? _buildBlur()
             : Stack(

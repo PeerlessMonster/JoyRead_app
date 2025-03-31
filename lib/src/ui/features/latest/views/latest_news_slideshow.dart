@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import '../../../../data/models/latest_news.dart';
 import '../../../core/future_widget.dart';
 import '../../../core/themes/constants/style.dart';
-import '../../../widgets/image_background_sinking_title_card.dart';
+import '../../../widgets/image_background_card.dart';
+import '../../../widgets/ink_well_for_opaque_widget.dart';
 import '../../../widgets/load_state_changed_network_image.dart';
-import '../../../widgets/no_network_image_background_sign.dart';
+import '../../../widgets/network_error_image_background_sign.dart';
 import '../../../widgets/segment_indicator_carousel.dart';
 import '../../read/views/read_screen.dart';
 import '../view_models/extensions.dart';
 import '../view_models/latest_news_slideshow.dart';
 
 class LatestNewsSlideshow extends StatelessWidget {
-  final double maxHeight;
+  static const _cardHeight = 400.0;
   static const _borderRadius = RoundedCorner.largeBorderRadius;
 
-  LatestNewsSlideshow({super.key, required this.maxHeight});
+  LatestNewsSlideshow({super.key});
 
   final _viewModel = LatestNewsSlideshowViewModel();
 
@@ -28,23 +29,28 @@ class LatestNewsSlideshow extends StatelessWidget {
       final imageUrl = _viewModel.loadImageUrl(data.coverImageFilename);
       final fallbackImage = _viewModel.fallbackImages[i];
 
-      final item = GestureDetector(
-        onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReadScreen(
-                dataId: data.id,
-                title: data.title,
-                publishTime: data.formattedPublishTime,
-              ),
-            )),
-        child: ImageBackgroundTitleCard(
+      final item = InkWellForOpaqueWidget(
+        inkWell: InkWell(
+          borderRadius: BorderRadius.circular(_borderRadius),
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ReadScreen(
+                  dataId: data.id,
+                  title: data.title,
+                  publishTime: data.formattedPublishTime,
+                ),
+              )),
+        ),
+        child: ImageBackgroundCardWithSinkingTitle(
           borderRadius: _borderRadius,
           title: data.title,
-          backgroundImage: LoadStateChangedNetworkImageWithPlaceholder(
+          backgroundImage: LoadStateChangedNetworkImage(
             imageUrl,
             fallbackImageAssetName: fallbackImage.assetName,
-            color: fallbackImage.onBackground,
+            showLoadFailedPlaceholder: false,
+            displayNotificationWhenLoadFailed: true,
+            foregroundColor: fallbackImage.foregroundColor,
           ),
         ),
       );
@@ -59,27 +65,27 @@ class LatestNewsSlideshow extends StatelessWidget {
         builder: (context, _) => FutureWidget(
           dataFuture: _viewModel.slideshowFuture,
           uncompletedWidget: SegmentIndicatorCarousel(
-            maxCarouselHeight: maxHeight,
+            childHeight: _cardHeight,
             autoplay: false,
             children: List.generate(
               _viewModel.slideshowCount,
-              (_) => ImageBackgroundTitleCardSkeleton(
+              (_) => ImageBackgroundCardSkeleton(
                 isLoading: true,
                 borderRadius: _borderRadius,
               ),
             ),
           ),
           dataBuilder: (context, data) => SegmentIndicatorCarousel(
-            maxCarouselHeight: maxHeight,
+            childHeight: _cardHeight,
             children: _buildCards(context, data),
           ),
           errorBuilder: (context, _) => SegmentIndicatorCarousel(
-            maxCarouselHeight: maxHeight,
+            childHeight: _cardHeight,
             showIndicator: false,
             autoplay: false,
             isInfiniteLoop: false,
             children: [
-              NoNetworkImageBackgroundSign(
+              NetworkErrorImageBackgroundSign(
                 retry: _viewModel.reload,
                 backgroundImageAssetName:
                     _viewModel.fallbackImages[0].assetName,

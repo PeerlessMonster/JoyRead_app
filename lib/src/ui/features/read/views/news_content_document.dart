@@ -32,7 +32,7 @@ class NewsContentDocument extends StatelessWidget {
         return ImageBlockWidget(
           url: url,
           fallbackImageAssetName: fallbackImage.assetName,
-          foregroundColor: fallbackImage.onBackground,
+          foregroundColor: fallbackImage.foregroundColor,
         );
 
       case ImageDescriptionBlock():

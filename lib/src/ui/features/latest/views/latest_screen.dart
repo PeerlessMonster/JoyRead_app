@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/breakpoint_state.dart';
-import '../../../core/shared/sign.dart';
+import '../../../core/shared/illustration.dart';
 import '../../../widgets/load_state_changed_secondary_scaffold.dart';
+import '../../../widgets/retry_button.dart';
+import '../../../widgets/sign.dart';
 import '../view_models/latest_screen.dart';
 import 'more_news_list.dart';
 
@@ -14,11 +16,13 @@ class LatestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: _viewModel,
-        builder: (context, _) =>
-            SliverLoadStateChangedSecondaryScaffold(
+        builder: (context, _) => SliverLoadStateChangedSecondaryScaffold(
           dataFuture: _viewModel.firstPageFuture,
           title: '最新资讯',
-          uncompletedSign: LoadingSign(),
+          uncompletedSign: Sign(
+            text: Illustration.loading.text,
+            imageAssetName: Illustration.loading.assetName,
+          ),
           sliversBodyBuilder: (context, data) => [
             BreakpointProvider(
               child: MoreLatestNewsList(
@@ -32,8 +36,12 @@ class LatestScreen extends StatelessWidget {
               ),
             ),
           ],
-          errorSignBuilder: (context, _) => NoNetworkSign(
-            retry: _viewModel.reloadFirstPage,
+          errorSignBuilder: (context, _) => Sign(
+            text: Illustration.noNetwork.text,
+            imageAssetName: Illustration.noNetwork.assetName,
+            action: RetryButton(
+              retry: _viewModel.reloadFirstPage,
+            ),
           ),
         ),
       );

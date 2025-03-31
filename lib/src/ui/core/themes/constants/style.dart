@@ -1,3 +1,9 @@
+class DropShadow {
+  const DropShadow._();
+
+  static const elevation = 6.0;
+}
+
 class RoundedCorner {
   const RoundedCorner._();
 
