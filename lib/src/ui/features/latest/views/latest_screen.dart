@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/breakpoint_state.dart';
 import '../../../core/shared/illustration.dart';
 import '../../../widgets/load_state_changed_secondary_scaffold.dart';
-import '../../../widgets/retry_button.dart';
 import '../../../widgets/sign.dart';
 import '../view_models/latest_screen.dart';
 import 'more_news_list.dart';
@@ -39,8 +38,9 @@ class LatestScreen extends StatelessWidget {
           errorSignBuilder: (context, _) => Sign(
             text: Illustration.noNetwork.text,
             imageAssetName: Illustration.noNetwork.assetName,
-            action: RetryButton(
-              retry: _viewModel.reloadFirstPage,
+            action: FilledButton(
+              onPressed: _viewModel.reloadFirstPage,
+              child: Text('Retry'),
             ),
           ),
         ),

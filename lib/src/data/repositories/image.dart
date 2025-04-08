@@ -3,5 +3,5 @@ import '../services/image.dart';
 class ImageUrlRepository {
   const ImageUrlRepository();
 
-  String news(String filename) => joinNewsImageUrl(filename);
+  String loadNews(String filename) => joinNewsImageUrl(filename);
 }

@@ -9,12 +9,12 @@ class NewsRepository {
 
   NewsRepository(this._client);
 
-  Future<News> loadOne(String id) async {
+  Future<News> load(String id) async {
     final result = await _client.fetch((client) => getNews(client, id: id));
     switch (result) {
       case Ok():
         final responseBody = result.value;
-        return jsonDecodeTo<News>(responseBody, News.fromJson);
+        return jsonDecodeTo(responseBody, News.fromJson);
 
       case Error():
         throw result.error;

@@ -62,7 +62,7 @@ class _SegmentIndicatorCarouselState extends State<SegmentIndicatorCarousel> {
             SizedBox(height: spacing.Padding.increment * 3),
             SizedBox(
               height: 20,
-              child: SegmentedButton<int>(
+              child: SegmentedButton(
                 segments: List.generate(
                   widget.children.length,
                   (index) => ButtonSegment(

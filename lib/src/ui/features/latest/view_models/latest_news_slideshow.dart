@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:joyread/src/data/repositories/image.dart';
 
 import '../../../../data/models/latest_news.dart';
+import '../../../../data/repositories/image.dart';
 import '../../../../data/repositories/latest_news.dart';
 import '../../../../utils/http_client_proxy.dart';
 import '../../../core/shared/background.dart';
 
 class LatestNewsSlideshowViewModel extends ChangeNotifier {
-  static const _slideshowCount = 5;
-
-  int get slideshowCount => _slideshowCount;
+  static const _dataCount = 5;
+  int get dataCount => _dataCount;
 
   final List<Background> fallbackImages;
 
@@ -17,7 +16,7 @@ class LatestNewsSlideshowViewModel extends ChangeNotifier {
   late final LatestNewsRepository _newsRepository;
 
   LatestNewsSlideshowViewModel()
-      : fallbackImages = BackgroundRandom.nextDistinctAssets(_slideshowCount) {
+      : fallbackImages = BackgroundRandom.nextDistinctAssets(_dataCount) {
     _imageRepository = const ImageUrlRepository();
 
     final httpClient = HttpClientProxyWithDisposableConnection();
@@ -26,10 +25,10 @@ class LatestNewsSlideshowViewModel extends ChangeNotifier {
     _load();
   }
 
-  late Future<List<LatestNews>> slideshowFuture;
+  late Future<List<LatestNews>> dataFuture;
 
   void _load() =>
-      slideshowFuture = _newsRepository.loadAllWithCache(_slideshowCount);
+      dataFuture = _newsRepository.loadWithCache(_dataCount);
 
   void reload() {
     _load();
@@ -37,5 +36,5 @@ class LatestNewsSlideshowViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String loadImageUrl(String filename) => _imageRepository.news(filename);
+  String loadImageUrl(String filename) => _imageRepository.loadNews(filename);
 }

@@ -7,12 +7,12 @@ import '../../../../utils/http_client_proxy.dart';
 import '../../../core/shared/background.dart';
 
 class ReadScreenViewModel extends ChangeNotifier {
-  final String newsId;
+  final String dataId;
 
   late final ImageUrlRepository _imageRepository;
   late final NewsRepository _newsRepository;
 
-  ReadScreenViewModel(this.newsId) {
+  ReadScreenViewModel(this.dataId) {
     _imageRepository = const ImageUrlRepository();
 
     final httpClient = HttpClientProxyWithDisposableConnection();
@@ -21,9 +21,9 @@ class ReadScreenViewModel extends ChangeNotifier {
     _load();
   }
 
-  late Future<News> newsFuture;
+  late Future<News> dataFuture;
 
-  void _load() => newsFuture = _newsRepository.loadOne(newsId);
+  void _load() => dataFuture = _newsRepository.load(dataId);
 
   void reload() {
     _load();
@@ -31,7 +31,7 @@ class ReadScreenViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String loadImageUrl(String filename) => _imageRepository.news(filename);
+  String loadImageUrl(String filename) => _imageRepository.loadNews(filename);
 
   Background loadFallbackImage() => BackgroundRandom.nextAsset();
 }

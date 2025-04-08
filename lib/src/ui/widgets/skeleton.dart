@@ -20,6 +20,37 @@ class BoxSkeleton extends StatelessWidget {
       );
 }
 
+class ListTileSkeleton extends StatelessWidget {
+  final Widget? leading;
+  final Widget? trailing;
+  final int widthAsWordCount;
+  final EdgeInsetsGeometry? contentPadding;
+  final bool playAnimation;
+
+  const ListTileSkeleton(
+      {super.key,
+      this.leading,
+      this.trailing,
+      this.widthAsWordCount = 3,
+      this.contentPadding,
+      this.playAnimation = true})
+      : assert(widthAsWordCount > 0,
+            'Count of words as width should be positive integer');
+
+  @override
+  Widget build(BuildContext context) => Skeletonizer.zone(
+        effect: _buildEffect(playAnimation),
+        child: ListTile(
+          contentPadding: contentPadding,
+          leading: leading,
+          title: Bone.text(
+            words: widthAsWordCount,
+          ),
+          trailing: trailing,
+        ),
+      );
+}
+
 class ChipSkeleton extends StatelessWidget {
   final Widget avatar;
   final int widthAsWordCount;

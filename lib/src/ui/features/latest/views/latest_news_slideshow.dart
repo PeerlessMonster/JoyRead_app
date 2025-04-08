@@ -12,13 +12,19 @@ import '../../read/views/read_screen.dart';
 import '../view_models/extensions.dart';
 import '../view_models/latest_news_slideshow.dart';
 
-class LatestNewsSlideshow extends StatelessWidget {
-  static const _cardHeight = 400.0;
-  static const _borderRadius = RoundedCorner.largeBorderRadius;
+class LatestNewsSlideshow extends StatefulWidget {
+  const LatestNewsSlideshow({super.key});
 
-  LatestNewsSlideshow({super.key});
+  @override
+  State<LatestNewsSlideshow> createState() => _LatestNewsSlideshowState();
+}
 
+class _LatestNewsSlideshowState extends State<LatestNewsSlideshow> {
   final _viewModel = LatestNewsSlideshowViewModel();
+
+  static const _cardHeight = 400.0;
+
+  static const _borderRadius = RoundedCorner.largeBorderRadius;
 
   List<Widget> _buildCards(BuildContext context, List<LatestNews> dataList) {
     final items = <Widget>[];
@@ -63,12 +69,12 @@ class LatestNewsSlideshow extends StatelessWidget {
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: _viewModel,
         builder: (context, _) => FutureWidget(
-          dataFuture: _viewModel.slideshowFuture,
+          dataFuture: _viewModel.dataFuture,
           uncompletedWidget: SegmentIndicatorCarousel(
             childHeight: _cardHeight,
             autoplay: false,
             children: List.generate(
-              _viewModel.slideshowCount,
+              _viewModel.dataCount,
               (_) => ImageBackgroundCardSkeleton(
                 isLoading: true,
                 borderRadius: _borderRadius,
@@ -83,15 +89,15 @@ class LatestNewsSlideshow extends StatelessWidget {
             childHeight: _cardHeight,
             showIndicator: false,
             autoplay: false,
-            isInfiniteLoop: false,
-            children: [
-              NetworkErrorImageBackgroundSign(
+            children: List.generate(
+              3,
+              (index) => NetworkErrorImageBackgroundSign(
                 retry: _viewModel.reload,
                 backgroundImageAssetName:
-                    _viewModel.fallbackImages[0].assetName,
+                    _viewModel.fallbackImages[index].assetName,
                 borderRadius: _borderRadius,
-              )
-            ],
+              ),
+            ),
           ),
         ),
       );

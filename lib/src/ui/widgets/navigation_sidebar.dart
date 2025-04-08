@@ -4,7 +4,7 @@ import '../core/page_navigation_destination.dart';
 import '../core/pressed_action.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
 import '../core/themes/constants/spacing.dart' as spacing;
-import 'extended_floating_action_button.dart';
+import 'button.dart';
 
 class NavigationSidebar extends StatefulWidget {
   final List<PageNavigationDestination> navigationDestinations;

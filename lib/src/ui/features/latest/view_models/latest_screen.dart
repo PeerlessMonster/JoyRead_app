@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../data/repositories/image.dart';
 
 import '../../../../data/models/latest_news.dart';
+import '../../../../data/repositories/image.dart';
 import '../../../../data/repositories/latest_news.dart';
 import '../../../../utils/http_client_proxy.dart';
 import '../../../core/shared/background.dart';
@@ -33,7 +33,7 @@ class LatestScreenViewModel extends ChangeNotifier {
   late Future<List<LatestNews>> firstPageFuture;
 
   void _loadFirstPage() =>
-      firstPageFuture = _newsRepository.loadAll(_pageSize);
+      firstPageFuture = _newsRepository.load(_pageSize);
 
   void reloadFirstPage() {
     _loadFirstPage();
@@ -42,7 +42,7 @@ class LatestScreenViewModel extends ChangeNotifier {
   }
 
   Future<List<LatestNews>> loadMorePage(int pageOrder) =>
-      _newsRepository.loadAll(_pageSize, pageOrder);
+      _newsRepository.load(_pageSize, pageOrder);
 
   @override
   void dispose() {
@@ -51,7 +51,7 @@ class LatestScreenViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  String loadImageUrl(String filename) => _imageRepository.news(filename);
+  String loadImageUrl(String filename) => _imageRepository.loadNews(filename);
 
   Background get fallbackImage => BackgroundRandom.nextAsset();
 }

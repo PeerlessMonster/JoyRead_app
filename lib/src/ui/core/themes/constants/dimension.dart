@@ -4,6 +4,15 @@ class Icon {
   static const size = 24.0;
 }
 
+class ListTile {
+  const ListTile._();
+
+  static const contentVerticalPadding = 10.0;
+  static const contentHorizontalPadding = 16.0;
+
+  static const leadingWidth = 40.0;
+}
+
 class MaterialBanner {
   const MaterialBanner._();
 

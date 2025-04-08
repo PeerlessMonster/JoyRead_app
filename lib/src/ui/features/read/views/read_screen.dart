@@ -107,7 +107,7 @@ class ReadScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FutureWidget(
-        dataFuture: _viewModel.newsFuture,
+        dataFuture: _viewModel.dataFuture,
         uncompletedWidget: _ReadScreen(
           key: key,
           title: title,

@@ -13,21 +13,20 @@ class LatestNewsRepository {
 
   LatestNewsRepository(this._client);
 
-  Future<List<LatestNews>> loadAll(int pageSize,
-      [int pageOrder = 0]) async {
+  Future<List<LatestNews>> load(int pageSize, [int pageOrder = 0]) async {
     final result = await _client.fetch((client) =>
         getLatestNews(client, pageSize: pageSize, pageOrder: pageOrder));
     switch (result) {
       case Ok():
         final responseBody = result.value;
-        return jsonDecodeToList<LatestNews>(responseBody, LatestNews.fromJson);
+        return jsonDecodeToList(responseBody, LatestNews.fromJson);
 
       case Error():
         throw result.error;
     }
   }
 
-  Future<List<LatestNews>> loadAllWithCache(int count) async {
+  Future<List<LatestNews>> loadWithCache(int count) async {
     const key = 'cache_latestNews';
     final box = GetStorage();
 
@@ -50,6 +49,6 @@ class LatestNewsRepository {
         responseBody = result.value;
         box.write(key, responseBody);
     }
-    return jsonDecodeToList<LatestNews>(responseBody, LatestNews.fromJson);
+    return jsonDecodeToList(responseBody, LatestNews.fromJson);
   }
 }

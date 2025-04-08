@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../data/models/news.dart';
 import '../../../../utils/breakpoint.dart';
+import '../../../core/max_width_box.dart';
 import '../../../core/themes/constants/spacing.dart' as spacing;
 import '../../../widgets/load_state_changed_network_image.dart';
+
+const _maxWidth = Breakpoint.expanded;
 
 class HeadingBlockWidget extends StatelessWidget {
   final String text;
@@ -52,15 +55,13 @@ class ImageBlockWidget extends StatelessWidget {
       required this.foregroundColor});
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: SizedBox(
-          width: Breakpoint.medium.screenWidthRange.end,
-          child: LoadStateChangedNetworkImage(
-            url,
-            fallbackImageAssetName: fallbackImageAssetName,
-            foregroundColor: foregroundColor,
-            placeholderAspectRatio: 16 / 9,
-          ),
+  Widget build(BuildContext context) => MaxWidthBox(
+        endpoint: _maxWidth,
+        child: LoadStateChangedNetworkImage(
+          url,
+          fallbackImageAssetName: fallbackImageAssetName,
+          foregroundColor: foregroundColor,
+          placeholderAspectRatio: 16 / 9,
         ),
       );
 }
@@ -81,25 +82,22 @@ class ImageDescriptionBlockWidget extends StatelessWidget {
       color: colorScheme.onSurface.withValues(alpha: 0.5),
     );
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints.tightFor(
-            width: Breakpoint.medium.screenWidthRange.end),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: colorScheme.tertiary,
-              ),
+    return MaxWidthBox(
+      endpoint: _maxWidth,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: colorScheme.tertiary,
             ),
           ),
-          child: Padding(
-            padding: EdgeInsets.only(top: spacing.Padding.increment * 1),
-            child: _SpansBlockLayout(
-              key: key,
-              spans: spans,
-              rootTextSpanStyle: textStyle,
-            ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(top: spacing.Padding.increment * 1),
+          child: _SpansBlockLayout(
+            key: key,
+            spans: spans,
+            rootTextSpanStyle: textStyle,
           ),
         ),
       ),

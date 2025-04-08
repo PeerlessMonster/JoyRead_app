@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../core/themes/constants/dimension.dart' as dimension;
 import '../core/themes/constants/spacing.dart' as spacing;
-import 'retry_button.dart';
 import 'translucent_white_box.dart';
 
 class NetworkErrorImageBackgroundSign extends StatelessWidget {
@@ -36,8 +35,9 @@ class NetworkErrorImageBackgroundSign extends StatelessWidget {
             SizedBox(height: spacing.Padding.increment * 1),
             Text('Unable to access network.'),
             SizedBox(height: spacing.Padding.increment * 3),
-            RetryButton(
-              retry: retry,
+            FilledButton(
+              onPressed: retry,
+              child: Text('Retry'),
             ),
           ],
         ),
