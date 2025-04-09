@@ -35,8 +35,8 @@ class NewsContentDocument extends StatelessWidget {
           foregroundColor: fallbackImage.foregroundColor,
         );
 
-      case ImageDescriptionBlock():
-        return ImageDescriptionBlockWidget(
+      case AnnotationBlock():
+        return AnnotationBlockWidget(
           spans: paragraphBlock.spans,
         );
 
@@ -54,6 +54,7 @@ class NewsContentDocument extends StatelessWidget {
 
       case BodyBlock():
         return BodyBlockWidget(
+          leading: paragraphBlock.leading,
           spans: paragraphBlock.spans,
         );
     }

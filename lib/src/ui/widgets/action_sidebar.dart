@@ -37,38 +37,31 @@ class ActionSidebar extends StatelessWidget {
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
+                spacing: spacing.Padding.targetSpacing,
                 children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: spacing.Padding.targetSpacing,
-                    children: [
-                      FloatingActionButton(
-                        onPressed: floatingAction.onPressed,
-                        shape: CircleBorder(),
-                        tooltip: floatingAction.name,
-                        child: floatingAction.icon,
-                      ),
-                      ...primaryActions
-                          .map((primaryAction) => IconButton.filledTonal(
-                                tooltip: primaryAction.name,
-                                icon: primaryAction.icon,
-                                onPressed: primaryAction.onPressed,
-                              )),
-                    ],
-                  ),
-                  Divider(),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: spacing.Padding.targetSpacing,
-                    children: secondaryActions
-                        .map((secondaryAction) => IconButton(
-                              tooltip: secondaryAction.name,
-                              icon: secondaryAction.icon,
-                              onPressed: secondaryAction.onPressed,
-                            ))
-                        .toList(),
+                  ...primaryActions.reversed
+                      .map((primaryAction) => IconButton.outlined(
+                            tooltip: primaryAction.name,
+                            icon: primaryAction.icon,
+                            onPressed: primaryAction.onPressed,
+                          )),
+                  FloatingActionButton(
+                    onPressed: floatingAction.onPressed,
+                    shape: const CircleBorder(),
+                    tooltip: floatingAction.name,
+                    child: floatingAction.icon,
                   ),
                 ],
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: secondaryActions
+                    .map((secondaryAction) => IconButton(
+                          tooltip: secondaryAction.name,
+                          icon: secondaryAction.icon,
+                          onPressed: secondaryAction.onPressed,
+                        ))
+                    .toList(),
               ),
             ],
           ),

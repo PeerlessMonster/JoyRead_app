@@ -29,6 +29,7 @@ List<Widget> buildDetailScrollView(
         String source,
         List<String> writers,
         String time,
+        String visitCount,
         List<ParagraphBlock> content,
         String Function(String filename) loadImageUrl,
         Background Function() loadFallbackImage) =>
@@ -39,6 +40,7 @@ List<Widget> buildDetailScrollView(
             source: source,
             writers: writers,
             time: time,
+            visitCount: visitCount,
           ),
         ),
       ),
@@ -53,16 +55,17 @@ List<Widget> buildDetailScrollView(
       )
     ];
 
-List<Widget> buildDetailScrollViewSkeleton(
-        bool isLoading, String? source, List<String>? writers, String? time) =>
+List<Widget> buildDetailScrollViewSkeleton(bool isLoading, String? source,
+        List<String>? writers, String? time, String? visitCount) =>
     [
       _HorizontalResponsiveSliverMargin(
         sliver: SliverToBoxAdapter(
-          child: NewsMetaContainerSkeleton(
+          child: NewsMetaGridSkeleton(
             isLoading: isLoading,
             source: source,
             writers: writers,
             time: time,
+            visitCount: visitCount,
           ),
         ),
       ),

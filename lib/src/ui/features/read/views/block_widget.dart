@@ -17,11 +17,11 @@ class HeadingBlockWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final themeData = Theme.of(context);
 
-    final colorScheme = theme.colorScheme;
+    final colorScheme = themeData.colorScheme;
 
-    final textTheme = theme.textTheme;
+    final textTheme = themeData.textTheme;
     final textStyle = switch (level) {
       1 => textTheme.titleLarge?.copyWith(
           color: colorScheme.tertiary,
@@ -66,18 +66,18 @@ class ImageBlockWidget extends StatelessWidget {
       );
 }
 
-class ImageDescriptionBlockWidget extends StatelessWidget {
+class AnnotationBlockWidget extends StatelessWidget {
   final List<SpanBlock> spans;
 
-  const ImageDescriptionBlockWidget({super.key, required this.spans});
+  const AnnotationBlockWidget({super.key, required this.spans});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final themeData = Theme.of(context);
 
-    final colorScheme = theme.colorScheme;
+    final colorScheme = themeData.colorScheme;
 
-    final textTheme = theme.textTheme;
+    final textTheme = themeData.textTheme;
     final textStyle = textTheme.labelLarge?.copyWith(
       color: colorScheme.onSurface.withValues(alpha: 0.5),
     );
@@ -94,7 +94,7 @@ class ImageDescriptionBlockWidget extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.only(top: spacing.Padding.increment * 1),
-          child: _SpansBlockLayout(
+          child: _SpanBlocksWidget(
             key: key,
             spans: spans,
             rootTextSpanStyle: textStyle,
@@ -159,37 +159,52 @@ class QuoteBlockWidget extends StatelessWidget {
 }
 
 class BodyBlockWidget extends StatelessWidget {
+  final LeadingBlock? leading;
   final List<SpanBlock> spans;
 
-  const BodyBlockWidget({super.key, required this.spans});
+  const BodyBlockWidget({super.key, this.leading, required this.spans});
 
-  @override
-  Widget build(BuildContext context) => _SpansBlockLayout(
+  Widget _buildSpanBlocks() => _SpanBlocksWidget(
         key: key,
         spans: spans,
       );
+
+  @override
+  Widget build(BuildContext context) => leading == null
+      ? _buildSpanBlocks()
+      : Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsetsDirectional.only(
+                  end: spacing.Padding.increment * 2),
+              child: LeadingBlockWidget(
+                leading: leading!,
+              ),
+            ),
+            Expanded(
+              child: _buildSpanBlocks(),
+            ),
+          ],
+        );
 }
 
-class _SpansBlockLayout extends StatelessWidget {
+class _SpanBlocksWidget extends StatelessWidget {
   final List<SpanBlock> spans;
   final TextStyle? rootTextSpanStyle;
 
-  const _SpansBlockLayout(
+  const _SpanBlocksWidget(
       {super.key, required this.spans, this.rootTextSpanStyle});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
     final defaultTextStyle = DefaultTextStyle.of(context).style;
 
-    final firstSpanStyle = spans[0].style;
-    final hasLeading =
-        firstSpanStyle == SpanStyle.order || firstSpanStyle == SpanStyle.sign;
-
-    final mainSpans = hasLeading ? spans.skip(1) : spans;
-    final mainWidget = Text.rich(
+    return Text.rich(
       TextSpan(
-        children: mainSpans.map((span) {
+        children: spans.map((span) {
           final textStyle = switch (span.style) {
             SpanStyle.normal => null,
             SpanStyle.bold => TextStyle(
@@ -199,9 +214,16 @@ class _SpansBlockLayout extends StatelessWidget {
                 fontStyle: FontStyle.italic,
               ),
             SpanStyle.colored => TextStyle(
-                color: colorScheme.tertiary, fontWeight: FontWeight.bold),
-            _ => throw FormatException(
-                "No textStyle for ${span.style} after the first span of a paragraph"),
+                color: colorScheme.tertiary,
+              ),
+            SpanStyle.boldColored => TextStyle(
+                color: colorScheme.tertiary,
+                fontWeight: FontWeight.bold,
+              ),
+            SpanStyle.italicBold => TextStyle(
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+              ),
           };
 
           return TextSpan(
@@ -212,47 +234,42 @@ class _SpansBlockLayout extends StatelessWidget {
         style: rootTextSpanStyle ?? defaultTextStyle,
       ),
     );
-    if (!hasLeading) {
-      return mainWidget;
-    }
+  }
+}
 
-    final textStyle = switch (firstSpanStyle) {
-      SpanStyle.sign => defaultTextStyle
+class LeadingBlockWidget extends StatelessWidget {
+  final LeadingBlock leading;
+
+  const LeadingBlockWidget({super.key, required this.leading});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final defaultTextStyle = DefaultTextStyle.of(context).style;
+    final textStyle = switch (leading.style) {
+      LeadingStyle.sign => defaultTextStyle
           .copyWith(
             height: 0.37,
-            color: colorScheme.primary,
+            color: colorScheme.tertiary,
             fontWeight: FontWeight.bold,
           )
           .apply(
             fontSizeFactor: 3,
           ),
-      SpanStyle.order => defaultTextStyle
+      LeadingStyle.order => defaultTextStyle
           .copyWith(
             height: 0.7,
-            color: colorScheme.primary,
+            color: colorScheme.tertiary,
           )
           .apply(
             fontSizeFactor: 2,
           ),
-      _ => throw UnimplementedError(
-          "No textStyle for $firstSpanStyle when this paragraph has leading"),
     };
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding:
-              EdgeInsetsDirectional.only(end: spacing.Padding.increment * 2),
-          child: Text(
-            spans[0].text,
-            style: textStyle,
-          ),
-        ),
-        Expanded(
-          child: mainWidget,
-        ),
-      ],
+    return Text(
+      leading.text,
+      style: textStyle,
     );
   }
 }

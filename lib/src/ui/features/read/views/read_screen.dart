@@ -10,48 +10,47 @@ import '../../../widgets/wide_screen_action_scaffold.dart';
 import '../view_models/extensions.dart';
 import '../view_models/read_view_model.dart';
 import 'news_detail_scroll_view.dart';
+import '../../../core/themes/constants/spacing.dart' as spacing;
 
-final _floatingAction = PressedAction(
-  name: 'Search',
-  icon: Icon(Icons.search_rounded),
-  onPressed: () {},
-);
-final _primaryActions = [
-  PressedAction(
-    name: 'Summary',
-    icon: Icon(Icons.summarize_outlined),
-    onPressed: () {},
-  ),
-  PressedAction(
-    name: 'Translate',
-    icon: Icon(Icons.translate_rounded),
-    onPressed: () {},
-  ),
-];
-final _secondaryActions = [
-  PressedAction(
-    name: 'Star',
-    icon: Icon(Icons.star_rounded),
-    onPressed: () {},
-  ),
-  PressedAction(
-    name: 'Like',
-    icon: Icon(Icons.thumb_up),
-    onPressed: () {},
-  ),
-  PressedAction(
-    name: 'Dislike',
-    icon: Icon(Icons.thumb_down_rounded),
-    onPressed: () {},
-  )
-];
+const _title = '阅读详情';
 
 class _ReadScreen extends StatelessWidget {
-  final String title;
   final List<Widget> sliversBody;
+  final String? title;
 
-  const _ReadScreen(
-      {super.key, required this.title, required this.sliversBody});
+  const _ReadScreen({super.key, required this.sliversBody, this.title});
+
+  PressedAction _buildFloatingAction() => PressedAction(
+        name: 'Search',
+        icon: Icon(Icons.auto_awesome_rounded),
+        onPressed: () {},
+      );
+
+  List<PressedAction> _buildPrimaryActions() => [
+        PressedAction(
+          name: 'Translate',
+          icon: Icon(Icons.translate_rounded),
+          onPressed: () {},
+        ),
+      ];
+
+  List<PressedAction> _buildSecondaryActions() => [
+        PressedAction(
+          name: 'Like',
+          icon: Icon(Icons.thumb_up),
+          onPressed: () {},
+        ),
+        PressedAction(
+          name: 'Star',
+          icon: Icon(Icons.star_rounded),
+          onPressed: () {},
+        ),
+        PressedAction(
+          name: 'Dislike',
+          icon: Icon(Icons.thumb_down_rounded),
+          onPressed: () {},
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) => ResponsiveLayoutBuilder(
@@ -61,46 +60,48 @@ class _ReadScreen extends StatelessWidget {
               controller: controller,
               slivers: [
                 FlexibleSliverAppBar(
-                  title: title,
+                  title: title ?? _title,
                 ),
                 ...sliversBody,
               ],
             ),
           ),
-          floatingAction: _floatingAction,
-          primaryActions: _primaryActions,
-          secondaryActions: _secondaryActions,
+          floatingAction: _buildFloatingAction(),
+          primaryActions: _buildPrimaryActions(),
+          secondaryActions: _buildSecondaryActions(),
         ),
         wideScreenWidget: WideScreenActionScaffold(
           body: BreakpointProvider(
             child: CustomScrollView(slivers: [
               FlexibleSliverAppBarWithoutLeading(
-                title: title,
+                title: title ?? _title,
               ),
               ...sliversBody,
             ]),
           ),
-          floatingAction: _floatingAction,
-          primaryActions: _primaryActions,
-          secondaryActions: _secondaryActions,
+          floatingAction: _buildFloatingAction(),
+          primaryActions: _buildPrimaryActions(),
+          secondaryActions: _buildSecondaryActions(),
         ),
       );
 }
 
 class ReadScreen extends StatelessWidget {
   final String dataId;
-  final String title;
+  final String? title;
   final String? source;
   final List<String>? writers;
   final String? publishTime;
+  final String? visitCount;
 
   ReadScreen(
       {super.key,
       required this.dataId,
-      this.title = '阅读详情',
+      this.title,
       this.source,
       this.writers,
-      this.publishTime})
+      this.publishTime,
+      this.visitCount})
       : _viewModel = ReadViewModel(dataId);
 
   final ReadViewModel _viewModel;
@@ -112,7 +113,7 @@ class ReadScreen extends StatelessWidget {
           key: key,
           title: title,
           sliversBody: buildDetailScrollViewSkeleton(
-              true, source, writers, publishTime),
+              true, source, writers, publishTime, visitCount),
         ),
         dataBuilder: (context, data) => _ReadScreen(
           key: key,
@@ -121,6 +122,7 @@ class ReadScreen extends StatelessWidget {
               data.source,
               data.writers,
               data.formattedPublishTime,
+              '${data.view}',
               data.content,
               _viewModel.loadImageUrl,
               _viewModel.loadFallbackImage),
@@ -128,8 +130,22 @@ class ReadScreen extends StatelessWidget {
         errorBuilder: (context, _) => _ReadScreen(
           key: key,
           title: title,
-          sliversBody: buildDetailScrollViewSkeleton(
-              false, source, writers, publishTime),
+          sliversBody: [
+            ...buildDetailScrollViewSkeleton(
+                false, source, writers, publishTime, visitCount),
+            SliverPadding(
+              padding: EdgeInsets.only(top: spacing.Padding.increment * 1),
+              sliver: SliverToBoxAdapter(
+                child: Center(
+                  child: FilledButton.icon(
+                    icon: Icon(Icons.refresh_rounded),
+                    label: Text('Retry'),
+                    onPressed: _viewModel.reload,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       );
 }

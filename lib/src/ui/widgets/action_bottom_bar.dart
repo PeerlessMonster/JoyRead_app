@@ -20,7 +20,6 @@ class ActionBottomBar extends StatelessWidget {
           children: [
             Row(
               mainAxisSize: MainAxisSize.min,
-              spacing: spacing.Padding.targetSpacing,
               children: secondaryActions.reversed
                   .map((secondaryAction) => IconButton(
                         tooltip: secondaryAction.name,
@@ -35,7 +34,7 @@ class ActionBottomBar extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 spacing: spacing.Padding.targetSpacing,
                 children: primaryActions.reversed
-                    .map((primaryAction) => IconButton.filledTonal(
+                    .map((primaryAction) => IconButton.outlined(
                           tooltip: primaryAction.name,
                           icon: primaryAction.icon,
                           onPressed: primaryAction.onPressed,

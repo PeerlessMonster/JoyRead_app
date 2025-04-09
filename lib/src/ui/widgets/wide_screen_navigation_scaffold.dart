@@ -21,18 +21,16 @@ class WideScreenNavigationScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Row(
-          children: [
-            NavigationSidebar(
-              navigationDestinations: navigationDestinations,
-              floatingAction: floatingAction,
-              selectedIndex: selectedIndex,
-              onDestinationsSelected: setSelectedIndex,
-            ),
-            Expanded(
-              child: body,
-            ),
-          ],
-        ),
+        body: Row(children: [
+          NavigationSidebar(
+            navigationDestinations: navigationDestinations,
+            floatingAction: floatingAction,
+            selectedIndex: selectedIndex,
+            onDestinationsSelected: setSelectedIndex,
+          ),
+          Expanded(
+            child: body,
+          ),
+        ]),
       );
 }

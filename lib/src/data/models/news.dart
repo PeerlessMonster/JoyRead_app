@@ -3,6 +3,7 @@ import '../../utils/time.dart' as time;
 class News {
   final String title;
   final DateTime publishUtc;
+  final int view;
   final String source;
   final List<String> writers;
   final List<ParagraphBlock> content;
@@ -10,6 +11,7 @@ class News {
   const News(
       {required this.title,
       required this.publishUtc,
+      required this.view,
       required this.source,
       required this.writers,
       required this.content});
@@ -18,6 +20,7 @@ class News {
         {
           'title': String title,
           'publishUTCEpochMilli': String publishUtcMillisecondsSinceEpoch,
+          'view': int view,
           'source': String source,
           'writers': List<dynamic> writers,
           'content': List<dynamic> paragraphs,
@@ -25,6 +28,7 @@ class News {
           News(
               title: title,
               publishUtc: time.parse(publishUtcMillisecondsSinceEpoch),
+              view: view,
               source: source,
               writers: writers.cast<String>(),
               content: ParagraphBlock.fromJsonList(paragraphs)),
@@ -53,10 +57,10 @@ sealed class ParagraphBlock extends Block {
       } =>
         ImageBlock(filename: filename),
       {
-        'type': 'IMAGE_DESCRIPTION',
+        'type': 'ANNOTATION',
         'spans': List<dynamic> spans,
       } =>
-        ImageDescriptionBlock(spans: SpanBlock.fromJsonList(spans)),
+        AnnotationBlock(spans: SpanBlock.fromJsonList(spans)),
       {
         'type': 'CONTEXT',
         'paragraphs': List<dynamic> paragraphs,
@@ -71,7 +75,11 @@ sealed class ParagraphBlock extends Block {
         'type': 'BODY',
         'spans': List<dynamic> spans,
       } =>
-        BodyBlock(spans: SpanBlock.fromJsonList(spans)),
+        BodyBlock(
+            leading: json.containsKey('leading')
+                ? LeadingBlock.fromJson(json['leading'] as Map<String, dynamic>)
+                : null,
+            spans: SpanBlock.fromJsonList(spans)),
       _ => throw const FormatException('Unexpected format of Paragraph'),
     };
   }
@@ -96,10 +104,10 @@ class ImageBlock extends ParagraphBlock {
   const ImageBlock({required this.filename});
 }
 
-class ImageDescriptionBlock extends ParagraphBlock {
+class AnnotationBlock extends ParagraphBlock {
   final List<SpanBlock> spans;
 
-  const ImageDescriptionBlock({required this.spans});
+  const AnnotationBlock({required this.spans});
 }
 
 class ContextBlock extends ParagraphBlock {
@@ -115,10 +123,33 @@ class QuoteBlock extends ParagraphBlock {
 }
 
 class BodyBlock extends ParagraphBlock {
+  final LeadingBlock? leading;
   final List<SpanBlock> spans;
 
-  const BodyBlock({required this.spans});
+  const BodyBlock({this.leading, required this.spans});
 }
+
+class LeadingBlock extends Block {
+  final String text;
+  final LeadingStyle style;
+
+  const LeadingBlock({required this.text, required this.style});
+
+  factory LeadingBlock.fromJson(Map<String, dynamic> json) => switch (json) {
+        {'type': 'LEADING', 'text': String text, 'style': String style} =>
+          LeadingBlock(
+              text: text,
+              style: switch (style) {
+                'SIGN' => LeadingStyle.sign,
+                'ORDER' => LeadingStyle.order,
+                _ =>
+                  throw FormatException('No enum named $style in LeadingStyle'),
+              }),
+        _ => throw const FormatException('Unexpected format of Leading'),
+      };
+}
+
+enum LeadingStyle { sign, order }
 
 class SpanBlock extends Block {
   final String text;
@@ -138,9 +169,9 @@ class SpanBlock extends Block {
                 'BOLD' => SpanStyle.bold,
                 'ITALIC' => SpanStyle.italic,
                 'COLORED' => SpanStyle.colored,
+                'BOLD_COLORED' => SpanStyle.boldColored,
+                'ITALIC_BOLD' => SpanStyle.italicBold,
                 'NORMAL' => SpanStyle.normal,
-                'ORDER' => SpanStyle.order,
-                'SIGN' => SpanStyle.sign,
                 _ => throw FormatException('No enum named $style in TextStyle'),
               }),
         _ => throw const FormatException('Unexpected format of Span'),
@@ -152,4 +183,4 @@ class SpanBlock extends Block {
       .toList();
 }
 
-enum SpanStyle { sign, order, normal, bold, italic, colored }
+enum SpanStyle { normal, bold, italic, colored, boldColored, italicBold }

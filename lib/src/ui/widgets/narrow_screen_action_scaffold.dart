@@ -44,7 +44,7 @@ class ScrollingHiddenNarrowScreenActionScaffold extends StatefulWidget {
   final PressedAction floatingAction;
   final List<PressedAction> primaryActions;
   final List<PressedAction> secondaryActions;
-  final double hiddingMotionFactor;
+  final double hidingMotionFactor;
 
   const ScrollingHiddenNarrowScreenActionScaffold(
       {super.key,
@@ -52,9 +52,9 @@ class ScrollingHiddenNarrowScreenActionScaffold extends StatefulWidget {
       required this.floatingAction,
       required this.primaryActions,
       required this.secondaryActions,
-      this.hiddingMotionFactor = 0.5})
-      : assert(hiddingMotionFactor > 0,
-            'Factor of hidding motion should be positive');
+      this.hidingMotionFactor = 0.5})
+      : assert(hidingMotionFactor > 0,
+            'Factor of hiding motion should be positive');
 
   @override
   State<ScrollingHiddenNarrowScreenActionScaffold> createState() =>
@@ -63,8 +63,8 @@ class ScrollingHiddenNarrowScreenActionScaffold extends StatefulWidget {
 
 class _ScrollingHiddenNarrowScreenActionScaffoldState
     extends State<ScrollingHiddenNarrowScreenActionScaffold> {
-  static const _maxActionBarHeight = dimension.BottomAppBar.height;
-  var actionBarHeight = _maxActionBarHeight;
+  static const _barHeight = dimension.BottomAppBar.height;
+  var currentBarHeight = _barHeight;
 
   var oldScrollOffset = .0;
 
@@ -73,14 +73,14 @@ class _ScrollingHiddenNarrowScreenActionScaffoldState
 
     switch (_controller.position.userScrollDirection) {
       case ScrollDirection.forward:
-        if (actionBarHeight == _maxActionBarHeight) {
+        if (currentBarHeight == _barHeight) {
           break;
         }
         setState(() {
-          actionBarHeight +=
-              widget.hiddingMotionFactor * (oldScrollOffset - scrollOffset);
-          if (actionBarHeight > _maxActionBarHeight) {
-            actionBarHeight = _maxActionBarHeight;
+          currentBarHeight +=
+              widget.hidingMotionFactor * (oldScrollOffset - scrollOffset);
+          if (currentBarHeight > _barHeight) {
+            currentBarHeight = _barHeight;
           }
         });
 
@@ -88,14 +88,14 @@ class _ScrollingHiddenNarrowScreenActionScaffoldState
         break;
 
       case ScrollDirection.reverse:
-        if (actionBarHeight == 0) {
+        if (currentBarHeight == 0) {
           break;
         }
         setState(() {
-          actionBarHeight -=
-              widget.hiddingMotionFactor * (scrollOffset - oldScrollOffset);
-          if (actionBarHeight < 0) {
-            actionBarHeight = 0;
+          currentBarHeight -=
+              widget.hidingMotionFactor * (scrollOffset - oldScrollOffset);
+          if (currentBarHeight < 0) {
+            currentBarHeight = 0;
           }
         });
     }
@@ -116,20 +116,26 @@ class _ScrollingHiddenNarrowScreenActionScaffoldState
   Widget build(BuildContext context) => Scaffold(
         body: widget.bodyBuilder(context, _controller),
         bottomNavigationBar: SizedBox(
-          height: actionBarHeight,
-          child: ActionBottomBar(
-            primaryActions: widget.primaryActions,
-            secondaryActions: widget.secondaryActions,
+          height: currentBarHeight,
+          child: OverflowBox(
+            alignment: Alignment.topCenter,
+            minHeight: _barHeight,
+            maxHeight: _barHeight,
+            child: ActionBottomBar(
+              primaryActions: widget.primaryActions,
+              secondaryActions: widget.secondaryActions,
+            ),
           ),
         ),
-        floatingActionButton: actionBarHeight == _maxActionBarHeight
-            ? FloatingActionButton(
-                onPressed: widget.floatingAction.onPressed,
-                tooltip: widget.floatingAction.name,
-                shape: _floatingActionButtonShape,
-                child: widget.floatingAction.icon,
-              )
-            : null,
+        floatingActionButton:
+            currentBarHeight >= dimension.BottomAppBar.notchSinkingHeight
+                ? FloatingActionButton(
+                    onPressed: widget.floatingAction.onPressed,
+                    tooltip: widget.floatingAction.name,
+                    shape: _floatingActionButtonShape,
+                    child: widget.floatingAction.icon,
+                  )
+                : null,
         floatingActionButtonLocation: _floatingActionButtonLocation,
       );
 
