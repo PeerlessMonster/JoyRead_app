@@ -8,7 +8,7 @@ import '../../../widgets/narrow_screen_action_scaffold.dart';
 import '../../../widgets/sliver_app_bar.dart';
 import '../../../widgets/wide_screen_action_scaffold.dart';
 import '../view_models/extensions.dart';
-import '../view_models/read_screen.dart';
+import '../view_models/read_view_model.dart';
 import 'news_detail_scroll_view.dart';
 
 final _floatingAction = PressedAction(
@@ -101,9 +101,9 @@ class ReadScreen extends StatelessWidget {
       this.source,
       this.writers,
       this.publishTime})
-      : _viewModel = ReadScreenViewModel(dataId);
+      : _viewModel = ReadViewModel(dataId);
 
-  final ReadScreenViewModel _viewModel;
+  final ReadViewModel _viewModel;
 
   @override
   Widget build(BuildContext context) => FutureWidget(

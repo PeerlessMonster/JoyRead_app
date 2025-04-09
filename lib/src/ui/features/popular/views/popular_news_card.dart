@@ -5,7 +5,7 @@ import '../../../core/themes/constants/dimension.dart' as dimension;
 import '../../../widgets/list_row.dart';
 import '../../../widgets/list_section.dart';
 import '../../read/views/read_screen.dart';
-import '../view_models/popular_news_card.dart';
+import '../view_models/popular_news_view_model.dart';
 
 enum Sort {
   day('日榜'),
@@ -76,8 +76,8 @@ class PopularNewsCard extends StatelessWidget {
 
   PopularNewsCard({super.key, required this.sort, this.showHeader = true}) {
     _viewModel = switch (sort) {
-      Sort.day => TodayPopularNewsCardViewModel(),
-      Sort.week => ThisWeekPopularNewsCardViewModel(),
+      Sort.day => TodayPopularNewsViewModel(),
+      Sort.week => ThisWeekPopularNewsViewModel(),
     };
   }
 

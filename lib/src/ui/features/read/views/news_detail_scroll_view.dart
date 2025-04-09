@@ -5,7 +5,7 @@ import '../../../core/responsive_margin.dart';
 import '../../../core/shared/background.dart';
 import '../../../core/themes/constants/spacing.dart' as spacing;
 import 'news_content_document.dart';
-import 'news_meta_container.dart';
+import 'news_meta_grid.dart';
 
 const _spacing = spacing.Padding.increment * 10;
 
@@ -35,7 +35,7 @@ List<Widget> buildDetailScrollView(
     [
       _HorizontalResponsiveSliverMargin(
         sliver: SliverToBoxAdapter(
-          child: NewsMetaContainer(
+          child: NewsMetaGrid(
             source: source,
             writers: writers,
             time: time,

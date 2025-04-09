@@ -32,8 +32,11 @@ class Restored extends NetworkNotification {
 ///
 /// No need to manually switch different states and write functions, instead,
 /// just pass callbacks.
-class NetworkNotificationListener extends StatelessWidget {
-  final Widget child;
+///
+/// If [Error] is received, [onNetworkError] will be invoked only at the first
+/// time, not repeatedly. The same as [Restored] to [onNetworkRestored].
+class NetworkNotificationListener extends StatefulWidget {
+  final Widget Function(BuildContext context, bool isNetworkError) childBuilder;
   final void Function()? onNetworkError;
   final void Function()? onNetworkRestored;
 
@@ -41,7 +44,16 @@ class NetworkNotificationListener extends StatelessWidget {
       {super.key,
       required this.onNetworkError,
       required this.onNetworkRestored,
-      required this.child});
+      required this.childBuilder});
+
+  @override
+  State<NetworkNotificationListener> createState() =>
+      _NetworkNotificationListenerState();
+}
+
+class _NetworkNotificationListenerState
+    extends State<NetworkNotificationListener> {
+  var isNetworkError = false;
 
   @override
   Widget build(BuildContext context) =>
@@ -49,17 +61,33 @@ class NetworkNotificationListener extends StatelessWidget {
         onNotification: (notification) {
           switch (notification) {
             case Error():
-              if (onNetworkError != null) {
-                onNetworkError!();
+              if (widget.onNetworkError == null) {
+                break;
+              }
+
+              if (!isNetworkError) {
+                setState(() {
+                  isNetworkError = true;
+                });
+
+                widget.onNetworkError!();
               }
 
             case Restored():
-              if (onNetworkRestored != null) {
-                onNetworkRestored!();
+              if (widget.onNetworkRestored == null) {
+                break;
+              }
+
+              if (isNetworkError) {
+                setState(() {
+                  isNetworkError = false;
+                });
+
+                widget.onNetworkRestored!();
               }
           }
           return true;
         },
-        child: child,
+        child: widget.childBuilder(context, isNetworkError),
       );
 }

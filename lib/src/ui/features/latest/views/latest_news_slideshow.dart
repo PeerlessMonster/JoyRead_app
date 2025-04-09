@@ -10,7 +10,7 @@ import '../../../widgets/network_error_image_background_sign.dart';
 import '../../../widgets/segment_indicator_carousel.dart';
 import '../../read/views/read_screen.dart';
 import '../view_models/extensions.dart';
-import '../view_models/latest_news_slideshow.dart';
+import '../view_models/latest_news_view_model.dart';
 
 class LatestNewsSlideshow extends StatefulWidget {
   const LatestNewsSlideshow({super.key});
@@ -20,7 +20,7 @@ class LatestNewsSlideshow extends StatefulWidget {
 }
 
 class _LatestNewsSlideshowState extends State<LatestNewsSlideshow> {
-  final _viewModel = LatestNewsSlideshowViewModel();
+  final _viewModel = LatestNewsViewModel();
 
   static const _cardHeight = 400.0;
 

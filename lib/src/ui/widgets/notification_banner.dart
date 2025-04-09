@@ -7,7 +7,7 @@ class NotificationBanner extends StatelessWidget {
   final Widget icon;
   final void Function() onClose;
   final bool capsuleShaped;
-  /// Used when [capsuledShaped] is true.
+  /// Taking effect when [capsuledShaped] is true.
   final double? elevation;
 
   const NotificationBanner(
@@ -17,13 +17,6 @@ class NotificationBanner extends StatelessWidget {
       required this.onClose,
       this.capsuleShaped = false,
       this.elevation});
-
-  Widget _buildText(String text, Color color) => Text(
-        text,
-        style: TextStyle(
-          color: color,
-        ),
-      );
 
   Widget _buildCloseButton(Color color) => IconButton(
         tooltip: 'Dismiss',
@@ -56,7 +49,10 @@ class NotificationBanner extends StatelessWidget {
                 dividerColor: backgroundColor,
                 backgroundColor: backgroundColor,
                 leading: icon,
-                content: _buildText(text, foregroundColor),
+                contentTextStyle: TextStyle(
+                  color: foregroundColor,
+                ),
+                content: Text(text),
                 actions: [_buildCloseButton(foregroundColor)],
               ),
             ),
@@ -64,7 +60,10 @@ class NotificationBanner extends StatelessWidget {
         : MaterialBanner(
             backgroundColor: backgroundColor,
             leading: icon,
-            content: _buildText(text, foregroundColor),
+            contentTextStyle: TextStyle(
+              color: foregroundColor,
+            ),
+            content: Text(text),
             actions: [_buildCloseButton(foregroundColor)],
           );
   }

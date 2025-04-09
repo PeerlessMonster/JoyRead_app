@@ -30,24 +30,24 @@ abstract class PopularNewsViewModel extends ChangeNotifier {
   }
 }
 
-class TodayPopularNewsCardViewModel extends PopularNewsViewModel {
-  TodayPopularNewsCardViewModel._();
+class TodayPopularNewsViewModel extends PopularNewsViewModel {
+  TodayPopularNewsViewModel._();
 
-  factory TodayPopularNewsCardViewModel() => _instance;
+  factory TodayPopularNewsViewModel() => _instance;
 
-  static final _instance = TodayPopularNewsCardViewModel._();
+  static final _instance = TodayPopularNewsViewModel._();
 
   @override
   Future<List<PopularNews>> Function(int count) get _loadDataFromRepository =>
       _repository.loadTodayWithCache;
 }
 
-class ThisWeekPopularNewsCardViewModel extends PopularNewsViewModel {
-  ThisWeekPopularNewsCardViewModel._();
+class ThisWeekPopularNewsViewModel extends PopularNewsViewModel {
+  ThisWeekPopularNewsViewModel._();
 
-  factory ThisWeekPopularNewsCardViewModel() => _instance;
+  factory ThisWeekPopularNewsViewModel() => _instance;
 
-  static final _instance = ThisWeekPopularNewsCardViewModel._();
+  static final _instance = ThisWeekPopularNewsViewModel._();
 
   @override
   Future<List<PopularNews>> Function(int count) get _loadDataFromRepository =>

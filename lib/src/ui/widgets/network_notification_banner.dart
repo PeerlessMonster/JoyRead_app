@@ -4,13 +4,13 @@ import 'notification_banner.dart';
 
 class NetworkErrorNotificationBanner extends StatelessWidget {
   final void Function() onClose;
-  final bool shapedCapsule;
+  final bool capsuleShaped;
   final double? elevation;
 
   const NetworkErrorNotificationBanner(
       {super.key,
       required this.onClose,
-      this.shapedCapsule = false,
+      this.capsuleShaped = false,
       this.elevation});
 
   @override
@@ -22,20 +22,20 @@ class NetworkErrorNotificationBanner extends StatelessWidget {
           color: Colors.red,
         ),
         onClose: onClose,
-        capsuleShaped: shapedCapsule,
+        capsuleShaped: capsuleShaped,
         elevation: elevation,
       );
 }
 
 class NetworkRestoredNotificationBanner extends StatelessWidget {
   final void Function() onClose;
-  final bool shapedCapsule;
+  final bool capsuleShaped;
   final double? elevation;
 
   const NetworkRestoredNotificationBanner(
       {super.key,
       required this.onClose,
-      this.shapedCapsule = false,
+      this.capsuleShaped = false,
       this.elevation});
 
   @override
@@ -47,7 +47,7 @@ class NetworkRestoredNotificationBanner extends StatelessWidget {
           color: Colors.green,
         ),
         onClose: onClose,
-        capsuleShaped: shapedCapsule,
+        capsuleShaped: capsuleShaped,
         elevation: elevation,
       );
 }

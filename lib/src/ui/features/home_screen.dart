@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'ui/core/breakpoint_state.dart';
-import 'ui/core/page_navigation_destination.dart';
-import 'ui/core/pressed_action.dart';
-import 'ui/core/responsive_layout_builder.dart';
-import 'ui/pages/explore.dart';
-import 'ui/pages/user_home.dart';
-import 'ui/widgets/narrow_screen_navigation_scaffold.dart';
-import 'ui/widgets/wide_screen_navigation_scaffold.dart';
+import '../core/breakpoint_state.dart';
+import '../core/page_navigation_destination.dart';
+import '../core/pressed_action.dart';
+import '../core/responsive_layout_builder.dart';
+import '../widgets/narrow_screen_navigation_scaffold.dart';
+import '../widgets/wide_screen_navigation_scaffold.dart';
+import 'explore_page.dart';
+import 'user_center_page.dart';
 
 const _navigationDestinations = [
   PageNavigationDestination(
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBody() {
     final page = switch (currentPageIndex) {
       0 => ExplorePage(),
-      1 => UserHomePage(),
+      1 => UserCenterPage(),
       _ => throw UnimplementedError("No widget for $currentPageIndex")
     };
     return BreakpointProvider(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'home_screen.dart';
 import 'ui/core/themes/theme.dart';
+import 'ui/features/home_screen.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

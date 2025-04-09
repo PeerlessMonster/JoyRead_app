@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// A builder defers loading while scrolling.
 ///
-/// [independentChild] is passed to the [child] parameter of the constructor of
+/// [independentChild] is passed to the [childBuilder] parameter of the constructor of
 /// [ValueListenableBuilder].
 class ScrollingDeferredLoadingBuilder extends StatefulWidget {
   final Widget Function(BuildContext context, Widget? child) underwayBuilder;

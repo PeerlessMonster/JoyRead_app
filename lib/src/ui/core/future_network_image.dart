@@ -34,8 +34,7 @@ class FutureNetworkImage extends StatelessWidget {
       url,
       fit: fit,
       handleLoadingProgress: true,
-      loadStateChanged: (state) {
-        return switch (state.extendedImageLoadState) {
+      loadStateChanged: (state) => switch (state.extendedImageLoadState) {
         LoadState.loading => loadingBuilder == null
             ? null
             : loadingBuilder!(context, state.loadingProgress),
@@ -51,7 +50,7 @@ class FutureNetworkImage extends StatelessWidget {
         LoadState.failed => failedBuilder == null
             ? null
             : failedBuilder!(context, state.reLoadImage),
-      };},
+      },
       cache: true,
       clearMemoryCacheWhenDispose: true,
     );

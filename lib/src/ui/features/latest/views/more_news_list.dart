@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../../data/models/latest_news.dart';
 import '../../../../utils/breakpoint.dart';
 import '../../../core/breakpoint_state.dart';
-import '../../../core/dynamic_loading_scroll_view.dart';
 import '../../../core/shared/background.dart';
 import '../../../core/themes/constants/spacing.dart' as spacing;
 import '../../../core/themes/constants/style.dart';
@@ -12,6 +11,7 @@ import '../../../features/read/views/read_screen.dart';
 import '../../../widgets/image_background_card.dart';
 import '../../../widgets/ink_well_for_opaque_widget.dart';
 import '../../../widgets/load_state_changed_network_image.dart';
+import '../../../widgets/load_state_changed_scroll_view.dart';
 import '../../../widgets/scrolling_parallax_image.dart';
 import '../view_models/extensions.dart';
 
@@ -19,7 +19,7 @@ class MoreLatestNewsList extends StatefulWidget {
   final List<LatestNews> firstPage;
   final Future<List<LatestNews>> Function(int pageOrder) loadMorePage;
   final String Function(String filename) loadImageUrl;
-  final Background fallbackImage;
+  final Background Function() loadFallbackImage;
   final int pageSize;
   final int preloadDataCount;
   final int maxCachedPageCount;
@@ -29,7 +29,7 @@ class MoreLatestNewsList extends StatefulWidget {
       required this.firstPage,
       required this.loadMorePage,
       required this.loadImageUrl,
-      required this.fallbackImage,
+      required this.loadFallbackImage,
       required this.pageSize,
       required this.preloadDataCount,
       required this.maxCachedPageCount});
@@ -63,6 +63,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
     }
 
     final imageUrl = widget.loadImageUrl(data.coverImageFilename);
+    final fallbackImage = widget.loadFallbackImage();
     return Padding(
       padding: padding,
       child: InkWellForOpaqueWidget(
@@ -83,7 +84,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
           label: data.formattedPublishTime,
           backgroundImage: LoadStateChangedNetworkImage(
             imageUrl,
-            fallbackImageAssetName: widget.fallbackImage.assetName,
+            fallbackImageAssetName: fallbackImage.assetName,
             showLoadingPlaceholder: false,
             showLoadFailedPlaceholder: false,
             displayNotificationWhenLoadFailed: true,
@@ -91,7 +92,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
                 ScrollingParallaxImage(
               image: completedWidget,
             ),
-            foregroundColor: widget.fallbackImage.foregroundColor,
+            foregroundColor: fallbackImage.foregroundColor,
           ),
           borderRadius: _borderRadius,
         ),
@@ -101,8 +102,6 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     final breakpoint = BreakpointState.of(context);
     final crossAxisCount = switch (breakpoint) {
       Breakpoint.compact => 1,
@@ -110,53 +109,40 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
       Breakpoint.large || Breakpoint.extraLarge => 3,
     };
 
-    return DynamicLoadingScrollView(
-      initialData: widget.firstPage,
-      loadData: widget.loadMorePage,
-      pageSize: widget.pageSize,
-      preloadDataCount: widget.preloadDataCount,
-      maxCachedPageCount: widget.maxCachedPageCount,
-      scrollViewBuilder:
-          (context, lastChildLayoutTypeBuilder, childBuilder, childCount) =>
-              ExtendedSliverGrid(
-        delegate: SliverChildBuilderDelegate(
-          childBuilder,
-          childCount: childCount,
-        ),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          mainAxisSpacing: _spacing,
-          crossAxisSpacing: _spacing,
-          childAspectRatio: 2.88,
-        ),
-        extendedListDelegate: ExtendedListDelegate(
-          lastChildLayoutTypeBuilder: lastChildLayoutTypeBuilder,
-        ),
-      ),
-      uncompletedWidget: ImageBackgroundCardSkeleton(
-        isLoading: true,
-        borderRadius: _borderRadius,
-      ),
-      successBuilder: (context, data, index) =>
-          _buildCard(data, index, crossAxisCount: crossAxisCount),
-      errorBuilder: (context, _) => ImageBackgroundCardSkeleton(
-        isLoading: false,
-        borderRadius: _borderRadius,
-      ),
-      loadingMoreWidget: Padding(
-        padding: EdgeInsets.only(top: _spacing),
-        child: LinearProgressIndicator(),
-      ),
-      noMoreWidget: Padding(
-        padding: EdgeInsets.only(top: _spacing),
-        child: SizedBox(
-          height: 50,
-          child: ColoredBox(
-            color: colorScheme.surfaceContainer,
-            child: Center(
-              child: Text('已经到底啦~'),
-            ),
+    return SliverPadding(
+      padding: EdgeInsets.only(top: _spacing),
+      sliver: LoadStateChangedScrollView(
+        firstPage: widget.firstPage,
+        loadMorePage: widget.loadMorePage,
+        pageSize: widget.pageSize,
+        preloadDataCount: widget.preloadDataCount,
+        maxCachedPageCount: widget.maxCachedPageCount,
+        scrollViewBuilder:
+            (context, lastChildLayoutTypeBuilder, childBuilder, childCount) =>
+                ExtendedSliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            childBuilder,
+            childCount: childCount,
           ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: _spacing,
+            crossAxisSpacing: _spacing,
+            childAspectRatio: 2.88,
+          ),
+          extendedListDelegate: ExtendedListDelegate(
+            lastChildLayoutTypeBuilder: lastChildLayoutTypeBuilder,
+          ),
+        ),
+        uncompletedWidget: ImageBackgroundCardSkeleton(
+          isLoading: true,
+          borderRadius: _borderRadius,
+        ),
+        successBuilder: (context, data, index) =>
+            _buildCard(data, index, crossAxisCount: crossAxisCount),
+        errorWidget: ImageBackgroundCardSkeleton(
+          isLoading: false,
+          borderRadius: _borderRadius,
         ),
       ),
     );

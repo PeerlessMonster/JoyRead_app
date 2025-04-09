@@ -1,3 +1,5 @@
+import '../../../../utils/breakpoint.dart';
+
 class Icon {
   const Icon._();
 
@@ -13,11 +15,13 @@ class ListTile {
   static const leadingWidth = 40.0;
 }
 
-class MaterialBanner {
-  const MaterialBanner._();
+class Banner {
+  const Banner._();
 
   static const height = 52.0;
   static const heightPlusDivider = height + 2.0;
+  static final floatingWidth =
+      Breakpoint.medium.screenWidthRange.start - NavigationRail.extendedWidth;
 }
 
 class SliverAppBar {

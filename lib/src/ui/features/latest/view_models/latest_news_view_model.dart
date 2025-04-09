@@ -6,7 +6,7 @@ import '../../../../data/repositories/latest_news.dart';
 import '../../../../utils/http_client_proxy.dart';
 import '../../../core/shared/background.dart';
 
-class LatestNewsSlideshowViewModel extends ChangeNotifier {
+class LatestNewsViewModel extends ChangeNotifier {
   static const _dataCount = 5;
   int get dataCount => _dataCount;
 
@@ -15,7 +15,7 @@ class LatestNewsSlideshowViewModel extends ChangeNotifier {
   late final ImageUrlRepository _imageRepository;
   late final LatestNewsRepository _newsRepository;
 
-  LatestNewsSlideshowViewModel()
+  LatestNewsViewModel()
       : fallbackImages = BackgroundRandom.nextDistinctAssets(_dataCount) {
     _imageRepository = const ImageUrlRepository();
 

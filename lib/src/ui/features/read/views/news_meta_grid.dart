@@ -7,13 +7,13 @@ const _sourceIcon = Icon(Icons.domain_rounded);
 const _timeIcon = Icon(Icons.calendar_month_rounded);
 const _writersIcon = Icon(Icons.people_rounded);
 
-class _NewsMetaContainer extends StatelessWidget {
+class _NewsMetaGrid extends StatelessWidget {
   final Widget longChip;
   final Widget shortChip1;
   final Widget shortChip2;
   static const _spacing = spacing.Padding.increment * 2;
 
-  const _NewsMetaContainer(
+  const _NewsMetaGrid(
       {super.key,
       required this.longChip,
       required this.shortChip1,
@@ -57,19 +57,19 @@ Widget _buildLongLabel(List<String> data) {
   );
 }
 
-class NewsMetaContainer extends StatelessWidget {
+class NewsMetaGrid extends StatelessWidget {
   final String source;
   final List<String> writers;
   final String time;
 
-  const NewsMetaContainer(
+  const NewsMetaGrid(
       {super.key,
       required this.source,
       required this.writers,
       required this.time});
 
   @override
-  Widget build(BuildContext context) => _NewsMetaContainer(
+  Widget build(BuildContext context) => _NewsMetaGrid(
         key: key,
         longChip: Chip(
           label: _buildLongLabel(writers),
@@ -100,7 +100,7 @@ class NewsMetaContainerSkeleton extends StatelessWidget {
       this.time});
 
   @override
-  Widget build(BuildContext context) => _NewsMetaContainer(
+  Widget build(BuildContext context) => _NewsMetaGrid(
         key: key,
         longChip: writers == null
             ? ChipSkeleton(

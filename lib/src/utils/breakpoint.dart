@@ -37,9 +37,9 @@ enum Breakpoint {
     } else if (screenWidth >= 1200) {
       return Breakpoint.large;
     } else if (screenWidth >= 840) {
-      return Breakpoint.medium;
-    } else if (screenWidth >= 600) {
       return Breakpoint.expanded;
+    } else if (screenWidth >= 600) {
+      return Breakpoint.medium;
     } else {
       return Breakpoint.compact;
     }

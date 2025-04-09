@@ -6,7 +6,7 @@ import '../../../../data/repositories/latest_news.dart';
 import '../../../../utils/http_client_proxy.dart';
 import '../../../core/shared/background.dart';
 
-class LatestScreenViewModel extends ChangeNotifier {
+class MoreNewsViewModel extends ChangeNotifier {
   static const _pageSize = 18;
   int get pageSize => _pageSize;
 
@@ -19,7 +19,7 @@ class LatestScreenViewModel extends ChangeNotifier {
   late final ImageUrlRepository _imageRepository;
   late final LatestNewsRepository _newsRepository;
 
-  LatestScreenViewModel() {
+  MoreNewsViewModel() {
     _imageRepository = const ImageUrlRepository();
 
     _httpClient = HttpClientProxyWithPersistentConnection();
@@ -53,5 +53,5 @@ class LatestScreenViewModel extends ChangeNotifier {
 
   String loadImageUrl(String filename) => _imageRepository.loadNews(filename);
 
-  Background get fallbackImage => BackgroundRandom.nextAsset();
+  Background loadFallbackImage() => BackgroundRandom.nextAsset();
 }

@@ -116,10 +116,14 @@ class ImageBackgroundCardWithSpaceBetweenTitleAndLabel extends StatelessWidget {
               children: [
                 Text(
                   title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: _titleTextStyle,
                 ),
                 Text(
                   label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: _labelTextStyle,
                 ),
               ],

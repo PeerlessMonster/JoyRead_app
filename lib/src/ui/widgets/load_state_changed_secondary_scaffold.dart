@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/future_widget.dart';
-import 'secondary_scaffold.dart';
+import 'load_state_screen.dart';
 
 class LoadStateChangedSecondaryScaffold<T> extends StatelessWidget {
   final T? initialData;
@@ -21,59 +21,22 @@ class LoadStateChangedSecondaryScaffold<T> extends StatelessWidget {
       required this.errorSignBuilder});
 
   @override
-  Widget build(BuildContext context) => SecondaryScaffold(
-        title: title,
-        body: FutureWidget(
-          initialData: initialData,
-          dataFuture: dataFuture,
-          uncompletedWidget: Center(
-            child: uncompletedSign,
-          ),
-          dataBuilder: (context, data) => bodyBuilder(context, data),
-          errorBuilder: (context, error) => Center(
-            child: errorSignBuilder(context, error),
-          ),
-        ),
-      );
-}
-
-class SliverLoadStateChangedSecondaryScaffold<T>
-    extends StatelessWidget {
-  final T? initialData;
-  final Future<T> dataFuture;
-  final String title;
-  final Widget uncompletedSign;
-  final List<Widget> Function(BuildContext context, T data) sliversBodyBuilder;
-  final Widget Function(BuildContext context, Object error) errorSignBuilder;
-
-  const SliverLoadStateChangedSecondaryScaffold(
-      {super.key,
-      this.initialData,
-      required this.dataFuture,
-      required this.title,
-      required this.uncompletedSign,
-      required this.sliversBodyBuilder,
-      required this.errorSignBuilder});
-
-  @override
   Widget build(BuildContext context) => FutureWidget(
         initialData: initialData,
         dataFuture: dataFuture,
-        uncompletedWidget: SecondaryScaffold(
+        uncompletedWidget: LoadStateScreen(
           title: title,
-          body: Center(
-            child: uncompletedSign,
-          ),
+          sign: uncompletedSign,
         ),
-        dataBuilder: (context, data) => SliverSecondaryScaffold(
-          title: title,
-          sliversBody: sliversBodyBuilder(context, data),
-        ),
-        errorBuilder: (context, error) => SecondaryScaffold(
-          title: title,
-          body: Center(
-            child: errorSignBuilder(context, error),
+        dataBuilder: (context, data) => Scaffold(
+          appBar: AppBar(
+            title: Text(title),
           ),
+          body: bodyBuilder(context, data),
+        ),
+        errorBuilder: (context, error) => LoadStateScreen(
+          title: title,
+          sign: errorSignBuilder(context, error),
         ),
       );
 }

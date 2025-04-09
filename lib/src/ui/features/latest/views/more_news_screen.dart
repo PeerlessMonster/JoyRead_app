@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+
+import '../../../../data/models/latest_news.dart';
+import '../../../../utils/breakpoint.dart';
+import '../../../core/breakpoint_state.dart';
+import '../../../core/future_widget.dart';
+import '../../../core/shared/illustration.dart';
+import '../../../widgets/load_state_screen.dart';
+import '../../../widgets/network_notification_display_container.dart';
+import '../../../widgets/sign.dart';
+import '../../../widgets/sliver_app_bar.dart';
+import '../view_models/more_news_view_model.dart';
+import 'more_news_list.dart';
+
+const _title = '最新资讯';
+
+class MoreNewsScreen extends StatelessWidget {
+  MoreNewsScreen({super.key});
+
+  final _viewModel = MoreNewsViewModel();
+
+  Widget _buildSliverAppBar() => RigidSliverAppBar(
+        title: Text(_title),
+      );
+
+  Widget _buildSliverList(List<LatestNews> data) => MoreLatestNewsList(
+        firstPage: data,
+        loadMorePage: _viewModel.loadMorePage,
+        loadImageUrl: _viewModel.loadImageUrl,
+        loadFallbackImage: _viewModel.loadFallbackImage,
+        pageSize: _viewModel.pageSize,
+        preloadDataCount: _viewModel.preloadDataCount,
+        maxCachedPageCount: _viewModel.maxCachedPageCount,
+      );
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable: _viewModel,
+        builder: (context, child) => FutureWidget(
+          dataFuture: _viewModel.firstPageFuture,
+          uncompletedWidget: LoadStateScreen(
+            title: _title,
+            sign: Sign(
+              imageAssetName: Illustration.loading.assetName,
+              text: Illustration.loading.description,
+            ),
+          ),
+          dataBuilder: (context, data) => Scaffold(
+            body: SafeArea(
+              child: BreakpointProvider(
+                // Let [BreakpointState] is able to found.
+                child: Builder(
+                  builder: (context) =>
+                      BreakpointState.of(context) <= Breakpoint.compact
+                          ? SliverFixedNetworkNotificationDisplayContainer(
+                              sliverAppBar: _buildSliverAppBar(),
+                              sliversBody: [_buildSliverList(data)],
+                            )
+                          : FloatingNetworkNotificationDisplayContainer(
+                              body: CustomScrollView(slivers: [
+                                _buildSliverAppBar(),
+                                _buildSliverList(data),
+                              ]),
+                            ),
+                ),
+              ),
+            ),
+          ),
+          errorBuilder: (context, error) => LoadStateScreen(
+            title: _title,
+            sign: Sign(
+              imageAssetName: Illustration.noNetwork.assetName,
+              text: Illustration.noNetwork.description,
+              action: FilledButton(
+                onPressed: _viewModel.reloadFirstPage,
+                child: Text('Retry'),
+              ),
+            ),
+          ),
+        ),
+      );
+}
