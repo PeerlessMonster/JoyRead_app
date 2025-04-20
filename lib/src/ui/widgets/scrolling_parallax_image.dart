@@ -4,8 +4,9 @@ import '../core/global_widget.dart';
 
 class ScrollingParallaxImage extends StatelessWidget {
   final Widget image;
+  final double? aspectRatio;
 
-  ScrollingParallaxImage({super.key, required this.image});
+  ScrollingParallaxImage({super.key, required this.image, this.aspectRatio});
 
   final backgroundImageKey = GlobalKey();
 
@@ -17,10 +18,16 @@ class ScrollingParallaxImage extends StatelessWidget {
           backgroundImageKey: backgroundImageKey,
         ),
         children: [
-          GlobalWidget(
-            key: backgroundImageKey,
-            child: image,
-          ),
+          aspectRatio == null
+              ? GlobalWidget(
+                  key: backgroundImageKey,
+                  child: image,
+                )
+              : AspectRatio(
+                  key: backgroundImageKey,
+                  aspectRatio: aspectRatio!,
+                  child: image,
+                ),
         ],
       );
 }
@@ -55,16 +62,12 @@ class ParallaxFlowDelegate extends FlowDelegate {
 
     final verticalAlignment = Alignment(0.0, scrollFraction * 2 - 1);
 
-    final backgroundImageBox =
+    final backgroundBox =
         backgroundImageKey.currentContext!.findRenderObject() as RenderBox;
-    final backgroundImageSize = backgroundImageBox.size;
+    final backgroundSize = backgroundBox.size;
     final listItemSize = listItemBox.size;
-    // Considering background images have different height, set a fixed height
-    // according to list item.
-    final visibleBackgroundSize =
-        Size(backgroundImageSize.width, listItemSize.height * 1.66);
-    final childRect = verticalAlignment.inscribe(
-        visibleBackgroundSize, Offset.zero & listItemSize);
+    final childRect =
+        verticalAlignment.inscribe(backgroundSize, Offset.zero & listItemSize);
 
     context.paintChild(
       0,

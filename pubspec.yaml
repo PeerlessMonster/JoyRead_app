@@ -33,6 +33,8 @@ dependencies:
   extended_list: ^3.0.2
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   get_storage: ^2.1.1
   http: ^1.3.0
   intl: any
@@ -93,3 +95,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  fonts:
+    - family: Source Han Serif
+      fonts:
+        - asset: fonts/SourceHanSerifSC-VF.otf

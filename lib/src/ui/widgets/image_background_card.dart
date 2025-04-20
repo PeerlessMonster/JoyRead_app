@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/themes/constants/spacing.dart' as spacing;
-import 'black_gradient_transparent_box.dart';
+import 'gradient_transparent_box.dart';
 import 'skeleton.dart';
 import 'translucent_black_box.dart';
 
@@ -26,10 +26,7 @@ class _ImageBackgroundCardWithSinkingTitleState
   final _key = GlobalKey();
   final _textKey = GlobalKey();
 
-  double? _calculateOffsetFraction() {
-    if (_key.currentContext == null) {
-      return null;
-    }
+  double _calculateOffsetFraction() {
     final ancestorBox = _key.currentContext!.findRenderObject() as RenderBox;
 
     final textBox = _textKey.currentContext!.findRenderObject() as RenderBox;
@@ -42,6 +39,8 @@ class _ImageBackgroundCardWithSinkingTitleState
     return textOffset.dy / ancestorHeight;
   }
 
+  // To ensure that all text is over not gradient but black part, calculate
+  // [endStop] first, then minus a fixed height is [beginStop].
   double get beginStop => endStop - 0.2;
   var endStop = 0.8;
 
@@ -49,12 +48,17 @@ class _ImageBackgroundCardWithSinkingTitleState
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final textStyle = textTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.bold,
       color: Colors.white,
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+      if (_key.currentContext == null) {
+        return;
+      }
+
       final offsetFraction = _calculateOffsetFraction();
-      if (offsetFraction != null && offsetFraction != endStop) {
+      if (offsetFraction != endStop) {
         setState(() {
           endStop = offsetFraction;
         });
@@ -63,11 +67,12 @@ class _ImageBackgroundCardWithSinkingTitleState
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(widget.borderRadius),
-      child: BottomBlackGradientTransparentBox(
+      child: GradientTransparentBox(
         key: _key,
-        beginStop: beginStop,
-        endStop: endStop,
+        stops: [beginStop, endStop],
+        colors: [Colors.transparent, Colors.black.withValues(alpha: 0.8)],
         image: widget.backgroundImage,
+        alignment: AlignmentDirectional.bottomStart,
         child: Padding(
           padding: const EdgeInsets.all(spacing.Padding.increment * 5),
           child: Text(
@@ -86,15 +91,6 @@ class ImageBackgroundCardWithSpaceBetweenTitleAndLabel extends StatelessWidget {
   final String label;
   final Widget backgroundImage;
   final double borderRadius;
-  static const _titleTextStyle = TextStyle(
-    color: Colors.white,
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
-  );
-  static const _labelTextStyle = TextStyle(
-    color: Colors.white,
-    fontSize: 14,
-  );
 
   const ImageBackgroundCardWithSpaceBetweenTitleAndLabel(
       {super.key,
@@ -104,33 +100,43 @@ class ImageBackgroundCardWithSpaceBetweenTitleAndLabel extends StatelessWidget {
       this.borderRadius = 0});
 
   @override
-  Widget build(BuildContext context) => ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: TranslucentBlackBox(
-          image: backgroundImage,
-          child: Padding(
-            padding: const EdgeInsets.all(spacing.Padding.increment * 4),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: _titleTextStyle,
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: TranslucentBlackBox(
+        image: backgroundImage,
+        child: Padding(
+          padding: const EdgeInsets.all(spacing.Padding.increment * 4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-                Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: _labelTextStyle,
+              ),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }
 
 class ImageBackgroundCardSkeleton extends StatelessWidget {

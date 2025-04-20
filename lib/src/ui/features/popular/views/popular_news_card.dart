@@ -32,11 +32,11 @@ class _PopularNewsCard extends StatelessWidget {
       : assert(childCount > 0, 'Count of child should be positive integer');
 
   TextStyle? _buildTextStyle(BuildContext context, int index) {
-    final themeData = Theme.of(context);
+    final theme = Theme.of(context);
 
-    final colorScheme = themeData.colorScheme;
+    final colorScheme = theme.colorScheme;
 
-    final textTheme = themeData.textTheme;
+    final textTheme = theme.textTheme;
     return textTheme.titleMedium
         ?.copyWith(
           color: index < 3

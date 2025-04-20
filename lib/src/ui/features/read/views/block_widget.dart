@@ -17,11 +17,11 @@ class HeadingBlockWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
+    final theme = Theme.of(context);
 
-    final colorScheme = themeData.colorScheme;
+    final colorScheme = theme.colorScheme;
 
-    final textTheme = themeData.textTheme;
+    final textTheme = theme.textTheme;
     final textStyle = switch (level) {
       1 => textTheme.titleLarge?.copyWith(
           color: colorScheme.tertiary,
@@ -73,11 +73,11 @@ class AnnotationBlockWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
+    final theme = Theme.of(context);
 
-    final colorScheme = themeData.colorScheme;
+    final colorScheme = theme.colorScheme;
 
-    final textTheme = themeData.textTheme;
+    final textTheme = theme.textTheme;
     final textStyle = textTheme.labelLarge?.copyWith(
       color: colorScheme.onSurface.withValues(alpha: 0.5),
     );

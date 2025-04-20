@@ -91,9 +91,9 @@ class NewsMetaGridSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
+    final theme = Theme.of(context);
     return Theme(
-      data: removeTapTargetMarginOnMobile(themeData),
+      data: removeTapTargetMarginOnMobile(theme),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

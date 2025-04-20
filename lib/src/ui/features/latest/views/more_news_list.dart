@@ -91,6 +91,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
             completedBuilder: (context, completedWidget) =>
                 ScrollingParallaxImage(
               image: completedWidget,
+              aspectRatio: 4 / 3,
             ),
             foregroundColor: fallbackImage.foregroundColor,
           ),
