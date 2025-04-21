@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/models/latest_news.dart';
 import '../../../../utils/breakpoint.dart';
 import '../../../core/breakpoint_state.dart';
 import '../../../core/future_widget.dart';
@@ -19,20 +18,6 @@ class MoreNewsScreen extends StatelessWidget {
 
   final _viewModel = MoreNewsViewModel();
 
-  Widget _buildSliverAppBar() => RigidSliverAppBar(
-        title: Text(_title),
-      );
-
-  Widget _buildSliverList(List<LatestNews> data) => MoreLatestNewsList(
-        firstPage: data,
-        loadMorePage: _viewModel.loadMorePage,
-        loadImageUrl: _viewModel.loadImageUrl,
-        loadFallbackImage: _viewModel.loadFallbackImage,
-        pageSize: _viewModel.pageSize,
-        preloadDataCount: _viewModel.preloadDataCount,
-        maxCachedPageCount: _viewModel.maxCachedPageCount,
-      );
-
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: _viewModel,
@@ -48,20 +33,19 @@ class MoreNewsScreen extends StatelessWidget {
           dataBuilder: (context, data) => Scaffold(
             body: SafeArea(
               child: BreakpointProvider(
-                // Let [BreakpointState] is able to found.
-                child: Builder(
-                  builder: (context) =>
-                      BreakpointState.of(context) <= Breakpoint.compact
-                          ? SliverFixedNetworkNotificationDisplayContainer(
-                              sliverAppBar: _buildSliverAppBar(),
-                              sliversBody: [_buildSliverList(data)],
-                            )
-                          : FloatingNetworkNotificationDisplayContainer(
-                              body: CustomScrollView(slivers: [
-                                _buildSliverAppBar(),
-                                _buildSliverList(data),
-                              ]),
-                            ),
+                child: _AdaptiveSliverNetworkNotificationDisplayContainer(
+                  sliverAppBar: RigidSliverAppBar(
+                    title: Text(_title),
+                  ),
+                  sliverBody: MoreLatestNewsList(
+                    firstPage: data,
+                    loadMorePage: _viewModel.loadMorePage,
+                    loadImageUrl: _viewModel.loadImageUrl,
+                    loadFallbackImage: _viewModel.loadFallbackImage,
+                    pageSize: _viewModel.pageSize,
+                    preloadDataCount: _viewModel.preloadDataCount,
+                    maxCachedPageCount: _viewModel.maxCachedPageCount,
+                  ),
                 ),
               ),
             ),
@@ -79,4 +63,29 @@ class MoreNewsScreen extends StatelessWidget {
           ),
         ),
       );
+}
+
+class _AdaptiveSliverNetworkNotificationDisplayContainer
+    extends StatelessWidget {
+  final Widget sliverAppBar;
+  final Widget sliverBody;
+
+  const _AdaptiveSliverNetworkNotificationDisplayContainer(
+      {required this.sliverAppBar, required this.sliverBody});
+
+  @override
+  Widget build(BuildContext context) {
+    final breakpoint = BreakpointState.of(context);
+    return breakpoint <= Breakpoint.compact
+        ? SliverFixedNetworkNotificationDisplayContainer(
+            sliverAppBar: sliverAppBar,
+            sliversBody: [sliverBody],
+          )
+        : FloatingNetworkNotificationDisplayContainer(
+            body: CustomScrollView(slivers: [
+              sliverAppBar,
+              sliverBody,
+            ]),
+          );
+  }
 }

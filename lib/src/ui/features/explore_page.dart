@@ -6,7 +6,6 @@ import '../core/max_width_box.dart';
 import '../core/responsive_margin.dart';
 import '../core/themes/constants/spacing.dart' as spacing;
 import '../widgets/button.dart';
-import '../widgets/network_notification_display_container.dart';
 import '../widgets/sliding_segmented_control.dart';
 import 'latest/views/latest_news_slideshow.dart';
 import 'latest/views/more_news_screen.dart';
@@ -24,7 +23,8 @@ class _ExplorePageState extends State<ExplorePage> {
 
   static const _spacing = spacing.Padding.increment * 2;
 
-  Widget _buildListView(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     final breakpoint = BreakpointState.of(context);
@@ -124,14 +124,4 @@ class _ExplorePageState extends State<ExplorePage> {
       SizedBox(height: spacing.Padding.increment * 9),
     ]);
   }
-
-  @override
-  Widget build(BuildContext context) =>
-      BreakpointState.of(context) <= Breakpoint.compact
-          ? FixedNetworkNotificationDisplayContainer(
-              body: _buildListView(context),
-            )
-          : FloatingNetworkNotificationDisplayContainer(
-              body: _buildListView(context),
-            );
 }

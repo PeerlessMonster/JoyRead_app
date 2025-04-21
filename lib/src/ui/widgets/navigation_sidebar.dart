@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/page_navigation_destination.dart';
 import '../core/pressed_action.dart';
+import '../core/themes/constants/animation.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
 import '../core/themes/constants/spacing.dart' as spacing;
 import 'button.dart';
@@ -51,12 +52,14 @@ class _NavigationSidebarState extends State<NavigationSidebar> {
                   const EdgeInsets.only(top: spacing.Padding.targetSpacing),
               child: isExtended
                   ? CapsuleExtendedFloatingActionButton(
-                      onPressed: () {},
+                      onPressed: widget.floatingAction.onPressed,
+                      heroTag: HeroTag.sidebarFloatingActionButton,
                       icon: widget.floatingAction.icon,
                       label: Text(widget.floatingAction.name),
                     )
                   : FloatingActionButton(
-                      onPressed: () {},
+                      onPressed: widget.floatingAction.onPressed,
+                      heroTag: HeroTag.sidebarFloatingActionButton,
                       shape: CircleBorder(),
                       child: widget.floatingAction.icon,
                     ),

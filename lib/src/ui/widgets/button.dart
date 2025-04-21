@@ -35,21 +35,34 @@ class CapsuleExtendedFloatingActionButton extends StatelessWidget {
   final Widget icon;
   final Widget label;
   final void Function() onPressed;
+  final Object? heroTag;
+  static const _shape = StadiumBorder();
 
   const CapsuleExtendedFloatingActionButton(
       {super.key,
       required this.icon,
       required this.label,
-      required this.onPressed});
+      required this.onPressed,
+      this.heroTag});
+
+  Widget _buildLabel() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: label,
+      );
 
   @override
-  Widget build(BuildContext context) => FloatingActionButton.extended(
-        onPressed: onPressed,
-        shape: StadiumBorder(),
-        icon: icon,
-        label: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: label,
-        ),
-      );
+  Widget build(BuildContext context) => heroTag == null
+      ? FloatingActionButton.extended(
+          onPressed: onPressed,
+          shape: _shape,
+          icon: icon,
+          label: label,
+        )
+      : FloatingActionButton.extended(
+          onPressed: onPressed,
+          heroTag: heroTag,
+          shape: _shape,
+          icon: icon,
+          label: _buildLabel(),
+        );
 }

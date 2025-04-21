@@ -28,6 +28,11 @@ class BreakpointState extends InheritedWidget {
       breakpoint != oldWidget.breakpoint;
 }
 
+Breakpoint dependOnWindowWidth(BuildContext context) {
+  final windowWidth = MediaQuery.sizeOf(context).width;
+  return Breakpoint.include(windowWidth);
+}
+
 /// A wrapper of [BreakpointState].
 ///
 /// To obtain [Breakpoint] information, insert it to somewhere top of the widget
@@ -43,8 +48,7 @@ class BreakpointProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final windowWidth = MediaQuery.sizeOf(context).width;
-    final breakpoint = Breakpoint.include(windowWidth);
+    final breakpoint = dependOnWindowWidth(context);
     return BreakpointState(
       breakpoint: breakpoint,
       child: child,

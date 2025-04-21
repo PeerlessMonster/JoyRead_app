@@ -37,8 +37,6 @@ class BottomAppBar {
   static const verticalPadding = 12.0;
   static const horizontalPadding = 16.0;
 
-  static const notchSinkingHeight = height / 3;
-
   static const height = 80.0;
 }
 

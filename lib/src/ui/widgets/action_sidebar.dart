@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/pressed_action.dart';
+import '../core/themes/constants/animation.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
 import '../core/themes/constants/spacing.dart' as spacing;
 
@@ -47,8 +48,9 @@ class ActionSidebar extends StatelessWidget {
                           )),
                   FloatingActionButton(
                     onPressed: floatingAction.onPressed,
-                    shape: const CircleBorder(),
+                    heroTag: HeroTag.sidebarFloatingActionButton,
                     tooltip: floatingAction.name,
+                    shape: const CircleBorder(),
                     child: floatingAction.icon,
                   ),
                 ],

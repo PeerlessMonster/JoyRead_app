@@ -14,26 +14,24 @@ class NavigationBottomBar extends StatelessWidget {
       required this.onDestinationSelected});
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(children: [
-      Positioned.fill(
-        child: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
+  Widget build(BuildContext context) => Stack(children: [
+        Positioned.fill(
+          child: BottomAppBar(
+            shape: const CircularNotchedRectangle(),
+          ),
         ),
-      ),
-      NavigationBar(
-        backgroundColor: Colors.transparent,
-        destinations: navigationDestinations
-            .map((destination) => NavigationDestination(
-                  tooltip: '',
-                  label: destination.name,
-                  icon: destination.icon,
-                ))
-            .toList(),
-        selectedIndex: selectedIndex,
-        onDestinationSelected: onDestinationSelected,
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-      ),
-    ]);
-  }
+        NavigationBar(
+          backgroundColor: Colors.transparent,
+          destinations: navigationDestinations
+              .map((destination) => NavigationDestination(
+                    tooltip: '',
+                    label: destination.name,
+                    icon: destination.icon,
+                  ))
+              .toList(),
+          selectedIndex: selectedIndex,
+          onDestinationSelected: onDestinationSelected,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        ),
+      ]);
 }

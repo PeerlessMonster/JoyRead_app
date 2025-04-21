@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../../../utils/breakpoint.dart';
 import '../../../core/breakpoint_state.dart';
 import '../../../core/future_widget.dart';
 import '../../../core/pressed_action.dart';
-import '../../../core/responsive_layout_builder.dart';
-import '../../../widgets/narrow_screen_action_scaffold.dart';
+import '../../../core/themes/constants/spacing.dart' as spacing;
+import '../../../widgets/action_scaffold.dart';
 import '../../../widgets/sliver_app_bar.dart';
-import '../../../widgets/wide_screen_action_scaffold.dart';
 import '../view_models/extensions.dart';
 import '../view_models/read_view_model.dart';
 import 'news_detail_scroll_view.dart';
-import '../../../core/themes/constants/spacing.dart' as spacing;
 
 const _title = '阅读详情';
 
@@ -20,70 +19,63 @@ class _ReadScreen extends StatelessWidget {
 
   const _ReadScreen({super.key, required this.sliversBody, this.title});
 
-  PressedAction _buildFloatingAction() => PressedAction(
-        name: 'Search',
-        icon: Icon(Icons.auto_awesome_rounded),
-        onPressed: () {},
-      );
-
-  List<PressedAction> _buildPrimaryActions() => [
-        PressedAction(
-          name: 'Translate',
-          icon: Icon(Icons.translate_rounded),
-          onPressed: () {},
-        ),
-      ];
-
-  List<PressedAction> _buildSecondaryActions() => [
-        PressedAction(
-          name: 'Like',
-          icon: Icon(Icons.thumb_up),
-          onPressed: () {},
-        ),
-        PressedAction(
-          name: 'Star',
-          icon: Icon(Icons.star_rounded),
-          onPressed: () {},
-        ),
-        PressedAction(
-          name: 'Dislike',
-          icon: Icon(Icons.thumb_down_rounded),
-          onPressed: () {},
-        ),
-      ];
-
   @override
-  Widget build(BuildContext context) => ResponsiveLayoutBuilder(
-        narrowScreenWidget: ScrollingHiddenNarrowScreenActionScaffold(
-          bodyBuilder: (context, controller) => BreakpointProvider(
-            child: CustomScrollView(
-              controller: controller,
-              slivers: [
-                FlexibleSliverAppBar(
-                  title: title ?? _title,
-                ),
-                ...sliversBody,
-              ],
-            ),
-          ),
-          floatingAction: _buildFloatingAction(),
-          primaryActions: _buildPrimaryActions(),
-          secondaryActions: _buildSecondaryActions(),
-        ),
-        wideScreenWidget: WideScreenActionScaffold(
-          body: BreakpointProvider(
-            child: CustomScrollView(slivers: [
-              FlexibleSliverAppBarWithoutLeading(
+  Widget build(BuildContext context) => ActionScaffold(
+        bodyBuilder: (context, controller) => BreakpointProvider(
+          child: CustomScrollView(
+            controller: controller,
+            slivers: [
+              _AdaptiveFlexibleSliverAppBar(
                 title: title ?? _title,
               ),
               ...sliversBody,
-            ]),
+            ],
           ),
-          floatingAction: _buildFloatingAction(),
-          primaryActions: _buildPrimaryActions(),
-          secondaryActions: _buildSecondaryActions(),
         ),
+        floatingAction: PressedAction(
+          name: 'Search',
+          icon: Icon(Icons.auto_awesome_rounded),
+          onPressed: () {},
+        ),
+        primaryActions: [
+          PressedAction(
+            name: 'Translate',
+            icon: Icon(Icons.translate_rounded),
+            onPressed: () {},
+          ),
+        ],
+        secondaryActions: [
+          PressedAction(
+            name: 'Like',
+            icon: Icon(Icons.thumb_up),
+            onPressed: () {},
+          ),
+          PressedAction(
+            name: 'Star',
+            icon: Icon(Icons.star_rounded),
+            onPressed: () {},
+          ),
+          PressedAction(
+            name: 'Dislike',
+            icon: Icon(Icons.thumb_down_rounded),
+            onPressed: () {},
+          ),
+        ],
       );
+}
+
+class _AdaptiveFlexibleSliverAppBar extends StatelessWidget {
+  final String title;
+
+  const _AdaptiveFlexibleSliverAppBar({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    final breakpoint = BreakpointState.of(context);
+    return breakpoint <= Breakpoint.compact
+        ? FlexibleSliverAppBar(title: title)
+        : FlexibleSliverAppBarWithoutLeading(title: title);
+  }
 }
 
 class ReadScreen extends StatelessWidget {

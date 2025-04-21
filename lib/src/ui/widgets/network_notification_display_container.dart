@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/network_notification.dart';
-import '../core/themes/constants/animation.dart' as animation;
+import '../core/themes/constants/animation.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
 import '../core/themes/constants/spacing.dart' as spacing;
 import 'network_notification_banner.dart';
@@ -25,32 +25,30 @@ class _NetworkNotificationDisplayContainer extends StatelessWidget {
       this.shadowDropped = false});
 
   @override
-  Widget build(BuildContext context) {
-    return NetworkNotificationListener(
-      onNetworkError: showBanner,
-      onNetworkRestored: () {
-        if (isVisible) {
-          Future.delayed(
-            animation.SnackBar.displayDuration,
-            hideBanner,
-          );
-        }
-      },
-      childBuilder: (context, isNetworkError) => bodyBuilder(
-          context,
-          isNetworkError
-              ? NetworkErrorNotificationBanner(
-                  onClose: hideBanner,
-                  capsuleShaped: floating,
-                  elevation: shadowDropped ? null : 0,
-                )
-              : NetworkRestoredNotificationBanner(
-                  onClose: hideBanner,
-                  capsuleShaped: floating,
-                  elevation: shadowDropped ? null : 0,
-                )),
-    );
-  }
+  Widget build(BuildContext context) => NetworkNotificationListener(
+        onNetworkError: showBanner,
+        onNetworkRestored: () {
+          if (isVisible) {
+            Future.delayed(
+              PlayTime.snackBarDisplay,
+              hideBanner,
+            );
+          }
+        },
+        childBuilder: (context, isNetworkError) => bodyBuilder(
+            context,
+            isNetworkError
+                ? NetworkErrorNotificationBanner(
+                    onClose: hideBanner,
+                    capsuleShaped: floating,
+                    elevation: shadowDropped ? null : 0,
+                  )
+                : NetworkRestoredNotificationBanner(
+                    onClose: hideBanner,
+                    capsuleShaped: floating,
+                    elevation: shadowDropped ? null : 0,
+                  )),
+      );
 }
 
 const _bannerHeight = dimension.Banner.heightPlusDivider;
