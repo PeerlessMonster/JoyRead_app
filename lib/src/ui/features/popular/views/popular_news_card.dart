@@ -4,7 +4,7 @@ import '../../../core/future_widget.dart';
 import '../../../core/themes/constants/dimension.dart' as dimension;
 import '../../../widgets/list_row.dart';
 import '../../../widgets/list_section.dart';
-import '../../read/views/read_screen.dart';
+import '../../reading/views/reading_screen.dart';
 import '../view_models/popular_news_view_model.dart';
 
 enum Sort {
@@ -120,7 +120,7 @@ class PopularNewsCard extends StatelessWidget {
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ReadScreen(
+                      builder: (context) => ReadingScreen(
                         dataId: data.id,
                         title: data.title,
                       ),

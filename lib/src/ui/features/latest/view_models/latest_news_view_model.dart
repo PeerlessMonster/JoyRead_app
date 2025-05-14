@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/models/latest_news.dart';
+import '../../../../data/models/news_detail.dart';
 import '../../../../data/repositories/image.dart';
 import '../../../../data/repositories/latest_news.dart';
 import '../../../../utils/http_client_proxy.dart';
@@ -25,7 +25,7 @@ class LatestNewsViewModel extends ChangeNotifier {
     _load();
   }
 
-  late Future<List<LatestNews>> dataFuture;
+  late Future<List<NewsDetail>> dataFuture;
 
   void _load() =>
       dataFuture = _newsRepository.loadWithCache(_dataCount);

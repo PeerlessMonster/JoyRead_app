@@ -1,23 +1,23 @@
 import 'package:extended_list/extended_list.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../data/models/latest_news.dart';
+import '../../../../data/models/news_detail.dart';
 import '../../../../utils/breakpoint.dart';
 import '../../../core/breakpoint_state.dart';
 import '../../../core/shared/background.dart';
 import '../../../core/themes/constants/spacing.dart' as spacing;
 import '../../../core/themes/constants/style.dart';
-import '../../../features/read/views/read_screen.dart';
 import '../../../widgets/image_background_card.dart';
 import '../../../widgets/ink_well_for_opaque_widget.dart';
 import '../../../widgets/load_state_changed_network_image.dart';
 import '../../../widgets/load_state_changed_scroll_view.dart';
 import '../../../widgets/scrolling_parallax_image.dart';
+import '../../reading/views/reading_screen.dart';
 import '../view_models/extensions.dart';
 
 class MoreLatestNewsList extends StatefulWidget {
-  final List<LatestNews> firstPage;
-  final Future<List<LatestNews>> Function(int pageOrder) loadMorePage;
+  final List<NewsDetail> firstPage;
+  final Future<List<NewsDetail>> Function(int pageOrder) loadMorePage;
   final String Function(String filename) loadImageUrl;
   final Background Function() loadFallbackImage;
   final int pageSize;
@@ -43,7 +43,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
 
   static const _borderRadius = RoundedCorner.smallBorderRadius;
 
-  Widget _buildCard(LatestNews data, int index, {required int crossAxisCount}) {
+  Widget _buildCard(NewsDetail data, int index, int crossAxisCount) {
     late final EdgeInsetsGeometry padding;
     switch (crossAxisCount) {
       case 1:
@@ -64,6 +64,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
 
     final imageUrl = widget.loadImageUrl(data.coverImageFilename);
     final fallbackImage = widget.loadFallbackImage();
+
     return Padding(
       padding: padding,
       child: InkWellForOpaqueWidget(
@@ -72,7 +73,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
           onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ReadScreen(
+                builder: (context) => ReadingScreen(
                   dataId: data.id,
                   title: data.title,
                   publishTime: data.formattedPublishTime,
@@ -140,7 +141,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
           borderRadius: _borderRadius,
         ),
         successBuilder: (context, data, index) =>
-            _buildCard(data, index, crossAxisCount: crossAxisCount),
+            _buildCard(data, index, crossAxisCount),
         errorWidget: ImageBackgroundCardSkeleton(
           isLoading: false,
           borderRadius: _borderRadius,

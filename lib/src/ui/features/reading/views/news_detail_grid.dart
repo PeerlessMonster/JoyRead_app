@@ -4,7 +4,7 @@ import '../../../../utils/theme.dart';
 import '../../../core/themes/constants/spacing.dart' as spacing;
 import '../../../widgets/skeleton.dart';
 
-enum _Meta {
+enum _DetailField {
   source('来源', Icon(Icons.domain_rounded)),
   writers('作者', Icon(Icons.people_rounded)),
   time('发布时间', Icon(Icons.calendar_month_rounded)),
@@ -13,16 +13,16 @@ enum _Meta {
   final String tooltip;
   final Icon icon;
 
-  const _Meta(this.tooltip, this.icon);
+  const _DetailField(this.tooltip, this.icon);
 }
 
-class NewsMetaGrid extends StatelessWidget {
+class NewsDetailGrid extends StatelessWidget {
   final String source;
   final List<String> writers;
   final String time;
   final String visitCount;
 
-  const NewsMetaGrid(
+  const NewsDetailGrid(
       {super.key,
       required this.source,
       required this.writers,
@@ -30,7 +30,7 @@ class NewsMetaGrid extends StatelessWidget {
       required this.visitCount});
 
   @override
-  Widget build(BuildContext context) => NewsMetaGridSkeleton(
+  Widget build(BuildContext context) => NewsDetailGridSkeleton(
         isLoading: false,
         source: source,
         writers: writers,
@@ -39,7 +39,7 @@ class NewsMetaGrid extends StatelessWidget {
       );
 }
 
-class NewsMetaGridSkeleton extends StatelessWidget {
+class NewsDetailGridSkeleton extends StatelessWidget {
   /// Taking effect when any of [source], [writers], [time] or [visitCount] is
   /// null.
   final bool isLoading;
@@ -48,7 +48,7 @@ class NewsMetaGridSkeleton extends StatelessWidget {
   final String? time;
   final String? visitCount;
 
-  const NewsMetaGridSkeleton(
+  const NewsDetailGridSkeleton(
       {super.key,
       required this.isLoading,
       this.source,
@@ -103,24 +103,24 @@ class NewsMetaGridSkeleton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: _spacing,
             children: [
-              _checkIfLongChipFallback(writers, _Meta.writers, 2),
-              _checkIfChipFallback(source, _Meta.source, 1),
+              _checkIfLongChipFallback(writers, _DetailField.writers, 2),
+              _checkIfChipFallback(source, _DetailField.source, 1),
             ],
           ),
-          _checkIfChipFallback(time, _Meta.time, 3),
-          _checkIfChipFallback(visitCount, _Meta.visitCount, 1),
+          _checkIfChipFallback(time, _DetailField.time, 3),
+          _checkIfChipFallback(visitCount, _DetailField.visitCount, 1),
         ],
       ),
     );
   }
 
-  Widget _checkIfChipFallback(String? data, _Meta meta, int width) =>
+  Widget _checkIfChipFallback(String? data, _DetailField field, int width) =>
       data == null
-          ? _buildChipSkeleton(meta.icon, width)
-          : _buildChip(Text(data), meta.tooltip, meta.icon);
+          ? _buildChipSkeleton(field.icon, width)
+          : _buildChip(Text(data), field.tooltip, field.icon);
 
   Widget _checkIfLongChipFallback(
-          List<String>? dataList, _Meta meta, int width) =>
+          List<String>? dataList, _DetailField meta, int width) =>
       dataList == null
           ? _buildChipSkeleton(meta.icon, width)
           : _buildChip(_buildLongLabel(dataList), meta.tooltip, meta.icon);

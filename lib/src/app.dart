@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'ui/core/themes/theme.dart';
+import 'ui/features/assistant/views/assistant_screen.dart';
 import 'ui/features/home_screen.dart';
 import 'utils/theme.dart';
 
@@ -36,7 +37,8 @@ class MainApp extends StatelessWidget {
         Locale.fromSubtags(
             languageCode: 'zh', scriptCode: 'Hant', countryCode: 'HK'),
       ],
-      home: const HomeScreen(),
+      // home: const HomeScreen(),
+      home: const AssistantScreen(),
     );
   }
 }

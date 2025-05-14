@@ -6,13 +6,10 @@ class Icon {
   static const size = 24.0;
 }
 
-class ListTile {
-  const ListTile._();
+class CircleAvatar {
+  const CircleAvatar._();
 
-  static const contentVerticalPadding = 10.0;
-  static const contentHorizontalPadding = 16.0;
-
-  static const leadingWidth = 40.0;
+  static const size = 40.0;
 }
 
 class Banner {
@@ -22,6 +19,21 @@ class Banner {
   static const heightPlusDivider = height + 2.0;
   static final floatingWidth =
       Breakpoint.medium.screenWidthRange.start - NavigationRail.extendedWidth;
+}
+
+class ListTile {
+  const ListTile._();
+
+  static const contentVerticalPadding = 10.0;
+  static const contentHorizontalPadding = 16.0;
+
+  static const leadingWidth = 40.0;
+}
+
+class Card {
+  const Card._();
+
+  static const horizontalPadding = 16.0;
 }
 
 class SliverAppBar {

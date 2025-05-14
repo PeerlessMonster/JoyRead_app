@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 
+import '../../data/constant/media_type.dart';
 import '../../fetch_config.dart';
 import '../../utils/error_handling.dart';
 import '../exceptions/http_exception.dart';
 
-const _pathname = "news";
+const _pathname = 'news';
 
 Future<Result<String>> getLatestNews(http.Client client,
     {required int pageSize, int pageOrder = 0}) async {
@@ -14,9 +17,13 @@ Future<Result<String>> getLatestNews(http.Client client,
   final url = Uri.http(serverDomainName, '$_pathname/latest',
       {'pageOrder': '$pageOrder', 'pageSize': '$pageSize'});
 
+  final header = {
+    HttpHeaders.acceptHeader: MediaType.applicationJsonUtf8,
+  };
+
   late final http.Response response;
   try {
-    response = await client.get(url);
+    response = await client.get(url, headers: header);
   } on http.ClientException catch (e) {
     return Result.error(e);
   }
@@ -35,9 +42,13 @@ Future<Result<String>> getTodayPopularNews(http.Client client,
   final url = Uri.http(serverDomainName, '$_pathname/popular/day',
       {'pageOrder': '$pageOrder', 'pageSize': '$pageSize'});
 
+  final header = {
+    HttpHeaders.acceptHeader: MediaType.applicationJsonUtf8,
+  };
+
   late final http.Response response;
   try {
-    response = await client.get(url);
+    response = await client.get(url, headers: header);
   } on http.ClientException catch (e) {
     return Result.error(e);
   }
@@ -56,9 +67,13 @@ Future<Result<String>> getThisWeekPopularNews(http.Client client,
   final url = Uri.http(serverDomainName, '$_pathname/popular/week',
       {'pageOrder': '$pageOrder', 'pageSize': '$pageSize'});
 
+  final header = {
+    HttpHeaders.acceptHeader: MediaType.applicationJsonUtf8,
+  };
+
   late final http.Response response;
   try {
-    response = await client.get(url);
+    response = await client.get(url, headers: header);
   } on http.ClientException catch (e) {
     return Result.error(e);
   }
@@ -74,9 +89,13 @@ Future<Result<String>> getNews(http.Client client, {required String id}) async {
 
   final url = Uri.http(serverDomainName, '$_pathname/$id');
 
+  final header = {
+    HttpHeaders.acceptHeader: MediaType.applicationJsonUtf8,
+  };
+
   late final http.Response response;
   try {
-    response = await client.get(url);
+    response = await client.get(url, headers: header);
   } on http.ClientException catch (e) {
     return Result.error(e);
   }

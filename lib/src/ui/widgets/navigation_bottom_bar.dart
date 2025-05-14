@@ -24,7 +24,6 @@ class NavigationBottomBar extends StatelessWidget {
           backgroundColor: Colors.transparent,
           destinations: navigationDestinations
               .map((destination) => NavigationDestination(
-                    tooltip: '',
                     label: destination.name,
                     icon: destination.icon,
                   ))

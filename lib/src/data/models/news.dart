@@ -43,46 +43,45 @@ abstract class Block {
 sealed class ParagraphBlock extends Block {
   const ParagraphBlock();
 
-  factory ParagraphBlock.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {
-        'type': 'HEADING',
-        'text': String text,
-        'level': int level,
-      } =>
-        HeadingBlock(text: text, level: level),
-      {
-        'type': 'IMAGE',
-        'filename': String filename,
-      } =>
-        ImageBlock(filename: filename),
-      {
-        'type': 'ANNOTATION',
-        'spans': List<dynamic> spans,
-      } =>
-        AnnotationBlock(spans: SpanBlock.fromJsonList(spans)),
-      {
-        'type': 'CONTEXT',
-        'paragraphs': List<dynamic> paragraphs,
-      } =>
-        ContextBlock(paragraphs: ParagraphBlock.fromJsonList(paragraphs)),
-      {
-        'type': 'QUOTE',
-        'paragraphs': List<dynamic> paragraphs,
-      } =>
-        QuoteBlock(paragraphs: ParagraphBlock.fromJsonList(paragraphs)),
-      {
-        'type': 'BODY',
-        'spans': List<dynamic> spans,
-      } =>
-        BodyBlock(
-            leading: json.containsKey('leading')
-                ? LeadingBlock.fromJson(json['leading'] as Map<String, dynamic>)
-                : null,
-            spans: SpanBlock.fromJsonList(spans)),
-      _ => throw const FormatException('Unexpected format of Paragraph'),
-    };
-  }
+  factory ParagraphBlock.fromJson(Map<String, dynamic> json) => switch (json) {
+        {
+          'type': 'HEADING',
+          'text': String text,
+          'level': int level,
+        } =>
+          HeadingBlock(text: text, level: level),
+        {
+          'type': 'IMAGE',
+          'filename': String filename,
+        } =>
+          ImageBlock(filename: filename),
+        {
+          'type': 'ANNOTATION',
+          'spans': List<dynamic> spans,
+        } =>
+          AnnotationBlock(spans: SpanBlock.fromJsonList(spans)),
+        {
+          'type': 'CONTEXT',
+          'paragraphs': List<dynamic> paragraphs,
+        } =>
+          ContextBlock(paragraphs: ParagraphBlock.fromJsonList(paragraphs)),
+        {
+          'type': 'QUOTE',
+          'paragraphs': List<dynamic> paragraphs,
+        } =>
+          QuoteBlock(paragraphs: ParagraphBlock.fromJsonList(paragraphs)),
+        {
+          'type': 'BODY',
+          'spans': List<dynamic> spans,
+        } =>
+          BodyBlock(
+              leading: json.containsKey('leading')
+                  ? LeadingBlock.fromJson(
+                      json['leading'] as Map<String, dynamic>)
+                  : null,
+              spans: SpanBlock.fromJsonList(spans)),
+        _ => throw const FormatException('Unexpected format of Paragraph'),
+      };
 
   static List<ParagraphBlock> fromJsonList(List<dynamic> jsonList) => jsonList
       .cast<Map<String, dynamic>>()

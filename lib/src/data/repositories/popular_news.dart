@@ -5,7 +5,7 @@ import '../../data/exceptions/storage_exception.dart';
 import '../../utils/error_handling.dart';
 import '../../utils/http_client_proxy.dart';
 import '../../utils/json.dart';
-import '../models/popular_news.dart';
+import '../models/news_title.dart';
 import '../services/news.dart';
 
 class PopularNewsRepository {
@@ -13,7 +13,7 @@ class PopularNewsRepository {
 
   PopularNewsRepository(this._client);
 
-  Future<List<PopularNews>> loadTodayWithCache(int count) async {
+  Future<List<NewsTitle>> loadTodayWithCache(int count) async {
     const key = 'cache_todayPopularNews';
     final box = GetStorage();
 
@@ -36,10 +36,10 @@ class PopularNewsRepository {
         responseBody = result.value;
         box.write(key, responseBody);
     }
-    return jsonDecodeToList(responseBody, PopularNews.fromJson);
+    return jsonDecodeToList(responseBody, NewsTitle.fromJson);
   }
 
-  Future<List<PopularNews>> loadThisWeekWithCache(int count) async {
+  Future<List<NewsTitle>> loadThisWeekWithCache(int count) async {
     const key = 'cache_thisWeekPopularNews';
     final box = GetStorage();
 
@@ -62,6 +62,6 @@ class PopularNewsRepository {
         responseBody = result.value;
         box.write(key, responseBody);
     }
-    return jsonDecodeToList(responseBody, PopularNews.fromJson);
+    return jsonDecodeToList(responseBody, NewsTitle.fromJson);
   }
 }

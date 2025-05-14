@@ -7,7 +7,6 @@ import '../../../core/shared/illustration.dart';
 import '../../../widgets/load_state_screen.dart';
 import '../../../widgets/network_notification_display_container.dart';
 import '../../../widgets/sign.dart';
-import '../../../widgets/sliver_app_bar.dart';
 import '../view_models/more_news_view_model.dart';
 import 'more_news_list.dart';
 
@@ -34,8 +33,9 @@ class MoreNewsScreen extends StatelessWidget {
             body: SafeArea(
               child: BreakpointProvider(
                 child: _AdaptiveSliverNetworkNotificationDisplayContainer(
-                  sliverAppBar: RigidSliverAppBar(
+                  sliverAppBar: SliverAppBar(
                     title: Text(_title),
+                    floating: true,
                   ),
                   sliverBody: MoreLatestNewsList(
                     firstPage: data,

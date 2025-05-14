@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Padding {
   const Padding._();
 
@@ -6,13 +8,18 @@ class Padding {
 
   // https://m3.material.io/foundations/designing/structure#1057f862-b8f1-42a1-9239-7077b8763a48
   static const targetSpacing = increment * 2;
+
+  /// Equal to the measurement of all [ButtonStyle].
+  static const spacingBetweenIconAndLabel = 8.0;
 }
 
 class Margin {
   const Margin._();
 
-  // equal to default margin of [SnackBar]
+  /// Equal to default margin of [SnackBar].
   static const floatingVerticalMargin = 5.0;
+
+  static const allSides = 8.0;
 
   // https://m3.material.io/foundations/layout/applying-layout/compact#e32a1311-f9ca-4425-9249-081e180fafba
   static const compactMargin = 16.0;

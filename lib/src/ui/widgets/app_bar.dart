@@ -2,17 +2,24 @@ import 'package:flutter/material.dart';
 
 import '../core/responsive_margin.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
+import '../core/themes/constants/spacing.dart' as spacing;
 
-class RigidSliverAppBar extends StatelessWidget {
-  final Widget title;
-
-  const RigidSliverAppBar({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) => SliverAppBar(
-        title: title,
-        floating: true,
-      );
+class AppBarWithActions extends AppBar {
+  AppBarWithActions(
+      {super.key,
+      super.centerTitle = true,
+      required super.title,
+      required List<Widget> actions})
+      : super(
+          actions: actions
+            ..setAll(actions.length - 1, [
+              Padding(
+                padding: EdgeInsetsDirectional.only(
+                    end: spacing.Padding.increment * 1),
+                child: actions.last,
+              ),
+            ]),
+        );
 }
 
 class FlexibleSliverAppBar extends StatelessWidget {

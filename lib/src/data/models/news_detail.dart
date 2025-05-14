@@ -1,25 +1,25 @@
 import '../../utils/time.dart' as time;
 
-class LatestNews {
+class NewsDetail {
   final String id;
   final String title;
   final DateTime publishUtc;
   final String coverImageFilename;
 
-  const LatestNews(
+  const NewsDetail(
       {required this.id,
       required this.title,
       required this.publishUtc,
       required this.coverImageFilename});
 
-  factory LatestNews.fromJson(Map<String, dynamic> json) => switch (json) {
+  factory NewsDetail.fromJson(Map<String, dynamic> json) => switch (json) {
         {
           'id': String id,
           'title': String title,
           'publishUTCEpochMilli': String publishUtcMillisecondsSinceEpoch,
           'coverImgFilename': String coverImgFilename,
         } =>
-          LatestNews(
+          NewsDetail(
               id: id,
               title: title,
               publishUtc: time.parse(publishUtcMillisecondsSinceEpoch),

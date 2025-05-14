@@ -6,13 +6,13 @@ import '../../../../data/repositories/news.dart';
 import '../../../../utils/http_client_proxy.dart';
 import '../../../core/shared/background.dart';
 
-class ReadViewModel extends ChangeNotifier {
+class ReadingViewModel extends ChangeNotifier {
   final String dataId;
 
   late final ImageUrlRepository _imageRepository;
   late final NewsRepository _newsRepository;
 
-  ReadViewModel(this.dataId) {
+  ReadingViewModel(this.dataId) {
     _imageRepository = const ImageUrlRepository();
 
     final httpClient = HttpClientProxyWithDisposableConnection();

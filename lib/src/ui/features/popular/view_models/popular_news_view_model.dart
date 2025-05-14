@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/models/popular_news.dart';
+import '../../../../data/models/news_title.dart';
 import '../../../../data/repositories/popular_news.dart';
 import '../../../../utils/http_client_proxy.dart';
 
@@ -10,7 +10,7 @@ abstract class PopularNewsViewModel extends ChangeNotifier {
 
   late final PopularNewsRepository _repository;
 
-  Future<List<PopularNews>> Function(int count) get _loadDataFromRepository;
+  Future<List<NewsTitle>> Function(int count) get _loadDataFromRepository;
 
   PopularNewsViewModel() {
     final httpClient = HttpClientProxyWithDisposableConnection();
@@ -19,7 +19,7 @@ abstract class PopularNewsViewModel extends ChangeNotifier {
     _load();
   }
 
-  late Future<List<PopularNews>> dataFuture;
+  late Future<List<NewsTitle>> dataFuture;
 
   void _load() => dataFuture = _loadDataFromRepository(_dataCount);
 
@@ -38,7 +38,7 @@ class TodayPopularNewsViewModel extends PopularNewsViewModel {
   static final _instance = TodayPopularNewsViewModel._();
 
   @override
-  Future<List<PopularNews>> Function(int count) get _loadDataFromRepository =>
+  Future<List<NewsTitle>> Function(int count) get _loadDataFromRepository =>
       _repository.loadTodayWithCache;
 }
 
@@ -50,6 +50,6 @@ class ThisWeekPopularNewsViewModel extends PopularNewsViewModel {
   static final _instance = ThisWeekPopularNewsViewModel._();
 
   @override
-  Future<List<PopularNews>> Function(int count) get _loadDataFromRepository =>
+  Future<List<NewsTitle>> Function(int count) get _loadDataFromRepository =>
       _repository.loadThisWeekWithCache;
 }

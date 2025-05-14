@@ -2,10 +2,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../../utils/error_handling.dart';
-import '../../utils/json.dart';
 import '../../utils/http_client_proxy.dart';
+import '../../utils/json.dart';
 import '../exceptions/storage_exception.dart';
-import '../models/latest_news.dart';
+import '../models/news_detail.dart';
 import '../services/news.dart';
 
 class LatestNewsRepository {
@@ -13,20 +13,20 @@ class LatestNewsRepository {
 
   LatestNewsRepository(this._client);
 
-  Future<List<LatestNews>> load(int pageSize, [int pageOrder = 0]) async {
+  Future<List<NewsDetail>> load(int pageSize, [int pageOrder = 0]) async {
     final result = await _client.fetch((client) =>
         getLatestNews(client, pageSize: pageSize, pageOrder: pageOrder));
     switch (result) {
       case Ok():
         final responseBody = result.value;
-        return jsonDecodeToList(responseBody, LatestNews.fromJson);
+        return jsonDecodeToList(responseBody, NewsDetail.fromJson);
 
       case Error():
         throw result.error;
     }
   }
 
-  Future<List<LatestNews>> loadWithCache(int count) async {
+  Future<List<NewsDetail>> loadWithCache(int count) async {
     const key = 'cache_latestNews';
     final box = GetStorage();
 
@@ -49,6 +49,6 @@ class LatestNewsRepository {
         responseBody = result.value;
         box.write(key, responseBody);
     }
-    return jsonDecodeToList(responseBody, LatestNews.fromJson);
+    return jsonDecodeToList(responseBody, NewsDetail.fromJson);
   }
 }
