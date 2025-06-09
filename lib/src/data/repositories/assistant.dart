@@ -13,39 +13,55 @@ class AssistantRepository {
 
   AssistantRepository(this._client);
 
-  void loadAnswer(String question,
-          void Function(Stream<AssistantMessage> dataStream) onData) =>
-      postChat(
-        _client,
-        (result) {
-          switch (result) {
-            case Ok():
-              final responseBody = result.value;
+  void loadAnswer(
+      void Function(Exception error, AssistantMessage? lastData) onError,
+      void Function(AssistantMessage completedData) onDone,
+      void Function(Stream<AssistantMessage> dataStream) onData,
+      String question,
+      [String? newsId]) {
+    var answer = '';
+    List<NewsTitle>? sources;
 
-              var answer = '';
-              List<NewsTitle>? sources;
+    postQuestion(
+      _client,
+      () {
+        final completedData =
+            AssistantMessage(answer: answer, sources: sources);
+        onDone(completedData);
+      },
+      (result) {
+        switch (result) {
+          case Ok():
+            final responseBody = result.value;
 
-              final dataStream = responseBody.map((event) {
-                final data = event.data;
-                return jsonDecodeTo(data, ChunkAssistantAnswer.fromJson);
-              }).map((data) {
-                switch (data) {
-                  case AnswerTextChunk():
-                    answer += data.markdown;
-                    return AssistantMessage(answer: answer, sources: sources);
+            final dataStream = responseBody.map((event) {
+              final data = event.data;
+              final chunkAnswer =
+                  jsonDecodeTo(data, ChunkAssistantAnswer.fromJson);
 
-                  case AnswerSource():
-                    sources = data.sources;
-                    return AssistantMessage(answer: answer, sources: sources);
-                }
-              });
-              onData(dataStream);
+              switch (chunkAnswer) {
+                case ChunkAssistantAnswerText():
+                  answer += chunkAnswer.markdown;
 
-            case Error():
-              throw result.error;
-          }
-        },
-        question: question,
-        userId: testUser.id,
-      );
+                case AssistantAnswerSource():
+                  sources = chunkAnswer.sources;
+              }
+              return AssistantMessage(answer: answer, sources: sources);
+            });
+            onData(dataStream);
+
+          case Error():
+            final error = result.error;
+
+            final lastData = answer.isEmpty
+                ? null
+                : AssistantMessage(answer: answer, sources: sources);
+            onError(error, lastData);
+        }
+      },
+      newsId: newsId,
+      question: question,
+      userId: testUser.id,
+    );
+  }
 }

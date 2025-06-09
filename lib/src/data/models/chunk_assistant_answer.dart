@@ -7,26 +7,26 @@ sealed class ChunkAssistantAnswer {
       switch (json) {
         {
           'event': 'ANSWER',
-          'markdown': String text,
+          'markdown': String markdown,
         } =>
-          AnswerTextChunk(markdown: text),
+          ChunkAssistantAnswerText(markdown: markdown),
         {
           'event': 'SOURCE',
           'sources': List<dynamic> sources,
         } =>
-          AnswerSource(sources: NewsTitle.fromJsonList(sources)),
+          AssistantAnswerSource(sources: NewsTitle.fromJsonList(sources)),
         _ => throw const FormatException('Unexpected format of JSON'),
       };
 }
 
-class AnswerTextChunk extends ChunkAssistantAnswer {
+class ChunkAssistantAnswerText extends ChunkAssistantAnswer {
   final String markdown;
 
-  const AnswerTextChunk({required this.markdown});
+  const ChunkAssistantAnswerText({required this.markdown});
 }
 
-class AnswerSource extends ChunkAssistantAnswer {
+class AssistantAnswerSource extends ChunkAssistantAnswer {
   final List<NewsTitle> sources;
 
-  const AnswerSource({required this.sources});
+  const AssistantAnswerSource({required this.sources});
 }

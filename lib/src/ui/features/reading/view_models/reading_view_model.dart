@@ -21,9 +21,10 @@ class ReadingViewModel extends ChangeNotifier {
     _load();
   }
 
-  late Future<News> dataFuture;
+  late Future<News> _dataFuture;
+  Future<News> get dataFuture => _dataFuture;
 
-  void _load() => dataFuture = _newsRepository.load(dataId);
+  void _load() => _dataFuture = _newsRepository.load(dataId);
 
   void reload() {
     _load();

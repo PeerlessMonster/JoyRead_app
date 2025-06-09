@@ -48,6 +48,9 @@ class _LatestNewsSlideshowState extends State<LatestNewsSlideshow> {
           imageUrl,
           fallbackImageAssetName: fallbackImage.assetName,
           foregroundColor: fallbackImage.foregroundColor,
+          showLoadingPlaceholder: false,
+          showLoadFailedPlaceholder: false,
+          displayNotificationWhenLoadFailed: true,
         ),
       ),
     );

@@ -5,48 +5,70 @@ import '../../../../data/models/message.dart';
 import '../../../../data/repositories/assistant.dart';
 
 class AssistantChatViewModel extends ChangeNotifier {
+  final String? dataId;
+
   late final AssistantRepository _repository;
 
-  AssistantChatViewModel() {
+  AssistantChatViewModel(this.dataId) {
     _client = EventFlux.spawn();
     _repository = AssistantRepository(_client);
   }
 
   late final EventFlux _client;
 
-  Stream<AssistantMessage>? answerStream;
+  void _loadAnswer(String question) => _repository.loadAnswer(
+        (error, lastData) {
+          if (lastData != null) {
+            _undoneAnswer = lastData;
+          }
 
-  void loadAnswer(String question) {
-    if (hasUserMessage) {
-      answerStream = null;
+          _answerStream = Stream.error(error);
+          notifyListeners();
+        },
+        (completedData) => messages.insert(0, completedData),
+        (dataStream) {
+          _answerStream = dataStream;
+          notifyListeners();
+        },
+        question,
+        dataId,
+      );
+
+  Stream<AssistantMessage>? _answerStream;
+  Stream<AssistantMessage>? get answerStream => _answerStream;
+
+  AssistantMessage? _undoneAnswer;
+  AssistantMessage? get undoneAnswer => _undoneAnswer;
+
+  void _initializeNewAnswer() {
+    _answerStream = null;
+    if (_undoneAnswer != null) {
+      _undoneAnswer = null;
+    }
+  }
+
+  void send(String question) {
+    if (_hasUserMessage) {
+      _initializeNewAnswer();
     }
 
-    _repository.loadAnswer(question, (dataStream) {
-      answerStream = dataStream;
-      notifyListeners();
-    });
+    _loadAnswer(question);
     messages.insert(0, UserMessage(question: question));
 
-    if (!hasUserMessage) {
-      hasUserMessage = true;
+    if (!_hasUserMessage) {
+      _hasUserMessage = true;
     }
     notifyListeners();
   }
 
   final messages = <Message>[];
 
-  void saveAssistantMessage(AssistantMessage message) =>
-      messages.insert(0, message);
-
-  void reloadAnswer() {
-    answerStream = null;
+  void resend() {
+    _initializeNewAnswer();
     notifyListeners();
 
     final latestUserMessage = messages.first as UserMessage;
-    _repository.loadAnswer(latestUserMessage.question, (dataStream) {
-      answerStream = dataStream;
-      notifyListeners();
-    });
+    _loadAnswer(latestUserMessage.question);
   }
 
   @override
@@ -55,5 +77,6 @@ class AssistantChatViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  var hasUserMessage = false;
+  var _hasUserMessage = false;
+  bool get hasUserMessage => _hasUserMessage;
 }

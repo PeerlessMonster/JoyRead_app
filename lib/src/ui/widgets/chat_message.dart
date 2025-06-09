@@ -11,7 +11,7 @@ class RowChatMessage extends StatelessWidget {
   final Widget avatar;
   final RowChatMessageAlignment alignment;
   static const _avatarSize = dimension.CircleAvatar.size;
-  static const _spacing = spacing.Padding.targetSpacing;
+  static const _spacing = spacing.Padding.targetSpacing / 2;
 
   const RowChatMessage(
       {super.key,

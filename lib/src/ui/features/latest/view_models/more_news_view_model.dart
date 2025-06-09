@@ -30,10 +30,11 @@ class MoreNewsViewModel extends ChangeNotifier {
 
   late final HttpClientProxyWithPersistentConnection _httpClient;
 
-  late Future<List<NewsDetail>> firstPageFuture;
+  late Future<List<NewsDetail>> _firstPageFuture;
+  Future<List<NewsDetail>> get firstPageFuture => _firstPageFuture;
 
   void _loadFirstPage() =>
-      firstPageFuture = _newsRepository.load(_pageSize);
+      _firstPageFuture = _newsRepository.load(_pageSize);
 
   void reloadFirstPage() {
     _loadFirstPage();

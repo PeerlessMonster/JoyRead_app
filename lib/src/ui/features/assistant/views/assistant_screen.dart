@@ -7,9 +7,7 @@ import '../../../widgets/app_bar.dart';
 import 'assistant_chat_box.dart';
 
 class AssistantScreen extends StatelessWidget {
-  final String? dataId;
-
-  const AssistantScreen({super.key, this.dataId});
+  const AssistantScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -27,14 +25,8 @@ class AssistantScreen extends StatelessWidget {
         body: SafeArea(
           child: BreakpointProvider(
             child: AssistantChatBox(
-              opener: MarkdownBody(
-                data: '# **${testUser.name}**，早上好！',
-              ),
-              suggestedQuestions: const [
-                '最新资讯',
-                '今日热门资讯',
-                '本周热门资讯',
-              ],
+              opener: MarkdownBody(data: '# **${testUser.name}**，下午好！'),
+              suggestedQuestions: const ['最新资讯', '今日热门资讯', '本周热门资讯'],
             ),
           ),
         ),

@@ -11,7 +11,7 @@ class PaginationCache<T> {
 
   bool get isFull => _cache.length >= maxCachedPageCount;
 
-  bool isExisted(int pageOrder) => _cache.containsKey(pageOrder);
+  bool containsPage(int pageOrder) => _cache.containsKey(pageOrder);
 
   T? read(int pageOrder, int indexInPage) => _cache[pageOrder]?[indexInPage];
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../utils/pagination_cache.dart';
 import 'dynamic_loading_scroll_view.dart';
 
-/// View model of [DynamicLoadingScrollView].
+/// View Model of [DynamicLoadingScrollView].
 ///
 /// Imported by [DynamicLoadingScrollView], no need to construct manually.
 class DynamicLoadingDataChangeNotifier<T> extends ChangeNotifier {
@@ -13,20 +13,23 @@ class DynamicLoadingDataChangeNotifier<T> extends ChangeNotifier {
 
   int _calculateIndexInPage(int index) => index % pageSize;
 
-  late bool noMoreData;
+  late bool _noMoreData;
+  bool get noMoreData => _noMoreData;
 
-  var loadMoreFailed = false;
+  var _loadMoreFailed = false;
+  bool get loadMoreFailed => _loadMoreFailed;
 
   DynamicLoadingDataChangeNotifier(
       List<T> firstPage, this.loadMorePage, this.pageSize,
       [int maxCachedPageCount = 2]) {
+    assert(firstPage.isNotEmpty, 'List of initial data cannot be empty');
     assert(pageSize > 0, 'Size of page should be positive integer');
 
     _cache = PaginationCache<T>(pageSize, maxCachedPageCount);
     _cache.writeOnePage(0, firstPage);
 
-    loadedDataCount = firstPage.length;
-    noMoreData = firstPage.length < pageSize;
+    _loadedDataCount = firstPage.length;
+    _noMoreData = firstPage.length < pageSize;
   }
 
   late final PaginationCache _cache;
@@ -37,13 +40,15 @@ class DynamicLoadingDataChangeNotifier<T> extends ChangeNotifier {
     return _cache.read(pageOrder, indexInPage);
   }
 
-  late int loadedDataCount;
+  late int _loadedDataCount;
+  int get loadedDataCount => _loadedDataCount;
+
   final Future<List<T>> Function(int pageOrder) loadMorePage;
 
   Future<T> loadCurrentPage(int index) async {
     final indexInPage = _calculateIndexInPage(index);
     final pageOrder = _calculatePageOrder(index);
-    if (_cache.isExisted(pageOrder)) {
+    if (_cache.containsPage(pageOrder)) {
       return _cache.read(pageOrder, indexInPage);
     }
 
@@ -55,8 +60,8 @@ class DynamicLoadingDataChangeNotifier<T> extends ChangeNotifier {
   }
 
   Future<void> loadNextPage() async {
-    final nextPageOrder = _calculatePageOrder(loadedDataCount);
-    if (_cache.isExisted(nextPageOrder)) {
+    final nextPageOrder = _calculatePageOrder(_loadedDataCount);
+    if (_cache.containsPage(nextPageOrder)) {
       return;
     }
 
@@ -64,14 +69,14 @@ class DynamicLoadingDataChangeNotifier<T> extends ChangeNotifier {
     try {
       data = await loadMorePage(nextPageOrder);
 
-      if (loadMoreFailed) {
-        loadMoreFailed = false;
+      if (_loadMoreFailed) {
+        _loadMoreFailed = false;
 
         notifyListeners();
       }
     } catch (_) {
-      if (!loadMoreFailed) {
-        loadMoreFailed = true;
+      if (!_loadMoreFailed) {
+        _loadMoreFailed = true;
 
         notifyListeners();
       }
@@ -81,15 +86,15 @@ class DynamicLoadingDataChangeNotifier<T> extends ChangeNotifier {
     _cache.writeOnePage(nextPageOrder, data);
 
     final hasMoreData =
-        nextPageOrder * pageSize + data.length > loadedDataCount;
+        nextPageOrder * pageSize + data.length > _loadedDataCount;
     if (hasMoreData) {
-      loadedDataCount += data.length;
+      _loadedDataCount += data.length;
 
       notifyListeners();
     }
 
     if (data.length < pageSize) {
-      noMoreData = true;
+      _noMoreData = true;
 
       notifyListeners();
     }

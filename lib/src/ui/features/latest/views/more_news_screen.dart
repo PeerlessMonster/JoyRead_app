@@ -12,9 +12,14 @@ import 'more_news_list.dart';
 
 const _title = '最新资讯';
 
-class MoreNewsScreen extends StatelessWidget {
-  MoreNewsScreen({super.key});
+class MoreNewsScreen extends StatefulWidget {
+  const MoreNewsScreen({super.key});
 
+  @override
+  State<MoreNewsScreen> createState() => _MoreNewsScreenState();
+}
+
+class _MoreNewsScreenState extends State<MoreNewsScreen> {
   final _viewModel = MoreNewsViewModel();
 
   @override

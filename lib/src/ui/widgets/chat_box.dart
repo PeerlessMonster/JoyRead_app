@@ -2,15 +2,36 @@ import 'package:flutter/material.dart';
 
 import '../core/responsive_margin.dart';
 import '../core/themes/constants/spacing.dart' as spacing;
-import 'sending_text_field.dart';
+import 'text_sending_bar.dart';
 
 class ChatBox extends StatelessWidget {
   final List<Widget> children;
   final void Function(String value) onSent;
   final String? hintText;
+  /// Defaults to [ColorScheme.surfaceContainerLowest].
+  final Color? inputBoxBackgroundColor;
+  /// Defaults to [Colors.transparent].
+  final Color? messageListViewBackgroundColor;
+  static const _padding = spacing.Padding.targetSpacing;
 
   const ChatBox(
-      {super.key, required this.onSent, this.hintText, required this.children});
+      {super.key,
+      required this.onSent,
+      this.hintText,
+      this.inputBoxBackgroundColor,
+      this.messageListViewBackgroundColor,
+      required this.children});
+
+  Widget _buildListView() => ListView.builder(
+        reverse: true,
+        itemBuilder: (context, index) => Padding(
+          padding: EdgeInsets.only(
+              top: index == children.length - 1 ? _padding : 0,
+              bottom: _padding),
+          child: children[index],
+        ),
+        itemCount: children.length,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -18,33 +39,26 @@ class ChatBox extends StatelessWidget {
 
     return Column(children: [
       Expanded(
-        child: ListView.builder(
-          reverse: true,
-          itemBuilder: (context, index) => Padding(
-            padding: EdgeInsets.only(bottom: spacing.Padding.increment * 2),
-            child: children[index],
-          ),
-          itemCount: children.length,
-        ),
+        child: messageListViewBackgroundColor == null
+            ? _buildListView()
+            : ColoredBox(
+                color: messageListViewBackgroundColor!,
+                child: _buildListView(),
+              ),
       ),
-      DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: colorScheme.onSurface.withValues(alpha: 0.1),
-            ),
-          ),
-        ),
+      Divider(height: 1),
+      ColoredBox(
+        color: inputBoxBackgroundColor ?? colorScheme.surfaceContainerLowest,
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: calculateResponsiveMarginValue(context),
-              vertical: spacing.Padding.targetSpacing),
-          child: SendingTextField(
+              vertical: _padding),
+          child: TextSendingBar(
             hintText: hintText,
             onSent: onSent,
           ),
         ),
-      )
+      ),
     ]);
   }
 }

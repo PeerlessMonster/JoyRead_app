@@ -35,7 +35,7 @@ import 'scrolling_deferred_loading_builder.dart';
 ///   ...
 /// )
 /// ```
-class DynamicLoadingScrollView<T> extends StatelessWidget {
+class DynamicLoadingScrollView<T> extends StatefulWidget {
   final List<T> firstPage;
   final Future<List<T>> Function(int pageOrder) loadMorePage;
   final int pageSize;
@@ -54,7 +54,7 @@ class DynamicLoadingScrollView<T> extends StatelessWidget {
       loadMoreFailedBuilder;
   final Widget? noMoreWidget;
 
-  DynamicLoadingScrollView(
+  const DynamicLoadingScrollView(
       {super.key,
       required this.firstPage,
       required this.loadMorePage,
@@ -69,23 +69,33 @@ class DynamicLoadingScrollView<T> extends StatelessWidget {
       this.loadMoreFailedBuilder,
       this.noMoreWidget})
       : assert(preloadDataCount >= 1 && preloadDataCount <= pageSize,
-            'Count of preload should be in the range of size of page'),
-        assert(firstPage.isNotEmpty, 'List of initial data cannot be empty');
+            'Count of preload should be in the range of size of page');
 
+  @override
+  State<DynamicLoadingScrollView<T>> createState() =>
+      _DynamicLoadingScrollViewState<T>();
+}
+
+class _DynamicLoadingScrollViewState<T>
+    extends State<DynamicLoadingScrollView<T>> {
   late final _changeNotifier = DynamicLoadingDataChangeNotifier<T>(
-      firstPage, loadMorePage, pageSize, maxCachedPageCount);
+      widget.firstPage,
+      widget.loadMorePage,
+      widget.pageSize,
+      widget.maxCachedPageCount);
 
   Widget? _buildLastChild(BuildContext context, int index) {
     if (_changeNotifier.loadMoreFailed) {
-      return loadMoreFailedBuilder == null
+      return widget.loadMoreFailedBuilder == null
           ? null
-          : loadMoreFailedBuilder!(context, _changeNotifier.loadNextPage);
+          : widget.loadMoreFailedBuilder!(
+              context, _changeNotifier.loadNextPage);
     }
 
     if (_changeNotifier.noMoreData) {
-      return noMoreWidget;
+      return widget.noMoreWidget;
     }
-    return loadingMoreWidget;
+    return widget.loadingMoreWidget;
   }
 
   LastChildLayoutType _buildLastChildLayoutType(int index) =>
@@ -99,23 +109,24 @@ class DynamicLoadingScrollView<T> extends StatelessWidget {
     }
 
     final isRunningOut =
-        index + preloadDataCount >= _changeNotifier.loadedDataCount;
+        index + widget.preloadDataCount >= _changeNotifier.loadedDataCount;
     if (!_changeNotifier.noMoreData && isRunningOut) {
       _changeNotifier.loadNextPage();
     }
 
     final data = _changeNotifier.readCache(index);
     if (data != null) {
-      return dataBuilder(context, data, index);
+      return widget.dataBuilder(context, data, index);
     }
 
     return ScrollingDeferredLoadingBuilder(
-      underwayBuilder: (context, _) => uncompletedWidget,
+      underwayBuilder: (context, _) => widget.uncompletedWidget,
       idleBuilder: (context, _) => FutureWidget(
         dataFuture: _changeNotifier.loadCurrentPage(index),
-        uncompletedWidget: uncompletedWidget,
-        dataBuilder: (context, data) => dataBuilder(context, data, index),
-        errorBuilder: (context, error) => errorBuilder(context, error),
+        uncompletedWidget: widget.uncompletedWidget,
+        dataBuilder: (context, data) =>
+            widget.dataBuilder(context, data, index),
+        errorBuilder: (context, error) => widget.errorBuilder(context, error),
       ),
     );
   }
@@ -123,7 +134,7 @@ class DynamicLoadingScrollView<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: _changeNotifier,
-        builder: (context, _) => scrollViewBuilder(
+        builder: (context, _) => widget.scrollViewBuilder(
             context,
             _buildLastChildLayoutType,
             _buildChild,

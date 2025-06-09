@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/future_widget.dart';
 import '../../../core/themes/constants/dimension.dart' as dimension;
-import '../../../widgets/list_row.dart';
 import '../../../widgets/list_section.dart';
+import '../../../widgets/list_tile.dart';
 import '../../reading/views/reading_screen.dart';
 import '../view_models/popular_news_view_model.dart';
 
@@ -16,14 +16,14 @@ enum Sort {
   const Sort(this.title);
 }
 
-class _PopularNewsCard extends StatelessWidget {
+class _PopularNewsCardLayout extends StatelessWidget {
   final int childCount;
   final List<Widget> Function(BuildContext context, List<Widget> leadings)
       childrenBuilder;
   final Widget? header;
   final Widget? footer;
 
-  const _PopularNewsCard(
+  const _PopularNewsCardLayout(
       {super.key,
       required this.childCount,
       required this.childrenBuilder,
@@ -69,33 +69,38 @@ class _PopularNewsCard extends StatelessWidget {
       );
 }
 
-class PopularNewsCard extends StatelessWidget {
+class PopularNewsCard extends StatefulWidget {
   final Sort sort;
   final bool showHeader;
+
+  const PopularNewsCard(
+      {super.key, required this.sort, this.showHeader = true});
+
+  @override
+  State<PopularNewsCard> createState() => _PopularNewsCardState();
+}
+
+class _PopularNewsCardState extends State<PopularNewsCard> {
+  late final _viewModel = switch (widget.sort) {
+    Sort.day => TodayPopularNewsViewModel(),
+    Sort.week => ThisWeekPopularNewsViewModel(),
+  };
+
   static const _spacing = dimension.ListTile.contentVerticalPadding;
-
-  PopularNewsCard({super.key, required this.sort, this.showHeader = true}) {
-    _viewModel = switch (sort) {
-      Sort.day => TodayPopularNewsViewModel(),
-      Sort.week => ThisWeekPopularNewsViewModel(),
-    };
-  }
-
-  late final PopularNewsViewModel _viewModel;
 
   Widget _buildHeader() => Padding(
         padding: EdgeInsets.only(top: _spacing),
         child: Chip(
-          label: Text(sort.title),
+          label: Text(widget.sort.title),
         ),
       );
 
   @override
   Widget build(BuildContext context) => FutureWidget(
         dataFuture: _viewModel.dataFuture,
-        uncompletedWidget: _PopularNewsCard(
-          key: key,
-          header: showHeader ? _buildHeader() : null,
+        uncompletedWidget: _PopularNewsCardLayout(
+          key: widget.key,
+          header: widget.showHeader ? _buildHeader() : null,
           childCount: _viewModel.dataCount,
           childrenBuilder: (context, leadings) => leadings
               .map((leading) => ListRowSkeleton(
@@ -104,9 +109,9 @@ class PopularNewsCard extends StatelessWidget {
                   ))
               .toList(),
         ),
-        dataBuilder: (context, dataList) => _PopularNewsCard(
-          key: key,
-          header: showHeader ? _buildHeader() : null,
+        dataBuilder: (context, dataList) => _PopularNewsCardLayout(
+          key: widget.key,
+          header: widget.showHeader ? _buildHeader() : null,
           childCount: dataList.length,
           childrenBuilder: (context, leadings) {
             final items = <Widget>[];
@@ -131,15 +136,14 @@ class PopularNewsCard extends StatelessWidget {
             return items;
           },
         ),
-        errorBuilder: (context, _) => _PopularNewsCard(
-          key: key,
-          header: showHeader ? _buildHeader() : null,
+        errorBuilder: (context, _) => _PopularNewsCardLayout(
+          key: widget.key,
+          header: widget.showHeader ? _buildHeader() : null,
           footer: Padding(
             padding: EdgeInsets.only(bottom: _spacing),
-            child: FilledButton.icon(
-              icon: Icon(Icons.refresh_rounded),
-              label: Text('Retry'),
+            child: FilledButton(
               onPressed: _viewModel.reload,
+              child: Text('Retry'),
             ),
           ),
           childCount: _viewModel.dataCount,

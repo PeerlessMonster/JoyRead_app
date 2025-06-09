@@ -19,9 +19,10 @@ abstract class PopularNewsViewModel extends ChangeNotifier {
     _load();
   }
 
-  late Future<List<NewsTitle>> dataFuture;
+  late Future<List<NewsTitle>> _dataFuture;
+  Future<List<NewsTitle>> get dataFuture => _dataFuture;
 
-  void _load() => dataFuture = _loadDataFromRepository(_dataCount);
+  void _load() => _dataFuture = _loadDataFromRepository(_dataCount);
 
   void reload() {
     _load();

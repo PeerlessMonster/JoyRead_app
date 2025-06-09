@@ -25,10 +25,11 @@ class LatestNewsViewModel extends ChangeNotifier {
     _load();
   }
 
-  late Future<List<NewsDetail>> dataFuture;
+  late Future<List<NewsDetail>> _dataFuture;
+  Future<List<NewsDetail>> get dataFuture => _dataFuture;
 
   void _load() =>
-      dataFuture = _newsRepository.loadWithCache(_dataCount);
+      _dataFuture = _newsRepository.loadWithCache(_dataCount);
 
   void reload() {
     _load();

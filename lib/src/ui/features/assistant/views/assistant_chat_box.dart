@@ -7,20 +7,27 @@ import '../../../widgets/chat_box.dart';
 import '../view_models/assistant_chat_view_model.dart';
 import 'message_widget.dart';
 
-class AssistantChatBox extends StatelessWidget {
+class AssistantChatBox extends StatefulWidget {
   final Widget? opener;
   final List<String>? suggestedQuestions;
+  final String? dataId;
 
-  AssistantChatBox({super.key, this.opener, this.suggestedQuestions});
+  const AssistantChatBox(
+      {super.key, this.opener, this.suggestedQuestions, this.dataId});
 
-  final _viewModel = AssistantChatViewModel();
+  @override
+  State<AssistantChatBox> createState() => _AssistantChatBoxState();
+}
+
+class _AssistantChatBoxState extends State<AssistantChatBox> {
+  late final _viewModel = AssistantChatViewModel(widget.dataId);
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
         listenable: _viewModel,
         builder: (context, _) => ChatBox(
           hintText: 'Ask me anything.',
-          onSent: _viewModel.loadAnswer,
+          onSent: _viewModel.send,
           children: [
             StreamWidget(
               stream: _viewModel.answerStream,
@@ -29,40 +36,36 @@ class AssistantChatBox extends StatelessWidget {
                   : const SizedBox.shrink(),
               waitingWidget: AssistantThinkingMessageWidget(),
               activeBuilder: (context, data) => AssistantMessageWidget(
-                answer: MarkdownBody(
-                  data: data.answer,
-                ),
+                answer: MarkdownBody(data: data.answer),
                 sources: data.sources,
               ),
-              doneBuilder: (context, data) {
-                _viewModel.saveAssistantMessage(data);
-
-                return AssistantMessageWidget(
-                  answer: MarkdownBody(
-                    data: data.answer,
-                  ),
-                  sources: data.sources,
+              doneBuilder: (context, data) => AssistantMessageWidget(
+                answer: MarkdownBody(data: data.answer),
+                sources: data.sources,
+              ),
+              errorBuilder: (context, _) {
+                final undoneAnswer = _viewModel.undoneAnswer;
+                return AssistantErrorMessageWidget(
+                  answer: undoneAnswer == null
+                      ? null
+                      : MarkdownBody(data: undoneAnswer.answer),
+                  reloadAnswer: _viewModel.resend,
                 );
               },
-              errorBuilder: (context, _) => AssistantErrorMessageWidget(
-                reloadAnswer: _viewModel.reloadAnswer,
-              ),
             ),
             ..._viewModel.messages.map((message) => switch (message) {
                   UserMessage() => UserMessageWidget(
-                      content: Text(message.question),
+                      content: MarkdownBody(data: message.question),
                     ),
                   AssistantMessage() => AssistantMessageWidget(
-                      answer: MarkdownBody(
-                        data: message.answer,
-                      ),
+                      answer: MarkdownBody(data: message.answer),
                       sources: message.sources,
                     ),
                 }),
             AssistantOpenerMessageWidget(
-              opener: opener,
-              suggestedQuestions: suggestedQuestions,
-              onSent: _viewModel.loadAnswer,
+              opener: widget.opener,
+              suggestedQuestions: widget.suggestedQuestions,
+              onSent: _viewModel.send,
             ),
           ],
         ),
