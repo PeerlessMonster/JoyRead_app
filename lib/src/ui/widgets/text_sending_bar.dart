@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/text_editing_value_state_mixin.dart';
+
 class TextSendingBar extends StatefulWidget {
   final void Function(String value) onSent;
   final String? hintText;
@@ -10,32 +12,12 @@ class TextSendingBar extends StatefulWidget {
   State<TextSendingBar> createState() => _TextSendingBarState();
 }
 
-class _TextSendingBarState extends State<TextSendingBar> {
-  var hasText = false;
-
-  late final TextEditingController _controller;
-
-  void _handleTextChange() {
-    final isTextExisting = _controller.text.isNotEmpty;
-    if (isTextExisting != hasText) {
-      setState(() {
-        hasText = isTextExisting;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = TextEditingController();
-    _controller.addListener(_handleTextChange);
-  }
-
+class _TextSendingBarState extends State<TextSendingBar>
+    with TextEditingValueStateMixin {
   void _onSubmitted() {
-    widget.onSent(_controller.text);
+    widget.onSent(controller.text);
 
-    _controller.clear();
+    controller.clear();
   }
 
   @override
@@ -44,9 +26,9 @@ class _TextSendingBarState extends State<TextSendingBar> {
         children: [
           Expanded(
             child: TextField(
-              controller: _controller,
+              controller: controller,
               onEditingComplete: () {
-                if (_controller.text.isEmpty) {
+                if (controller.text.isEmpty) {
                   return;
                 }
                 _onSubmitted();

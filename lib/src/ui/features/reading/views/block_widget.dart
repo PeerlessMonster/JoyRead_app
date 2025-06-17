@@ -23,15 +23,9 @@ class HeadingBlockWidget extends StatelessWidget {
 
     final textTheme = theme.textTheme;
     final textStyle = switch (level) {
-      1 => textTheme.titleLarge?.copyWith(
-          color: colorScheme.tertiary,
-        ),
-      2 => textTheme.titleMedium?.copyWith(
-          color: colorScheme.tertiary,
-        ),
-      >= 3 => textTheme.titleSmall?.copyWith(
-          color: colorScheme.tertiary,
-        ),
+      1 => textTheme.titleLarge?.copyWith(color: colorScheme.tertiary),
+      2 => textTheme.titleMedium?.copyWith(color: colorScheme.tertiary),
+      >= 3 => textTheme.titleSmall?.copyWith(color: colorScheme.tertiary),
       _ => throw RangeError.range(level, 1, null, 'level',
           'Level of heading should be positive integer'),
     };
@@ -87,13 +81,11 @@ class AnnotationBlockWidget extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(
-              color: colorScheme.tertiary,
-            ),
+            top: BorderSide(color: colorScheme.tertiary),
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.only(top: spacing.Padding.increment * 1),
+          padding: const EdgeInsets.only(top: spacing.Padding.increment * 1),
           child: _SpanBlocksWidget(
             key: key,
             spans: spans,
@@ -117,7 +109,7 @@ class ContextBlockWidget extends StatelessWidget {
     return ColoredBox(
       color: colorScheme.tertiaryContainer.withValues(alpha: 0.2),
       child: Padding(
-        padding: EdgeInsets.all(spacing.Padding.increment * 4),
+        padding: const EdgeInsets.all(spacing.Padding.increment * 4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,14 +132,12 @@ class QuoteBlockWidget extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: BorderDirectional(
-          start: BorderSide(
-            color: colorScheme.tertiary,
-          ),
+          start: BorderSide(color: colorScheme.tertiary),
         ),
       ),
       child: Padding(
-        padding:
-            EdgeInsetsDirectional.only(start: spacing.Padding.increment * 2),
+        padding: const EdgeInsetsDirectional.only(
+            start: spacing.Padding.increment * 2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,14 +164,9 @@ class BodyBlockWidget extends StatelessWidget {
       ? _buildSpanBlocks()
       : Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: spacing.Padding.increment * 2,
           children: [
-            Padding(
-              padding: EdgeInsetsDirectional.only(
-                  end: spacing.Padding.increment * 2),
-              child: LeadingBlockWidget(
-                leading: leading!,
-              ),
-            ),
+            LeadingBlockWidget(leading: leading!),
             Expanded(
               child: _buildSpanBlocks(),
             ),
@@ -207,15 +192,9 @@ class _SpanBlocksWidget extends StatelessWidget {
         children: spans.map((span) {
           final textStyle = switch (span.style) {
             SpanStyle.normal => null,
-            SpanStyle.bold => TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            SpanStyle.italic => TextStyle(
-                fontStyle: FontStyle.italic,
-              ),
-            SpanStyle.colored => TextStyle(
-                color: colorScheme.tertiary,
-              ),
+            SpanStyle.bold => TextStyle(fontWeight: FontWeight.bold),
+            SpanStyle.italic => TextStyle(fontStyle: FontStyle.italic),
+            SpanStyle.colored => TextStyle(color: colorScheme.tertiary),
             SpanStyle.boldColored => TextStyle(
                 color: colorScheme.tertiary,
                 fontWeight: FontWeight.bold,
@@ -254,17 +233,13 @@ class LeadingBlockWidget extends StatelessWidget {
             color: colorScheme.tertiary,
             fontWeight: FontWeight.bold,
           )
-          .apply(
-            fontSizeFactor: 3,
-          ),
+          .apply(fontSizeFactor: 3),
       LeadingStyle.order => defaultTextStyle
           .copyWith(
             height: 0.7,
             color: colorScheme.tertiary,
           )
-          .apply(
-            fontSizeFactor: 2,
-          ),
+          .apply(fontSizeFactor: 2),
     };
 
     return Text(

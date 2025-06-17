@@ -7,6 +7,7 @@ import '../core/pressed_action.dart';
 import '../widgets/navigation_scaffold.dart';
 import '../widgets/network_notification_display_container.dart';
 import 'explore_page.dart';
+import 'search/views/search_screen.dart';
 import 'user_center_page.dart';
 
 const _navigationDestinations = [
@@ -19,11 +20,6 @@ const _navigationDestinations = [
     icon: Icon(Icons.account_circle_rounded),
   ),
 ];
-final _floatingAction = PressedAction(
-  name: 'Search',
-  icon: Icon(Icons.search_rounded),
-  onPressed: () {},
-);
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -44,13 +40,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ExplorePage(),
               UserCenterPage(),
             ]
-                .map((page) =>
-                    _AdaptiveNetworkNotificationDisplayContainer(body: page))
+                .map(
+                  (page) =>
+                      _AdaptiveNetworkNotificationDisplayContainer(body: page),
+                )
                 .toList(),
           ),
         ),
         navigationDestinations: _navigationDestinations,
-        floatingAction: _floatingAction,
+        floatingAction: PressedAction(
+          name: 'Search',
+          icon: Icon(Icons.search_rounded),
+          onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SearchScreen(),
+              )),
+        ),
         selectedIndex: currentPageIndex,
         setSelectedIndex: (index) => setState(() {
           currentPageIndex = index;

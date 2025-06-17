@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 ///
 /// Can be used by some of the widgets include:
 ///
-///   * [IconButton]
-///   * [FloatingActionButton]
+///  * [IconButton]
+///  * [FloatingActionButton]
 class PressedAction {
   final String name;
   final Icon icon;

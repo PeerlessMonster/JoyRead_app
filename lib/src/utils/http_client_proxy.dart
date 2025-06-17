@@ -1,13 +1,15 @@
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
-RetryClient _create() => RetryClient(http.Client());
+abstract class HttpClientProxy {
+  Future<T> fetch<T>(Future<T> Function(http.Client client) onRequest);
+}
 
 class HttpClientProxyWithDisposableConnection extends HttpClientProxy {
   @override
-  Future<T> fetch<T>(Future<T> Function(http.Client client) request) async {
-    final client = _create();
-    final response = await request(client);
+  Future<T> fetch<T>(Future<T> Function(http.Client client) onRequest) async {
+    final client = _spawn();
+    final response = await onRequest(client);
     client.close();
 
     return response;
@@ -17,11 +19,11 @@ class HttpClientProxyWithDisposableConnection extends HttpClientProxy {
 class HttpClientProxyWithPersistentConnection extends HttpClientProxy {
   var _isClosed = false;
 
-  final _client = RetryClient(http.Client());
+  final _client = _spawn();
 
   @override
-  Future<T> fetch<T>(Future<T> Function(http.Client client) request) async {
-    final response = await request(_client);
+  Future<T> fetch<T>(Future<T> Function(http.Client client) onRequest) async {
+    final response = await onRequest(_client);
     return response;
   }
 
@@ -33,6 +35,4 @@ class HttpClientProxyWithPersistentConnection extends HttpClientProxy {
   }
 }
 
-abstract class HttpClientProxy {
-  Future<T> fetch<T>(Future<T> Function(http.Client client) request);
-}
+RetryClient _spawn() => RetryClient(http.Client());

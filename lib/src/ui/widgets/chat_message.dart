@@ -21,29 +21,31 @@ class RowChatMessage extends StatelessWidget {
 
   Widget _buildCard() => Card(
         child: Padding(
-          padding: EdgeInsets.all(spacing.Margin.allSides),
+          padding: const EdgeInsets.all(spacing.Margin.allSides),
           child: content,
         ),
       );
 
   @override
   Widget build(BuildContext context) {
-    final edgeInsets = calculateResponsiveMarginValue(context);
+    final responsiveEdgeInsets = calculateResponsiveMarginValue(context);
 
     return Padding(
       padding: alignment == RowChatMessageAlignment.start
           ? EdgeInsetsDirectional.only(
-              start: edgeInsets, end: _spacing + _avatarSize + edgeInsets)
+              start: responsiveEdgeInsets,
+              end: _spacing + _avatarSize + responsiveEdgeInsets,
+            )
           : EdgeInsetsDirectional.only(
-              start: edgeInsets + _avatarSize + edgeInsets, end: edgeInsets),
+              start: responsiveEdgeInsets + _avatarSize + responsiveEdgeInsets,
+              end: responsiveEdgeInsets,
+            ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: _spacing,
         children: alignment == RowChatMessageAlignment.start
             ? [
-                CircleAvatar(
-                  child: avatar,
-                ),
+                CircleAvatar(child: avatar),
                 Expanded(
                   child: Align(
                     alignment: AlignmentDirectional.centerStart,
@@ -58,9 +60,7 @@ class RowChatMessage extends StatelessWidget {
                     child: _buildCard(),
                   ),
                 ),
-                CircleAvatar(
-                  child: avatar,
-                ),
+                CircleAvatar(child: avatar),
               ],
       ),
     );

@@ -187,8 +187,9 @@ class AssistantErrorMessageWidget extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.only(
-                      end: dimension.Card.horizontalPadding -
-                          spacing.Margin.allSides),
+                    end: dimension.Card.horizontalPadding -
+                        spacing.Margin.allSides,
+                  ),
                   child: FilledButton(
                     onPressed: reloadAnswer,
                     child: Text('Retry'),

@@ -14,12 +14,9 @@ void showAssistantSheet(BuildContext context) {
       outColor: colorScheme.surface,
       position: FadeOutPosition.top,
       fadeHeight: 10,
-      child: Padding(
-        padding: EdgeInsets.only(),
-        child: AssistantChatBox(
-          opener: MarkdownBody(data: '# **${testUser.name}**，早上好！'),
-          suggestedQuestions: const ['概括这篇文章的内容'],
-        ),
+      child: AssistantChatBox(
+        opener: MarkdownBody(data: '# **${testUser.name}**，早上好！'),
+        suggestedQuestions: const ['概括这篇文章的内容'],
       ),
     ),
     backgroundColor: colorScheme.surface,

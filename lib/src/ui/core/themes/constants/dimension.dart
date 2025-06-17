@@ -12,6 +12,12 @@ class CircleAvatar {
   static const size = 40.0;
 }
 
+class IconButton {
+  const IconButton._();
+
+  static const shrinkWrapTapTargetSize = 40.0;
+}
+
 class Banner {
   const Banner._();
 

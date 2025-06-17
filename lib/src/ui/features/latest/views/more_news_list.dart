@@ -112,7 +112,7 @@ class _MoreLatestNewsListState extends State<MoreLatestNewsList> {
     };
 
     return SliverPadding(
-      padding: EdgeInsets.only(top: _spacing),
+      padding: const EdgeInsets.only(top: _spacing),
       sliver: LoadStateChangedScrollView(
         firstPage: widget.firstPage,
         loadMorePage: widget.loadMorePage,

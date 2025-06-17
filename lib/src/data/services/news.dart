@@ -9,6 +9,10 @@ import '../exceptions/http_exception.dart';
 
 const _pathname = 'news';
 
+const _header = {
+  HttpHeaders.acceptHeader: MediaType.applicationJsonUtf8,
+};
+
 Future<Result<String>> getLatestNews(http.Client client,
     {required int pageSize, int pageOrder = 0}) async {
   assert(pageOrder >= 0, 'Order of page should count from 0');
@@ -17,13 +21,9 @@ Future<Result<String>> getLatestNews(http.Client client,
   final url = Uri.http(serverDomainName, '$_pathname/latest',
       {'pageOrder': '$pageOrder', 'pageSize': '$pageSize'});
 
-  final header = {
-    HttpHeaders.acceptHeader: MediaType.applicationJsonUtf8,
-  };
-
   late final http.Response response;
   try {
-    response = await client.get(url, headers: header);
+    response = await client.get(url, headers: _header);
   } on http.ClientException catch (e) {
     return Result.error(e);
   }
@@ -42,13 +42,9 @@ Future<Result<String>> getTodayPopularNews(http.Client client,
   final url = Uri.http(serverDomainName, '$_pathname/popular/day',
       {'pageOrder': '$pageOrder', 'pageSize': '$pageSize'});
 
-  final header = {
-    HttpHeaders.acceptHeader: MediaType.applicationJsonUtf8,
-  };
-
   late final http.Response response;
   try {
-    response = await client.get(url, headers: header);
+    response = await client.get(url, headers: _header);
   } on http.ClientException catch (e) {
     return Result.error(e);
   }
@@ -67,13 +63,9 @@ Future<Result<String>> getThisWeekPopularNews(http.Client client,
   final url = Uri.http(serverDomainName, '$_pathname/popular/week',
       {'pageOrder': '$pageOrder', 'pageSize': '$pageSize'});
 
-  final header = {
-    HttpHeaders.acceptHeader: MediaType.applicationJsonUtf8,
-  };
-
   late final http.Response response;
   try {
-    response = await client.get(url, headers: header);
+    response = await client.get(url, headers: _header);
   } on http.ClientException catch (e) {
     return Result.error(e);
   }

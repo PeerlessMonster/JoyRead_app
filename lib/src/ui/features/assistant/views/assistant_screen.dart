@@ -18,7 +18,7 @@ class AssistantScreen extends StatelessWidget {
               onPressed: () {},
               tooltip: '设置',
               icon: Icon(Icons.settings_rounded),
-            )
+            ),
           ],
         ),
         drawer: const Drawer(),

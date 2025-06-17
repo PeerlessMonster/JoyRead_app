@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 ///
 /// Can be used by some of the widgets include:
 ///
-///   * [NavigationDestination]
-///   * [NavigationRailDestination]
+///  * [NavigationDestination]
+///  * [NavigationRailDestination]
 class PageNavigationDestination {
   final String name;
   final Icon icon;
