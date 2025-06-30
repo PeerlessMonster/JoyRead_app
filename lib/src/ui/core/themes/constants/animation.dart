@@ -1,13 +1,6 @@
-class PlayTime {
-  const PlayTime._();
+class SnackBar {
+  const SnackBar._();
 
-  static const snackBarDisplay = Duration(seconds: 4);
-}
-
-class HeroTag {
-  const HeroTag._();
-
-  static const scaffoldFloatingActionButton =
-      'floatingActionButton_narrowScreen';
-  static const sidebarFloatingActionButton = 'floatingActionButton_wideScreen';
+  static const displayDuration = Duration(seconds: 4);
+  static const transitionDuration = Duration(milliseconds: 250);
 }

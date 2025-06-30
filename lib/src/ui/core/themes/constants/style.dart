@@ -1,7 +1,7 @@
 class DropShadow {
   const DropShadow._();
 
-  static const elevation = 6.0;
+  static const snackBarElevation = 6.0;
 }
 
 class RoundedCorner {

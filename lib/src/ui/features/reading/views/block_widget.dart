@@ -6,7 +6,7 @@ import '../../../core/max_width_box.dart';
 import '../../../core/themes/constants/spacing.dart' as spacing;
 import '../../../widgets/load_state_changed_network_image.dart';
 
-const _maxWidth = Breakpoint.expanded;
+const _maxBreakpoint = Breakpoint.expanded;
 
 class HeadingBlockWidget extends StatelessWidget {
   final String text;
@@ -49,8 +49,8 @@ class ImageBlockWidget extends StatelessWidget {
       required this.foregroundColor});
 
   @override
-  Widget build(BuildContext context) => MaxWidthBox(
-        endpoint: _maxWidth,
+  Widget build(BuildContext context) => MaxWidthBox.breakpoint(
+        endpoint: _maxBreakpoint,
         child: LoadStateChangedNetworkImage(
           url,
           fallbackImageAssetName: fallbackImageAssetName,
@@ -76,8 +76,8 @@ class AnnotationBlockWidget extends StatelessWidget {
       color: colorScheme.onSurface.withValues(alpha: 0.5),
     );
 
-    return MaxWidthBox(
-      endpoint: _maxWidth,
+    return MaxWidthBox.breakpoint(
+      endpoint: _maxBreakpoint,
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border(

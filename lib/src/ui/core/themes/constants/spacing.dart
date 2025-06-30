@@ -16,9 +16,6 @@ class Padding {
 class Margin {
   const Margin._();
 
-  /// Equal to default margin of [SnackBar].
-  static const floatingVerticalMargin = 5.0;
-
   static const allSides = 8.0;
 
   // https://m3.material.io/foundations/layout/applying-layout/compact#e32a1311-f9ca-4425-9249-081e180fafba

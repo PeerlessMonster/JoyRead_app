@@ -1,5 +1,3 @@
-import '../../../../utils/breakpoint.dart';
-
 class Icon {
   const Icon._();
 
@@ -18,15 +16,6 @@ class IconButton {
   static const shrinkWrapTapTargetSize = 40.0;
 }
 
-class Banner {
-  const Banner._();
-
-  static const height = 52.0;
-  static const heightPlusDivider = height + 2.0;
-  static final floatingWidth =
-      Breakpoint.medium.screenWidthRange.start - NavigationRail.extendedWidth;
-}
-
 class ListTile {
   const ListTile._();
 
@@ -40,6 +29,20 @@ class Card {
   const Card._();
 
   static const horizontalPadding = 16.0;
+}
+
+class SnackBar {
+  const SnackBar._();
+
+  static const verticalMargin = 10.0;
+  static const horizontalMargin = 15.0;
+}
+
+class Banner {
+  const Banner._();
+
+  static const height = 52.0;
+  static const heightIncludingDivider = height + 2.0;
 }
 
 class SliverAppBar {

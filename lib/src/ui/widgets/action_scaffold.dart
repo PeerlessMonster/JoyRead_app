@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../core/pressed_action.dart';
-import '../core/themes/constants/animation.dart';
+import '../core/shared/hero.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
 import 'action_bottom_bar.dart';
 import 'action_sidebar.dart';

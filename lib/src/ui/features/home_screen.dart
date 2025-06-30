@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/breakpoint.dart';
 import '../core/breakpoint_state.dart';
 import '../core/page_navigation_destination.dart';
 import '../core/pressed_action.dart';
+import '../widgets/adaptive_network_notification_display_container.dart';
 import '../widgets/navigation_scaffold.dart';
-import '../widgets/network_notification_display_container.dart';
 import 'explore_page.dart';
 import 'search/views/search_screen.dart';
 import 'user_center_page.dart';
@@ -40,10 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ExplorePage(),
               UserCenterPage(),
             ]
-                .map(
-                  (page) =>
-                      _AdaptiveNetworkNotificationDisplayContainer(body: page),
-                )
+                .map((page) =>
+                    AdaptiveNetworkNotificationDisplayContainer(body: page))
                 .toList(),
           ),
         ),
@@ -62,18 +59,4 @@ class _HomeScreenState extends State<HomeScreen> {
           currentPageIndex = index;
         }),
       );
-}
-
-class _AdaptiveNetworkNotificationDisplayContainer extends StatelessWidget {
-  final Widget body;
-
-  const _AdaptiveNetworkNotificationDisplayContainer({required this.body});
-
-  @override
-  Widget build(BuildContext context) {
-    final breakpoint = BreakpointState.of(context);
-    return breakpoint <= Breakpoint.compact
-        ? FixedNetworkNotificationDisplayContainer(body: body)
-        : FloatingNetworkNotificationDisplayContainer(body: body);
-  }
 }

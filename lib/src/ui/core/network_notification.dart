@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 ///
 /// See also:
 ///
-/// * [NetworkNotificationListener]
+///  * [NetworkNotificationListener]
 sealed class NetworkNotification extends Notification {
   const NetworkNotification();
 
@@ -33,17 +33,17 @@ class Restored extends NetworkNotification {
 /// No need to manually switch different states and write functions, instead,
 /// just pass callbacks.
 ///
-/// If [Error] is received, [onNetworkError] will be invoked only at the first
-/// time, not repeatedly. The same as [Restored] to [onNetworkRestored].
+/// If [Error] is received, [onError] will be invoked only at the first time,
+/// not repeatedly. The same as [Restored] to [onRestored].
 class NetworkNotificationListener extends StatefulWidget {
-  final Widget Function(BuildContext context, bool isNetworkError) childBuilder;
-  final void Function()? onNetworkError;
-  final void Function()? onNetworkRestored;
+  final Widget Function(BuildContext context, bool hasError) childBuilder;
+  final void Function()? onError;
+  final void Function()? onRestored;
 
   const NetworkNotificationListener(
       {super.key,
-      required this.onNetworkError,
-      required this.onNetworkRestored,
+      required this.onError,
+      required this.onRestored,
       required this.childBuilder});
 
   @override
@@ -53,7 +53,7 @@ class NetworkNotificationListener extends StatefulWidget {
 
 class _NetworkNotificationListenerState
     extends State<NetworkNotificationListener> {
-  var isNetworkError = false;
+  var hasError = false;
 
   @override
   Widget build(BuildContext context) =>
@@ -61,33 +61,33 @@ class _NetworkNotificationListenerState
         onNotification: (notification) {
           switch (notification) {
             case Error():
-              if (widget.onNetworkError == null) {
+              if (widget.onError == null) {
                 break;
               }
 
-              if (!isNetworkError) {
+              if (!hasError) {
                 setState(() {
-                  isNetworkError = true;
+                  hasError = true;
                 });
 
-                widget.onNetworkError!();
+                widget.onError!();
               }
 
             case Restored():
-              if (widget.onNetworkRestored == null) {
+              if (widget.onRestored == null) {
                 break;
               }
 
-              if (isNetworkError) {
+              if (hasError) {
                 setState(() {
-                  isNetworkError = false;
+                  hasError = false;
                 });
 
-                widget.onNetworkRestored!();
+                widget.onRestored!();
               }
           }
           return true;
         },
-        child: widget.childBuilder(context, isNetworkError),
+        child: widget.childBuilder(context, hasError),
       );
 }

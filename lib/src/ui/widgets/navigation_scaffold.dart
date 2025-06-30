@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/page_navigation_destination.dart';
 import '../core/pressed_action.dart';
-import '../core/themes/constants/animation.dart';
+import '../core/shared/hero.dart';
 import 'adaptive_scaffold.dart';
 import 'navigation_bottom_bar.dart';
 import 'navigation_sidebar.dart';

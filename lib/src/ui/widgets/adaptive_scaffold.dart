@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/breakpoint.dart';
-import '../core/breakpoint_state.dart';
+import '../core/responsive_layout_builder.dart';
 
-class AnimatedAdaptiveScaffold extends StatefulWidget {
+class AnimatedAdaptiveScaffold extends StatelessWidget {
   final Widget body;
   final Widget wideScreenSidebar;
   final Widget narrowScreenBottomBar;
@@ -21,57 +20,29 @@ class AnimatedAdaptiveScaffold extends StatefulWidget {
       this.duration = const Duration(milliseconds: 300)});
 
   @override
-  State<AnimatedAdaptiveScaffold> createState() =>
-      _AnimatedAdaptiveScaffoldState();
-}
-
-class _AnimatedAdaptiveScaffoldState extends State<AnimatedAdaptiveScaffold> {
-  var isWideScreen = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final breakpoint = dependOnWindowWidth(context);
-    if (breakpoint <= Breakpoint.compact) {
-      if (isWideScreen != false) {
-        setState(() {
-          isWideScreen = false;
-        });
-      }
-    } else {
-      if (isWideScreen != true) {
-        setState(() {
-          isWideScreen = true;
-        });
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Row(children: [
-          AnimatedAlign(
-            duration: widget.duration,
-            alignment: AlignmentDirectional.centerEnd,
-            widthFactor: isWideScreen ? 1 : 0,
-            child: widget.wideScreenSidebar,
-          ),
-          Expanded(
-            child: SafeArea(
-              child: widget.body,
+  Widget build(BuildContext context) => ResponsiveLayoutBuilder(
+        builder: (context, isWideScreen) => Scaffold(
+          body: Row(children: [
+            AnimatedAlign(
+              duration: duration,
+              alignment: AlignmentDirectional.centerEnd,
+              widthFactor: isWideScreen ? 1 : 0,
+              child: wideScreenSidebar,
             ),
+            Expanded(
+              child: SafeArea(child: body),
+            ),
+          ]),
+          bottomNavigationBar: AnimatedAlign(
+            duration: duration,
+            alignment: Alignment.topCenter,
+            heightFactor: isWideScreen ? 0 : 1,
+            child: narrowScreenBottomBar,
           ),
-        ]),
-        bottomNavigationBar: AnimatedAlign(
-          duration: widget.duration,
-          alignment: Alignment.topCenter,
-          heightFactor: isWideScreen ? 0 : 1,
-          child: widget.narrowScreenBottomBar,
+          floatingActionButton:
+              isWideScreen ? null : narrowScreenFloatingActionButton,
+          floatingActionButtonLocation:
+              narrowScreenFloatingActionButtonLocation,
         ),
-        floatingActionButton:
-            isWideScreen ? null : widget.narrowScreenFloatingActionButton,
-        floatingActionButtonLocation:
-            widget.narrowScreenFloatingActionButtonLocation,
       );
 }

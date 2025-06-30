@@ -14,8 +14,9 @@ class AppBarWithActions extends AppBar {
           actions: actions
             ..setAll(actions.length - 1, [
               Padding(
-                padding: EdgeInsetsDirectional.only(
-                    end: spacing.Padding.increment * 1),
+                padding: const EdgeInsetsDirectional.only(
+                  end: spacing.Padding.increment * 1,
+                ),
                 child: actions.last,
               ),
             ]),
@@ -38,9 +39,10 @@ class FlexibleSliverAppBar extends StatelessWidget {
           overflow: TextOverflow.fade,
         ),
         titlePadding: EdgeInsetsDirectional.only(
-            start: dimension.SliverAppBar.startPadding,
-            end: responsiveEdgeInsets,
-            bottom: dimension.SliverAppBar.bottomPadding),
+          start: dimension.SliverAppBar.startPadding,
+          end: responsiveEdgeInsets,
+          bottom: dimension.SliverAppBar.bottomPadding,
+        ),
       ),
       floating: true,
       pinned: false,
@@ -64,10 +66,11 @@ class FlexibleSliverAppBarWithoutLeading extends StatelessWidget {
           title,
           overflow: TextOverflow.fade,
         ),
-        titlePadding: EdgeInsetsDirectional.only(
-            start: responsiveEdgeInsets,
-            end: responsiveEdgeInsets,
-            bottom: dimension.SliverAppBar.bottomPadding),
+        titlePadding: EdgeInsets.only(
+          left: responsiveEdgeInsets,
+          right: responsiveEdgeInsets,
+          bottom: dimension.SliverAppBar.bottomPadding,
+        ),
       ),
       surfaceTintColor: Colors.transparent,
       floating: true,

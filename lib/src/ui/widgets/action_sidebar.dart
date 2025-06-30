@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/pressed_action.dart';
-import '../core/themes/constants/animation.dart';
+import '../core/shared/hero.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
 import '../core/themes/constants/spacing.dart' as spacing;
 
@@ -25,9 +25,10 @@ class ActionSidebar extends StatelessWidget {
       child: ColoredBox(
         color: colorScheme.surfaceContainer,
         child: Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: dimension.NavigationRail.verticalPadding,
-              horizontal: dimension.NavigationRail.horizontalPadding),
+          padding: const EdgeInsets.symmetric(
+            vertical: dimension.NavigationRail.verticalPadding,
+            horizontal: dimension.NavigationRail.horizontalPadding,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

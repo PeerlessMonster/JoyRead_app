@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/page_navigation_destination.dart';
 import '../core/pressed_action.dart';
-import '../core/themes/constants/animation.dart';
+import '../core/shared/hero.dart';
 import '../core/themes/constants/dimension.dart' as dimension;
 import '../core/themes/constants/spacing.dart' as spacing;
 import 'button.dart';
@@ -65,10 +65,11 @@ class _NavigationSidebarState extends State<NavigationSidebar> {
                     ),
             ),
             Padding(
-              padding: const EdgeInsetsDirectional.only(
-                  start: dimension.NavigationRail.horizontalPadding,
-                  end: dimension.NavigationRail.horizontalPadding,
-                  bottom: dimension.NavigationRail.verticalPadding),
+              padding: const EdgeInsets.only(
+                left: dimension.NavigationRail.horizontalPadding,
+                right: dimension.NavigationRail.horizontalPadding,
+                bottom: dimension.NavigationRail.verticalPadding,
+              ),
               child: IconButton(
                 tooltip: 'Expand',
                 icon: Icon(Icons.menu_open_rounded),

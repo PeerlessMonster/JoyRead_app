@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../utils/breakpoint.dart';
 
-/// Propagate [Breakpoint] information down the widget tree.
+/// Propagates [Breakpoint] information down the widget tree.
 ///
 /// Equivalent to [InheritedWidget].
 class BreakpointState extends InheritedWidget {
@@ -28,11 +28,6 @@ class BreakpointState extends InheritedWidget {
       breakpoint != oldWidget.breakpoint;
 }
 
-Breakpoint dependOnWindowWidth(BuildContext context) {
-  final windowWidth = MediaQuery.sizeOf(context).width;
-  return Breakpoint.include(windowWidth);
-}
-
 /// A wrapper of [BreakpointState].
 ///
 /// To obtain [Breakpoint] information, insert it to somewhere top of the widget
@@ -40,7 +35,7 @@ Breakpoint dependOnWindowWidth(BuildContext context) {
 ///
 /// See also:
 ///
-///   * [BreakpointState]
+///  * [BreakpointState]
 class BreakpointProvider extends StatelessWidget {
   final Widget child;
 
@@ -48,9 +43,9 @@ class BreakpointProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final breakpoint = dependOnWindowWidth(context);
+    final screenWidth = MediaQuery.sizeOf(context).width;
     return BreakpointState(
-      breakpoint: breakpoint,
+      breakpoint: Breakpoint.include(screenWidth),
       child: child,
     );
   }

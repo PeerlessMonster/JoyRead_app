@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/future_widget.dart';
 import '../../../core/responsive_margin.dart';
-import '../../../core/themes/constants/animation.dart';
+import '../../../core/shared/hero.dart';
 import '../../../core/themes/constants/spacing.dart' as spacing;
 import '../../../widgets/load_state_changed_network_image.dart';
 import '../../../widgets/search_field.dart';

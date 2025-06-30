@@ -21,6 +21,7 @@ class ExplorePage extends StatefulWidget {
 class _ExplorePageState extends State<ExplorePage> {
   var currentSegment = Sort.day;
 
+  static const _maxBreakpoint = Breakpoint.large;
   static const _spacing = spacing.Padding.increment * 2;
 
   @override
@@ -34,12 +35,14 @@ class _ExplorePageState extends State<ExplorePage> {
       // feature: Latest
       ResponsiveMargin(
         margin: const ResponsiveEdgeInsets.only(
-            enableStart: true, enableEnd: true, enableTop: true),
-        child: MaxWidthBox(
-          endpoint: Breakpoint.large,
+          enableStart: true,
+          enableEnd: true,
+          enableTop: true,
+        ),
+        child: MaxWidthBox.breakpoint(
+          endpoint: _maxBreakpoint,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 '最新资讯',
@@ -53,7 +56,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MoreNewsScreen(),
+                        builder: (context) => const MoreNewsScreen(),
                       )),
                 ),
               ),
@@ -69,8 +72,8 @@ class _ExplorePageState extends State<ExplorePage> {
       // feature: Popular
       ResponsiveMargin(
         margin: const ResponsiveEdgeInsets.symmetric(enableHorizontal: true),
-        child: MaxWidthBox(
-          endpoint: Breakpoint.large,
+        child: MaxWidthBox.breakpoint(
+          endpoint: _maxBreakpoint,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -105,9 +108,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         children: Sort.values
                             .map((sort) => Expanded(
                                   flex: 1,
-                                  child: PopularNewsCard(
-                                    sort: sort,
-                                  ),
+                                  child: PopularNewsCard(sort: sort),
                                 ))
                             .toList(),
                       ),

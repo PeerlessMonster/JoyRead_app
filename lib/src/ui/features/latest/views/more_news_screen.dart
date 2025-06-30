@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utils/breakpoint.dart';
 import '../../../core/breakpoint_state.dart';
 import '../../../core/future_widget.dart';
 import '../../../core/shared/illustration.dart';
+import '../../../widgets/adaptive_network_notification_display_container.dart';
 import '../../../widgets/load_state_screen.dart';
-import '../../../widgets/network_notification_display_container.dart';
 import '../../../widgets/sign.dart';
 import '../view_models/more_news_view_model.dart';
 import 'more_news_list.dart';
@@ -37,20 +36,22 @@ class _MoreNewsScreenState extends State<MoreNewsScreen> {
           dataBuilder: (context, data) => Scaffold(
             body: SafeArea(
               child: BreakpointProvider(
-                child: _AdaptiveSliverNetworkNotificationDisplayContainer(
+                child: AdaptiveSliverNetworkNotificationDisplayContainer(
                   sliverAppBar: SliverAppBar(
                     title: Text(_title),
                     floating: true,
                   ),
-                  sliverBody: MoreLatestNewsList(
-                    firstPage: data,
-                    loadMorePage: _viewModel.loadMorePage,
-                    loadImageUrl: _viewModel.loadImageUrl,
-                    loadFallbackImage: _viewModel.loadFallbackImage,
-                    pageSize: _viewModel.pageSize,
-                    preloadDataCount: _viewModel.preloadDataCount,
-                    maxCachedPageCount: _viewModel.maxCachedPageCount,
-                  ),
+                  sliversBody: [
+                    MoreLatestNewsList(
+                      firstPage: data,
+                      loadMorePage: _viewModel.loadMorePage,
+                      loadImageUrl: _viewModel.loadImageUrl,
+                      loadFallbackImage: _viewModel.loadFallbackImage,
+                      pageSize: _viewModel.pageSize,
+                      preloadDataCount: _viewModel.preloadDataCount,
+                      maxCachedPageCount: _viewModel.maxCachedPageCount,
+                    )
+                  ],
                 ),
               ),
             ),
@@ -68,29 +69,4 @@ class _MoreNewsScreenState extends State<MoreNewsScreen> {
           ),
         ),
       );
-}
-
-class _AdaptiveSliverNetworkNotificationDisplayContainer
-    extends StatelessWidget {
-  final Widget sliverAppBar;
-  final Widget sliverBody;
-
-  const _AdaptiveSliverNetworkNotificationDisplayContainer(
-      {required this.sliverAppBar, required this.sliverBody});
-
-  @override
-  Widget build(BuildContext context) {
-    final breakpoint = BreakpointState.of(context);
-    return breakpoint <= Breakpoint.compact
-        ? SliverFixedNetworkNotificationDisplayContainer(
-            sliverAppBar: sliverAppBar,
-            sliversBody: [sliverBody],
-          )
-        : FloatingNetworkNotificationDisplayContainer(
-            body: CustomScrollView(slivers: [
-              sliverAppBar,
-              sliverBody,
-            ]),
-          );
-  }
 }

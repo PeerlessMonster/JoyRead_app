@@ -2,27 +2,21 @@ import 'package:flutter/material.dart';
 
 import '../../utils/breakpoint.dart';
 
-/// A built-in width of screen detection [LayoutBuilder]
+/// A built-in screen width detection [LayoutBuilder].
 ///
-/// If [Breakpoint.compact] includes current width of screen,
-/// [narrowScreenWidget] will be built. Otherwise, [wideScreenWidget] will be
-/// built.
+/// This widget uses [Breakpoint] to determine the size category of its
+/// available space, then provides a builder function with a boolean flag
+/// indicating whether it is wide-screen.
 class ResponsiveLayoutBuilder extends StatelessWidget {
-  final Widget narrowScreenWidget;
-  final Widget wideScreenWidget;
+  final Widget Function(BuildContext context, bool isWideScreen) builder;
 
-  const ResponsiveLayoutBuilder(
-      {super.key,
-      required this.narrowScreenWidget,
-      required this.wideScreenWidget});
+  const ResponsiveLayoutBuilder({super.key, required this.builder});
 
   @override
   Widget build(BuildContext context) =>
       LayoutBuilder(builder: (context, constraints) {
         final screenWidth = constraints.maxWidth;
         final breakpoint = Breakpoint.include(screenWidth);
-        return breakpoint <= Breakpoint.compact
-            ? narrowScreenWidget
-            : wideScreenWidget;
+        return builder(context, breakpoint.isWideScreen);
       });
 }

@@ -56,4 +56,9 @@ enum Breakpoint {
 
   bool operator <=(Breakpoint breakpoint) =>
       screenWidthRange.end <= breakpoint.screenWidthRange.end;
+
+  /// Returns true if the current breakpoint belongs to [Breakpoint.compact].
+  bool get isNarrowScreen => this <= Breakpoint.compact;
+  /// Returns true if the current breakpoint exceeds [Breakpoint.compact].
+  bool get isWideScreen => this > Breakpoint.compact;
 }

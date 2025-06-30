@@ -29,7 +29,7 @@ class ActionBottomBar extends StatelessWidget {
                   .toList(),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.only(end: 68),
+              padding: const EdgeInsetsDirectional.only(end: 68),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: spacing.Padding.targetSpacing,
